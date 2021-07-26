@@ -67,6 +67,11 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
     serializer_class = ChoiceQuestionSerializer
 
 
+class OptionsView(viewsets.ModelViewSet):
+    queryset = Options.objects.all()
+    serializer_class = OptionsSerializer
+
+
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer

@@ -42,6 +42,12 @@ class ChoiceQuestion(models.Model):
     text_content = models.TextField(default="null")
 
 
+class Options(models.Model):
+    question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
+    order = models.IntegerField(default=0)
+    if_correct = models.BooleanField(default=False)
+
+
 class Media(models.Model):
     file = models.FileField(upload_to='./media/%Y/%m/%d/')
     type_file = (
