@@ -39,6 +39,27 @@ export default {
     },
     methods: {
         modify() {
+            if (!this.oldPassword) {
+                this.$message.error('请输入账号！');//message组件弹出框
+            } else if (!this.newPassword) {
+                this.$message.error('请输入密码！');
+            } else if (!this.newPasswordAgain) {
+                this.$message.error('请再次输入密码！');
+            } else {
+                this.axios.put('BackendAccount/changePassword/', {//其中的路由需要修改
+                    user_name: this.userName,
+                    password: this.password,
+                })
+                    .then(res => {//在其中写后端交互方法
+                        // console.log("输出response.data", res.data);
+                        // console.log("输出response.data.status", res.data.status);
+                        if (res.data.status === 200) {//200是判断http请求是否成功
+                            this.$router.push({path: '/'});
+                        } else {
+                            alert('密码修改失败！');
+                        }
+                    });
+            }
         }
     }
 };
