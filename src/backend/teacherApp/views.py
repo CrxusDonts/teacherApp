@@ -55,7 +55,12 @@ class BackendAccountView(viewsets.ModelViewSet):
         else:
             return Response('login failed')
 
-
+    # 登出
+    @action(methods=['post'], detail=False)
+    def logout(self, request):
+        # 这里的logout是django自带的logout，实现用户登出功能，清除session
+        logout(request)
+        return Response('logout succeed')
 
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
