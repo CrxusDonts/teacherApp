@@ -18,3 +18,9 @@ class ManagerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Manager
         fields = '__all__'
+
+
+class FrontAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrontAccount
+        fields = '__all__'

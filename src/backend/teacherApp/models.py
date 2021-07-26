@@ -16,3 +16,7 @@ class Manager(models.Model):
     status = models.BooleanField(default=False)
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default="undefined")
     account = models.ForeignKey(BackendAccount, on_delete=models.CASCADE)
+
+
+class FrontAccount(models.Model):
+    open_id = models.CharField(default="", max_length=50)

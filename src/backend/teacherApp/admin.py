@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(BackendAccount)
 admin.site.register(Class)
 admin.site.register(Manager)
+admin.site.register(FrontAccount)

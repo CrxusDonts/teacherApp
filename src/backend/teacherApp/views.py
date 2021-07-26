@@ -18,3 +18,10 @@ class ClassView(viewsets.ModelViewSet):
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
+
+
+class FrontAccountView(viewsets.ModelViewSet):
+    queryset = FrontAccount.objects.all()
+    serializer_class = FrontAccountSerializer
+
+
