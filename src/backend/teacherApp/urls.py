@@ -7,6 +7,7 @@ router.register('BackendAccount', views.BackendAccountView)
 router.register('Class', views.ClassView)
 router.register('Manager', views.ManagerView)
 router.register('FrontAccount', views.FrontAccountView)
+router.register('People', views.PeopleView)
 
 urlpatterns = [
     path('', include(router.urls)),

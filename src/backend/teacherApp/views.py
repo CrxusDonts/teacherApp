@@ -25,3 +25,6 @@ class FrontAccountView(viewsets.ModelViewSet):
     serializer_class = FrontAccountSerializer
 
 
+class PeopleView(viewsets.ModelViewSet):
+    queryset = People.objects.all()
+    serializer_class = PeopleSerializer

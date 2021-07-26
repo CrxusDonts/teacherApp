@@ -20,3 +20,19 @@ class Manager(models.Model):
 
 class FrontAccount(models.Model):
     open_id = models.CharField(default="", max_length=50)
+
+
+class People(models.Model):
+    name = models.CharField(default="", max_length=50)
+    sex_choice = (
+        (0, 'female'),
+        (1, 'male'),
+    )
+    sex = models.IntegerField(choices=sex_choice, default=1)
+    type_choice = (
+        (0, 'teacher'),
+        (1, 'student'),
+    )
+    type = models.IntegerField(choices=type_choice, default=1)
+    front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE, default=None)
+    my_class = models.ForeignKey(Class, on_delete=models.CASCADE, default=None)
