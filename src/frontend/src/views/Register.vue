@@ -33,7 +33,6 @@ export default {
     },
     methods: {
         doRegister() {
-
         }
     }
 };
@@ -42,34 +41,34 @@ export default {
 <style scoped>
 
 #poster {
-    height: 100%;
-    width: 100%;
-    background-size: cover;
     position: fixed;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
 }
 
 .Register-container {
+    width: 350px;
+    padding: 35px 35px 15px;
+    margin: 180px auto 90px;
+    border: 1px solid #eaeaea;
     border-radius: 15px;
     background-clip: padding-box;
-    margin: 180px auto 90px;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
+    background-color: #fff;
     box-shadow: 0 0 20px;
 }
 
 .login_title {
-    margin: 0 auto 40px auto;
+    margin: 0 auto 40px;
     text-align: center;
     color: #505458;
 }
 
 .methodButton {
-    height: 40px;
     width: 100px;
-    background: #505458;
+    height: 40px;
     border: none;
+    background: #505458;
 }
 
 </style>
