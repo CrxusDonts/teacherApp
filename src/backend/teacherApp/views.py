@@ -13,3 +13,8 @@ class BackendAccountView(viewsets.ModelViewSet):
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
+
+
+class ManagerView(viewsets.ModelViewSet):
+    queryset = Manager.objects.all()
+    serializer_class = ManagerSerializer

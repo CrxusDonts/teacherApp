@@ -9,3 +9,10 @@ class BackendAccount(models.Model):
 
 class Class(models.Model):
     class_name = models.CharField(max_length=10, default="undefined")
+
+
+class Manager(models.Model):
+    # True 是owner False不是
+    status = models.BooleanField(default=False)
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default="undefined")
+    account = models.ForeignKey(BackendAccount, on_delete=models.CASCADE)
