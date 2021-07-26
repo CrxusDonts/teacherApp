@@ -38,6 +38,10 @@ class People(models.Model):
     my_class = models.ForeignKey(Class, on_delete=models.CASCADE, default=None)
 
 
+class ChoiceQuestion(models.Model):
+    text_content = models.TextField(default="null")
+
+
 class Media(models.Model):
     file = models.FileField(upload_to='./media/%Y/%m/%d/')
     type_file = (

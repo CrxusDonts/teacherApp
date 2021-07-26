@@ -62,6 +62,11 @@ class PeopleView(viewsets.ModelViewSet):
     serializer_class = PeopleSerializer
 
 
+class ChoiceQuestionView(viewsets.ModelViewSet):
+    queryset = ChoiceQuestion.objects.all()
+    serializer_class = ChoiceQuestionSerializer
+
+
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer

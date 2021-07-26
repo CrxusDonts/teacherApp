@@ -36,3 +36,9 @@ class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = '__all__'
+
+
+class ChoiceQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChoiceQuestion
+        fields = '__all__'
