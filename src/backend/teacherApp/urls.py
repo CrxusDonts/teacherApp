@@ -10,6 +10,7 @@ router.register('FrontAccount', views.FrontAccountView)
 router.register('People', views.PeopleView)
 router.register('ChoiceQuestion', views.ChoiceQuestionView)
 router.register('Options', views.OptionsView)
+router.register('ChoiceQuestionUserAnswer', views.ChoiceQuestionUserAnswerView)
 router.register('Media', views.MediaView)
 
 urlpatterns = [

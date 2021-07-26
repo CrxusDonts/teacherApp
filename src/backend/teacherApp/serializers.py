@@ -43,6 +43,13 @@ class ChoiceQuestionSerializer(serializers.ModelSerializer):
         model = ChoiceQuestion
         fields = '__all__'
 
+
+class ChoiceQuestionUserAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChoiceQuestionUserAnswer
+        fields = '__all__'
+
+
 class OptionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Options

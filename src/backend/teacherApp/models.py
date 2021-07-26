@@ -48,6 +48,12 @@ class Options(models.Model):
     if_correct = models.BooleanField(default=False)
 
 
+class ChoiceQuestionUserAnswer(models.Model):
+    question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
+    answer_order = models.IntegerField(default=0)
+    user = models.ForeignKey(People, on_delete=models.CASCADE)
+
+
 class Media(models.Model):
     file = models.FileField(upload_to='./media/%Y/%m/%d/')
     type_file = (
