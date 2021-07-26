@@ -36,3 +36,12 @@ class People(models.Model):
     type = models.IntegerField(choices=type_choice, default=1)
     front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE, default=None)
     my_class = models.ForeignKey(Class, on_delete=models.CASCADE, default=None)
+
+
+class Media(models.Model):
+    file = models.FileField(upload_to='./media/%Y/%m/%d/')
+    type_file = (
+        (0, 'image'),
+        (1, 'video'),
+    )
+    file_type = models.IntegerField(choices=type_file, default=1)

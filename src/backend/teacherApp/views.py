@@ -28,3 +28,7 @@ class FrontAccountView(viewsets.ModelViewSet):
 class PeopleView(viewsets.ModelViewSet):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
+
+class MediaView(viewsets.ModelViewSet):
+    queryset = Media.objects.all()
+    serializer_class = MediaSerializer

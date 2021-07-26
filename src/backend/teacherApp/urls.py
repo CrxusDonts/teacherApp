@@ -8,6 +8,7 @@ router.register('Class', views.ClassView)
 router.register('Manager', views.ManagerView)
 router.register('FrontAccount', views.FrontAccountView)
 router.register('People', views.PeopleView)
+router.register('Media', views.MediaView)
 
 urlpatterns = [
     path('', include(router.urls)),
