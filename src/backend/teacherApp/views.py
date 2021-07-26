@@ -8,3 +8,8 @@ from .serializers import *
 class BackendAccountView(viewsets.ModelViewSet):
     queryset = BackendAccount.objects.all()
     serializer_class = BackendAccountSerializer
+
+
+class ClassView(viewsets.ModelViewSet):
+    queryset = Class.objects.all()
+    serializer_class = ClassSerializer
