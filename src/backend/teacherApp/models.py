@@ -38,6 +38,12 @@ class People(models.Model):
     my_class = models.ForeignKey(Class, on_delete=models.CASCADE, default=None)
 
 
+class Homework(models.Model):
+    start_time = models.DateTimeField()
+    due_time = models.DateTimeField()
+    repeatable = models.BooleanField(default=False)
+
+
 class ChoiceQuestion(models.Model):
     text_content = models.TextField(default="null")
 

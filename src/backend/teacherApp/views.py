@@ -80,3 +80,8 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
+
+
+class HomeworkView(viewsets.ModelViewSet):
+    queryset = Homework.objects.all()
+    serializer_class = HomeworkSerializer
