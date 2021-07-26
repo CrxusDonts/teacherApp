@@ -41,6 +41,21 @@ class BackendAccountView(viewsets.ModelViewSet):
         serializer = self.get_serializer(user)
         return HttpResponse(status=200)
 
+    # 登陆
+    @action(methods=['post'], detail=False)
+    def login(self, request):
+        user_name = request.data.get('user_name')
+        password = request.data.get('password')
+        user = authenticate(username=user_name, password=password)
+        if user:
+            # 这里的login是django自带的login，实现用户登录功能
+            login(request, user)
+            serializer = self.get_serializer(user)
+            return Response(serializer.data)
+        else:
+            return Response('login failed')
+
+
 
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
