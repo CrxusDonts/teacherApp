@@ -33,6 +33,30 @@ export default {
     },
     methods: {
         doRegister() {
+            if (!this.userName) {
+                this.$message.error('请输入账号！');//message组件弹出框
+                return;
+            } else if (!this.password) {
+                this.$message.error('请输入密码！');
+                return;
+            } else if (!this.classid) {
+                this.$message.error('请输入班级！');
+                return;
+            } else {
+                /* this.$router.push({ path: "/" }); */ //无需向后台提交数据，方便前台调试,与后端交互时可以删除
+                console.log(this.userName);
+                this.$http.post('BackendAccount/register/', {
+                    user_name: this.userName,
+                    password: this.password
+                }).then(response => {
+                    if (response.data !== 'The user exist') {//200是判断http请求是否成功
+                        this.$router.push({path: '/home', query: {userName: this.userName}});
+                    } else {
+                        alert('登录失败！');
+                    }
+                });
+                this.$router.push({path: '/register'});
+            }
         }
     }
 };

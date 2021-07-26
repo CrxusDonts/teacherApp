@@ -2,6 +2,14 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Passwordmodify from '../views/passwordModify.vue';
+import Home from '../views/Home.vue';
+import HomeworkManagement from '../views/HomeComponents/HomeworkManagement';
+import StudentManagement from '../views/HomeComponents/StudentManagement';
+import AssistantManagement from '../views/HomeComponents/AssistantManagement';
+import GradeByClass from '../views/HomeComponents/GradeByClass';
+import GradeByStudent from '../views/HomeComponents/GradeByStudent';
+import SwitchClass from '../views/HomeComponents/SwitchClass';
 
 
 Vue.use(VueRouter);
@@ -24,10 +32,55 @@ const routes = [{
     name: 'Register',
     component: Register
 },
+// 修改密码界面
+{
+    path: '/passwordmodify',
+    name: 'Passwordmodify',
+    component: Passwordmodify
+},
+// 主页
+{
+    path: '/home',
+    name: 'Home',
+    component: Home,
+    redirect: '/homeworkManagement',
+    children:[
+        {
+            path: '/homeworkManagement',
+            name: 'HomeworkManagement',
+            component: HomeworkManagement
+        },
+        {
+            path: '/studentManagement',
+            name: 'StudentManagement',
+            component: StudentManagement
+        },
+        {
+            path: '/assistantManagement',
+            name: 'AssistantManagement',
+            component: AssistantManagement
+        },
+        {
+            path: '/gradeByClass',
+            name: 'GradeByClass',
+            component: GradeByClass
+        },
+        {
+            path: '/gradeByStudent',
+            name: 'GradeByStudent',
+            component: GradeByStudent
+        },
+        {
+            path: '/switchClass',
+            name: 'SwitchClass',
+            component: SwitchClass
+        }
+    ]
+}
 ];
 
 const router = new VueRouter({
-    mode: 'history',
+    mode:'history',
     routes
 });
 
