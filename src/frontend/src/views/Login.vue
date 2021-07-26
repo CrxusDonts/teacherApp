@@ -31,10 +31,30 @@ export default {
     },
     methods: {
         login() {
-
+            if (!this.userName) {
+                this.$message.error('请输入账号！');//message组件弹出框
+                return;
+            }else if (!this.password) {
+                this.$message.error('请输入密码！');
+                return;
+            }else {
+                this.axios.post('BackendAccount/login',{//其中的路由需要修改
+                    name: this.userName,
+                    password: this.password,
+                })
+                    .then(res => {//在其中写后端交互方法
+                        // console.log("输出response.data", res.data);
+                        // console.log("输出response.data.status", res.data.status);
+                        if (res.data.status === 200) {//200是判断http请求是否成功
+                            this.$router.push({ path: '/' });
+                        } else {
+                            alert('登录失败！');
+                        }
+                    });
+            }
         },
-        register() {
-
+        register(){
+            this.$router.push({ path: '/register' });
         }
     }
 };
