@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -26,6 +27,20 @@ class BackendAccountView(viewsets.ModelViewSet):
         serializer = self.get_serializer(new_backend_account)
         return Response(serializer.data)
 
+    # 更改账户的密码
+    @action(methods=['put'], detail=False)
+    def change_password(self, request):
+        user_name = request.data.get('user_name')
+        password = request.data.get('password')
+        try:
+            user = User.objects.get(username=user_name)
+        except:
+            return Response('The user is not exited')
+        user.set_password(password)
+        user.save()
+        serializer = self.get_serializer(user)
+        return HttpResponse(status=200)
+
 
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
@@ -45,6 +60,7 @@ class FrontAccountView(viewsets.ModelViewSet):
 class PeopleView(viewsets.ModelViewSet):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
+
 
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
