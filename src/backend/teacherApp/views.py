@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db import transaction
 from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -8,37 +9,42 @@ from rest_framework.decorators import action
 from .serializers import *
 
 
-# Create your views here.
 class BackendAccountView(viewsets.ModelViewSet):
     queryset = BackendAccount.objects.all()
     serializer_class = BackendAccountSerializer
 
     # 注册后台账户
     @action(methods=['post'], detail=False)
-    def register(self, request):
+    def register_teacher(self, request):
         user_name = request.data.get('user_name')
         password = request.data.get('password')
         try:
-            new_user = User.objects.create_user(username=user_name, password=password)
-        except:
-            return Response('The user already exited')
-        new_backend_account = BackendAccount.objects.create(user=new_user)
-        new_backend_account.save()
-        serializer = self.get_serializer(new_backend_account)
-        return Response(serializer.data)
+            with transaction.atomic():  # 使用with，这样在with下面的代码如果发生错误 自动回滚
+                new_user = User.objects.create_user(username=user_name, password=password)
+                class_name = register_class(request.data.get('class_name'))
+                new_backend_account = BackendAccount.objects.create(user=new_user)
+                new_backend_account.save()
+                add_manager('True', new_backend_account, class_name)
+        except IntegrityError:
+            return HttpResponse(status=400)  # 返回bad request 说明user_name已经存在
+        except Exception:
+            return HttpResponse(status=500)
+        return HttpResponse(status=200)
 
     # 更改账户的密码
     @action(methods=['put'], detail=False)
     def change_password(self, request):
-        user_name = request.data.get('user_name')
-        password = request.data.get('password')
-        try:
-            user = User.objects.get(username=user_name)
-        except:
-            return Response('The user is not exited')
-        user.set_password(password)
-        user.save()
-        serializer = self.get_serializer(user)
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        cur_user = request.user
+        if cur_user.check_password(old_password):
+            try:
+                cur_user.set_password(new_password)
+                cur_user.save()
+            except:
+                return HttpResponse(status=500)
+        else:
+            return HttpResponse(status=400)
         return HttpResponse(status=200)
 
     # 登陆
@@ -50,17 +56,17 @@ class BackendAccountView(viewsets.ModelViewSet):
         if user:
             # 这里的login是django自带的login，实现用户登录功能
             login(request, user)
-            serializer = self.get_serializer(user)
-            return Response(serializer.data)
+            return HttpResponse(status=200)
         else:
-            return Response('login failed')
+            return HttpResponse(status=400)  # 返回bad request 说明登录失败
 
     # 登出
     @action(methods=['post'], detail=False)
     def logout(self, request):
         # 这里的logout是django自带的logout，实现用户登出功能，清除session
         logout(request)
-        return Response('logout succeed')
+        return HttpResponse(status=200)
+
 
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
@@ -105,3 +111,24 @@ class MediaView(viewsets.ModelViewSet):
 class HomeworkView(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
+
+
+# 用于注册班级的函数
+def register_class(name):
+    class_name = name
+    try:
+        new_class = Class.objects.create(class_name=class_name)
+    except IntegrityError:
+        raise IntegrityError
+    new_class.save()
+    return new_class
+
+
+# 用于添加manager表的函数
+def add_manager(if_teacher, account, class_name):
+    try:
+        if_owner = 0 if if_teacher == 'True ' else 1
+        new_manager = Manager.objects.create(status=if_owner, account=account, class_name=class_name)
+        new_manager.save()
+    except Exception:
+        raise Exception

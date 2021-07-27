@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, IntegrityError
 
 
 class BackendAccount(models.Model):
@@ -34,8 +34,8 @@ class People(models.Model):
         (1, 'student'),
     )
     type = models.IntegerField(choices=type_choice, default=1)
-    front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE, default=None)
-    my_class = models.ForeignKey(Class, on_delete=models.CASCADE, default=None)
+    front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE)
+    my_class = models.ForeignKey(Class, on_delete=models.CASCADE)
 
 
 class Homework(models.Model):
