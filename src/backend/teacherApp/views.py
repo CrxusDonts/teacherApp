@@ -4,7 +4,7 @@ from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
+from django.core.serializers import serialize
 from .serializers import *
 
 
@@ -27,7 +27,7 @@ class BackendAccountView(viewsets.ModelViewSet):
                 new_backend_account = BackendAccount.objects.create(user=new_user)
                 new_backend_account.save()
                 response_str = 'add manager'
-                add_manager('True', new_backend_account, class_name)
+                add_manager(True, new_backend_account, class_name)
         except IntegrityError:
             return Response("user_name already exists ", status=400)  # 返回bad request 说明user_name已经存在
         except Exception:
@@ -96,6 +96,21 @@ class ClassView(viewsets.ModelViewSet):
         homework.save()
         return Response('New homework success', status=200)
 
+    # 获取我的班级
+    @action(methods=['get'], detail=False)
+    def get_my_class(self, request):
+        try:
+            cur_user = request.user
+            cur_account = BackendAccount.objects.get(user=cur_user)
+            managers = cur_account.account_manager.all()
+            for manager in managers:
+                if manager.get_status_display() == 'owner':
+                    serializer = ClassSerializer(manager.class_name)
+                    return Response(serializer.data, status=200)
+        except Exception:
+            return Response(status=500)
+        return Response(status=500)
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
@@ -160,6 +175,7 @@ class HomeworkView(viewsets.ModelViewSet):
         completion_question.save()
         return Response('New completion_question success', status=200)
 
+
 class CompletionQuestionView(viewsets.ModelViewSet):
     queryset = CompletionQuestion.objects.all()
     serializer_class = CompletionQuestionSerializer
@@ -189,7 +205,7 @@ def register_class(name):
 # 用于添加manager表的函数
 def add_manager(if_teacher, account, class_name):
     try:
-        if_owner = 0 if if_teacher == 'True ' else 1
+        if_owner = 0 if if_teacher else 1
         new_manager = Manager.objects.create(status=if_owner, account=account, class_name=class_name)
         new_manager.save()
     except Exception:

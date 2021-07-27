@@ -9,7 +9,7 @@ class BackendAccount(models.Model):
 
 
 class Class(models.Model):
-    class_name = models.CharField(max_length=10, default='undefined')
+    class_name = models.CharField(max_length=20, default='undefined')
 
 
 class Manager(models.Model):
@@ -18,8 +18,8 @@ class Manager(models.Model):
         (1, 'manager'),
     )
     status = models.IntegerField(choices=status_choice, default=0)
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default='undefined')
-    account = models.ForeignKey(BackendAccount, on_delete=models.CASCADE)
+    class_name = models.ForeignKey(Class, related_name='class_manager', on_delete=models.CASCADE)
+    account = models.ForeignKey(BackendAccount, related_name='account_manager', on_delete=models.CASCADE)
 
 
 class FrontAccount(models.Model):
