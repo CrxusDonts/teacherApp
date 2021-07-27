@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.http import HttpResponse
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -21,15 +20,17 @@ class BackendAccountView(viewsets.ModelViewSet):
         try:
             with transaction.atomic():  # 使用with，这样在with下面的代码如果发生错误 自动回滚
                 new_user = User.objects.create_user(username=user_name, password=password)
+                response_str = 'class create '
                 class_name = register_class(request.data.get('class_name'))
                 new_backend_account = BackendAccount.objects.create(user=new_user)
                 new_backend_account.save()
+                response_str = 'add manager'
                 add_manager('True', new_backend_account, class_name)
         except IntegrityError:
-            return HttpResponse(status=400)  # 返回bad request 说明user_name已经存在
+            return Response("user_name already exists ", status=400)  # 返回bad request 说明user_name已经存在
         except Exception:
-            return HttpResponse(status=500)
-        return HttpResponse(status=200)
+            return Response(response_str + 'failed', status=500)
+        return Response(status=200)
 
     # 更改账户的密码
     @action(methods=['put'], detail=False)
@@ -41,31 +42,37 @@ class BackendAccountView(viewsets.ModelViewSet):
             try:
                 cur_user.set_password(new_password)
                 cur_user.save()
-            except:
-                return HttpResponse(status=500)
+            except Exception:
+                return Response(status=500)
         else:
-            return HttpResponse(status=400)
-        return HttpResponse(status=200)
+            return Response('authentication failed ', status=400)
+        return Response('modify password success', status=200)
 
     # 登陆
     @action(methods=['post'], detail=False)
     def login(self, request):
-        user_name = request.data.get('user_name')
-        password = request.data.get('password')
-        user = authenticate(username=user_name, password=password)
-        if user:
-            # 这里的login是django自带的login，实现用户登录功能
-            login(request, user)
-            return HttpResponse(status=200)
-        else:
-            return HttpResponse(status=400)  # 返回bad request 说明登录失败
+        try:
+            user_name = request.data.get('user_name')
+            password = request.data.get('password')
+            user = authenticate(username=user_name, password=password)
+            if user:
+                # 这里的login是django自带的login，实现用户登录功能
+                login(request, user)
+                return Response('login successfully', status=200)
+            else:
+                return Response('login failed ', status=400)  # 返回bad request 说明登录失败
+        except Exception:
+            return Response(status=500)
 
     # 登出
     @action(methods=['post'], detail=False)
     def logout(self, request):
-        # 这里的logout是django自带的logout，实现用户登出功能，清除session
-        logout(request)
-        return HttpResponse(status=200)
+        try:
+            # 这里的logout是django自带的logout，实现用户登出功能，清除session
+            logout(request)
+            return Response('logout successfully ', status=200)
+        except Exception:
+            return Response(status=500)
 
 
 class ClassView(viewsets.ModelViewSet):
@@ -118,9 +125,9 @@ def register_class(name):
     class_name = name
     try:
         new_class = Class.objects.create(class_name=class_name)
-    except IntegrityError:
-        raise IntegrityError
-    new_class.save()
+        new_class.save()
+    except Exception:
+        raise Exception
     return new_class
 
 
