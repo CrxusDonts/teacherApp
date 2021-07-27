@@ -70,5 +70,11 @@ class CompletionQuestionSerializer(serializers.ModelSerializer):
 
 class CompletionQuestionAnswerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CompletionQuestion
+        model = CompletionQuestionAnswer
+        fields = '__all__'
+
+
+class CompletionQuestionUserAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompletionQuestionUserAnswer
         fields = '__all__'

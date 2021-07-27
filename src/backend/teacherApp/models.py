@@ -81,4 +81,11 @@ class CompletionQuestion(models.Model):
 
 class CompletionQuestionAnswer(models.Model):
     answer = models.CharField(max_length=50, default='undefined')
+    answer_order = models.IntegerField(default=0)
+    question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)
+
+
+class CompletionQuestionUserAnswer(models.Model):
+    answer = models.CharField(max_length=50, default='undefined')
+    answer_order = models.IntegerField(default=0)
     question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)

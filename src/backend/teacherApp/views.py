@@ -96,21 +96,6 @@ class ClassView(viewsets.ModelViewSet):
         homework.save()
         return Response('New homework success', status=200)
 
-    # 获取我的班级
-    @action(methods=['get'], detail=False)
-    def get_my_class(self, request):
-        try:
-            cur_user = request.user
-            cur_account = BackendAccount.objects.get(user=cur_user)
-            managers = cur_account.manager_set.all()
-            for manager in managers:
-                if manager.status.get_status_display() == "owner":
-                    serializer = self.get_serializer(manager)
-                    return Response(serializer.data, status=200)
-            return Response(status=204)  # 返回204代表无内容，即名下不拥有班级
-        except Exception:
-            return Response(status=500)
-
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
@@ -183,6 +168,11 @@ class CompletionQuestionView(viewsets.ModelViewSet):
 class CompletionQuestionAnswerView(viewsets.ModelViewSet):
     queryset = CompletionQuestionAnswer.objects.all()
     serializer_class = CompletionQuestionAnswerSerializer
+
+
+class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
+    queryset = CompletionQuestionUserAnswer.objects.all()
+    serializer_class = CompletionQuestionUserAnswerSerializer
 
 
 # 用于注册班级的函数
