@@ -79,6 +79,20 @@ class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
 
+    # 添加作业
+    @action(methods=['post'], detail=True)
+    def new_homework(self, request, pk):
+        try:
+            clazz = Class.objects.get(id=pk)
+        except Exception:
+            return Response('Class not found', status=404)
+        start_time = request.data.get('start_time')
+        due_time = request.data.get('due_time')
+        repeatable = request.data.get('repeatable')
+        homework = Homework.objects.create(start_time=start_time, due_time=due_time, repeatable=repeatable, the_clazz=clazz)
+        homework.save()
+        return Response('New homework success', status=200)
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()

@@ -4,11 +4,11 @@ from django.db import models, IntegrityError
 
 class BackendAccount(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
-    open_id = models.CharField(default="", max_length=50)
+    open_id = models.CharField(default='', max_length=50)
 
 
 class Class(models.Model):
-    class_name = models.CharField(max_length=10, default="undefined")
+    class_name = models.CharField(max_length=20, default="null")
 
 
 class Manager(models.Model):
@@ -22,11 +22,11 @@ class Manager(models.Model):
 
 
 class FrontAccount(models.Model):
-    open_id = models.CharField(default="", max_length=50)
+    open_id = models.CharField(default='', max_length=50)
 
 
 class People(models.Model):
-    name = models.CharField(default="", max_length=50)
+    name = models.CharField(default='', max_length=50)
     sex_choice = (
         (0, 'female'),
         (1, 'male'),
@@ -45,7 +45,7 @@ class Homework(models.Model):
     start_time = models.DateTimeField()
     due_time = models.DateTimeField()
     repeatable = models.BooleanField(default=False)
-
+    the_clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
 
 class ChoiceQuestion(models.Model):
     text_content = models.TextField(default="null")
