@@ -6,7 +6,9 @@ import Passwordmodify from '../views/passwordModify.vue';
 import Home from '../views/Home.vue';
 import HomeworkManagement from '../views/HomeComponents/HomeworkManagement';
 import StudentManagement from '../views/HomeComponents/StudentManagement';
+import StudentApply from '../views/HomeComponents/StudentApply';
 import AssistantManagement from '../views/HomeComponents/AssistantManagement';
+import AssistantInvite from '../views/HomeComponents/AssistantInvite';
 import GradeByClass from '../views/HomeComponents/GradeByClass';
 import GradeByStudent from '../views/HomeComponents/GradeByStudent';
 import SwitchClass from '../views/HomeComponents/SwitchClass';
@@ -56,9 +58,19 @@ const routes = [{
             component: StudentManagement
         },
         {
+            path: '/studentApply',
+            name: 'StudentApply',
+            component: StudentApply
+        },
+        {
             path: '/assistantManagement',
             name: 'AssistantManagement',
             component: AssistantManagement
+        },
+        {
+            path: '/assistantInvite',
+            name: 'AssistantInvite',
+            component: AssistantInvite
         },
         {
             path: '/gradeByClass',
