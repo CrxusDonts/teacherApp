@@ -5,6 +5,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.serializers import serialize
+from rest_framework.utils import json
+
 from .serializers import *
 
 
@@ -110,6 +112,19 @@ class ClassView(viewsets.ModelViewSet):
         except Exception:
             return Response(status=500)
         return Response(status=500)
+
+    # 获取我管理的（除了我的班级）班级列表
+    @action(methods=['get'], detail=False)
+    def get_manage_class_list(self, request):
+        try:
+            cur_user = request.user
+            cur_account = BackendAccount.objects.get(user=cur_user)
+            managers = cur_account.account_manager.all()
+            class_list = managers.filter(status=1)  # 1代表manager 详细参见models内定义的status
+            serializer = ClassSerializer(class_list, many=True)
+            return Response(serializer.data, status=200)
+        except Exception:
+            return Response(status=500)
 
 
 class ManagerView(viewsets.ModelViewSet):
