@@ -8,7 +8,7 @@ class BackendAccount(models.Model):
 
 
 class Class(models.Model):
-    class_name = models.CharField(max_length=20, default="null")
+    class_name = models.CharField(max_length=10, default='undefined')
 
 
 class Manager(models.Model):
@@ -17,7 +17,7 @@ class Manager(models.Model):
         (1, 'manager'),
     )
     status = models.IntegerField(choices=status_choice, default=0)
-    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default="undefined")
+    class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default='undefined')
     account = models.ForeignKey(BackendAccount, on_delete=models.CASCADE)
 
 
@@ -45,10 +45,10 @@ class Homework(models.Model):
     start_time = models.DateTimeField()
     due_time = models.DateTimeField()
     repeatable = models.BooleanField(default=False)
-    the_clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
+
 
 class ChoiceQuestion(models.Model):
-    text_content = models.TextField(default="null")
+    text_content = models.TextField(default='null')
 
 
 class Options(models.Model):
@@ -73,5 +73,10 @@ class Media(models.Model):
 
 
 class CompletionQuestion(models.Model):
-    text_content = models.TextField(default="null")
+    text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
+
+
+class CompletionQuestionAnswer(models.Model):
+    answer = models.CharField(max_length=50, default='undefined')
+    question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)
