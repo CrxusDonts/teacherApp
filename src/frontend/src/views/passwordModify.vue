@@ -43,7 +43,7 @@ export default {
             } else if (this.newPassword!=this.newPasswordAgain) {
                 this.$message.error('请保证两次密码输入一致！');
             } else {
-                this.$http.post('BackendAccount/change_password/', {//其中的路由需要修改
+                this.$http.put('BackendAccount/change_password/', {//其中的路由需要修改
                     old_password: this.oldPassword,
                     new_password:this.newPassword
                 }).then(response => {//在其中写后端交互方法
