@@ -151,6 +151,17 @@ class HomeworkView(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
 
+    # 添加选择题
+    @action(methods=['post'], detail=True)
+    def new_choice_question(self, request, pk):
+        try:
+            homework = Homework.objects.get(id=pk)
+        except Exception:
+            return Response('Homework not found', status=404)
+        text_content = request.data.get('text_content')
+        choice_question = ChoiceQuestion.objects.create(text_content=text_content, homework=homework)
+        choice_question.save()
+        return Response('New choice_question success', status=200)
 
 class CompletionQuestionView(viewsets.ModelViewSet):
     queryset = CompletionQuestion.objects.all()
