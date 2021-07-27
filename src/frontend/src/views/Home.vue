@@ -9,7 +9,6 @@
                 <el-menu-item index="studentManagement">学生管理</el-menu-item>
                 <el-menu-item index="studentApply">学生申请 <el-badge :value="12" /></el-menu-item>
                 <el-menu-item index="assistantManagement">助教管理</el-menu-item>
-                <el-menu-item index="assistantInvite">邀请助教</el-menu-item>
                 <el-menu-item index="inviteMe">邀请我的 <el-badge :value="12" /></el-menu-item>
             </el-submenu>
             <el-submenu index="grade">

@@ -8,7 +8,6 @@ import HomeworkManagement from '../views/HomeComponents/HomeworkManagement';
 import StudentManagement from '../views/HomeComponents/StudentManagement';
 import StudentApply from '../views/HomeComponents/StudentApply';
 import AssistantManagement from '../views/HomeComponents/AssistantManagement';
-import AssistantInvite from '../views/HomeComponents/AssistantInvite';
 import InviteMe from '../views/HomeComponents/InviteMe';
 import GradeByClass from '../views/HomeComponents/GradeByClass';
 import GradeByStudent from '../views/HomeComponents/GradeByStudent';
@@ -67,11 +66,6 @@ const routes = [{
             path: '/assistantManagement',
             name: 'AssistantManagement',
             component: AssistantManagement
-        },
-        {
-            path: '/assistantInvite',
-            name: 'AssistantInvite',
-            component: AssistantInvite
         },
         {
             path: '/inviteMe',
