@@ -13,6 +13,7 @@ router.register('Options', views.OptionsView)
 router.register('ChoiceQuestionUserAnswer', views.ChoiceQuestionUserAnswerView)
 router.register('Homework', views.HomeworkView)
 router.register('Media', views.MediaView)
+router.register('Media', views.CompletionQuestionView)
 
 urlpatterns = [
     path('', include(router.urls)),

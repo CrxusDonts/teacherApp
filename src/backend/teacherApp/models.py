@@ -12,8 +12,11 @@ class Class(models.Model):
 
 
 class Manager(models.Model):
-    # True 是owner False不是
-    status = models.BooleanField(default=False)
+    status_choice = (
+        (0, 'owner'),
+        (1, 'manager'),
+    )
+    status = models.IntegerField(choices=status_choice, default=0)
     class_name = models.ForeignKey(Class, on_delete=models.CASCADE, default="undefined")
     account = models.ForeignKey(BackendAccount, on_delete=models.CASCADE)
 
@@ -67,3 +70,8 @@ class Media(models.Model):
         (1, 'video'),
     )
     file_type = models.IntegerField(choices=type_file, default=1)
+
+
+class CompletionQuestion(models.Model):
+    text_content = models.TextField(default="null")
+    homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)

@@ -55,7 +55,14 @@ class OptionsSerializer(serializers.ModelSerializer):
         model = Options
         fields = '__all__'
 
+
 class HomeworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Homework
+        fields = '__all__'
+
+
+class CompletionQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CompletionQuestion
         fields = '__all__'

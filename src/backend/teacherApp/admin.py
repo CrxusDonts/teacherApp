@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import *
 
-# Register your models here.
+
 admin.site.register(BackendAccount)
 admin.site.register(Class)
 admin.site.register(Manager)
@@ -12,3 +12,4 @@ admin.site.register(Options)
 admin.site.register(ChoiceQuestionUserAnswer)
 admin.site.register(Media)
 admin.site.register(Homework)
+admin.site.register(CompletionQuestion)

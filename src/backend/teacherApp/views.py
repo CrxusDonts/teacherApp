@@ -120,6 +120,11 @@ class HomeworkView(viewsets.ModelViewSet):
     serializer_class = HomeworkSerializer
 
 
+class CompletionQuestionView(viewsets.ModelViewSet):
+    queryset = CompletionQuestion.objects.all()
+    serializer_class = CompletionQuestionSerializer
+
+
 # 用于注册班级的函数
 def register_class(name):
     class_name = name
