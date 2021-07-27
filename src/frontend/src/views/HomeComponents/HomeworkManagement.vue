@@ -45,7 +45,6 @@ export default {
     name: 'HomeworkManagement',
     data() {
         return {
-            search: '',
             tableData: [{
                 date: '2016-05-03',
                 name: '王小虎',
