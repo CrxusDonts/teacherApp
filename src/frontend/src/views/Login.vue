@@ -38,19 +38,16 @@ export default {
                 this.$message.error('请输入密码！');
                 return;
             }else {
-                this.axios.post('BackendAccount/login',{//其中的路由需要修改
-                    name: this.userName,
+                this.$http.post('BackendAccount/login/',{//其中的路由需要修改
+                    user_name: this.userName,
                     password: this.password,
-                })
-                    .then(res => {//在其中写后端交互方法
-                        // console.log("输出response.data", res.data);
-                        // console.log("输出response.data.status", res.data.status);
-                        if (res.data.status === 200) {//200是判断http请求是否成功
-                            this.$router.push({ path: '/' });
-                        } else {
-                            alert('登录失败！');
-                        }
-                    });
+                }).then(response => {
+                    if (response.status === 200) {//200是判断http请求是否成功
+                        this.$router.push({path: '/home', query: {user_name: this.userName}});
+                    } else {
+                        this.$message.error('登录失败！');
+                    }
+                });
             }
         },
         register(){
