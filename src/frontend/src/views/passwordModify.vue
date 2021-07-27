@@ -27,38 +27,32 @@ export default {
     name: 'passwordModify',
     data: function () {
         return {
-            userName: '',
             oldPassword: '',
             newPassword: '',
             newPasswordAgain: ''
         };
     },
-    mounted: function () {
-        this.userName = this.$route.query.userName;
-        console.log(this.userName);
-    },
     methods: {
         modify() {
             if (!this.oldPassword) {
-                this.$message.error('请输入账号！');//message组件弹出框
+                this.$message.error('请输入原密码！');//message组件弹出框
             } else if (!this.newPassword) {
-                this.$message.error('请输入密码！');
+                this.$message.error('请输入新密码！');
             } else if (!this.newPasswordAgain) {
-                this.$message.error('请再次输入密码！');
+                this.$message.error('请再次输入新密码！');
+            } else if (this.newPassword!=this.newPasswordAgain) {
+                this.$message.error('请保证两次密码输入一致！');
             } else {
-                this.axios.put('BackendAccount/changePassword/', {//其中的路由需要修改
-                    user_name: this.userName,
-                    password: this.password,
-                })
-                    .then(res => {//在其中写后端交互方法
-                        // console.log("输出response.data", res.data);
-                        // console.log("输出response.data.status", res.data.status);
-                        if (res.data.status === 200) {//200是判断http请求是否成功
-                            this.$router.push({path: '/'});
-                        } else {
-                            alert('密码修改失败！');
-                        }
-                    });
+                this.$http.post('BackendAccount/change_password/', {//其中的路由需要修改
+                    old_password: this.oldPassword,
+                    new_password:this.newPassword
+                }).then(response => {//在其中写后端交互方法
+                    if (response.status === 200) {//200是判断http请求是否成功
+                        this.$message.error('密码修改成功，请重新登录');
+                    } else {
+                        this.$message.error('密码修改失败，请重新修改');
+                    }
+                });
             }
         }
     }
