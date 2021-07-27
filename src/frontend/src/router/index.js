@@ -9,6 +9,7 @@ import StudentManagement from '../views/HomeComponents/StudentManagement';
 import StudentApply from '../views/HomeComponents/StudentApply';
 import AssistantManagement from '../views/HomeComponents/AssistantManagement';
 import AssistantInvite from '../views/HomeComponents/AssistantInvite';
+import InviteMe from '../views/HomeComponents/InviteMe';
 import GradeByClass from '../views/HomeComponents/GradeByClass';
 import GradeByStudent from '../views/HomeComponents/GradeByStudent';
 import SwitchClass from '../views/HomeComponents/SwitchClass';
@@ -40,7 +41,7 @@ const routes = [{
     name: 'Passwordmodify',
     component: Passwordmodify
 },
-// 主页
+// 主页及其子页面
 {
     path: '/home',
     name: 'Home',
@@ -71,6 +72,11 @@ const routes = [{
             path: '/assistantInvite',
             name: 'AssistantInvite',
             component: AssistantInvite
+        },
+        {
+            path: '/inviteMe',
+            name: 'InviteMe',
+            component: InviteMe
         },
         {
             path: '/gradeByClass',
