@@ -35,7 +35,7 @@ export default {
     },
     components: {Header},
     mounted: function () {
-        this.userName = this.$route.query.userName;
+        this.userName = this.$route.query.user_name;
     },
     methods: {
         handleSelect(key) {

@@ -35,13 +35,10 @@ export default {
         doRegister() {
             if (!this.userName) {
                 this.$message.error('请输入账号！');//message组件弹出框
-                return;
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
-                return;
             } else if (!this.classname) {
                 this.$message.error('请输入班级！');
-                return;
             } else {
                 /* this.$router.push({ path: "/" }); */ //无需向后台提交数据，方便前台调试,与后端交互时可以删除
                 /* console.log(this.userName); */
@@ -57,7 +54,6 @@ export default {
                     }else {
                         this.$message.error('注册失败！');
                     }
-                    
                 });
             }
         }
