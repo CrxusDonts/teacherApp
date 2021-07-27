@@ -11,7 +11,7 @@
                           auto-complete="off" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input type="text" v-model="classId" prefix-icon="el-icon-menu"
+                <el-input type="text" v-model="classname" prefix-icon="el-icon-menu"
                           auto-complete="off" placeholder="班级" v-on:keyup.enter.native="doRegister"></el-input>
             </el-form-item>
             <el-form-item>
@@ -28,7 +28,7 @@ export default {
         return {
             userName: '',
             password: '',
-            classId: ''
+            classname: ''
         };
     },
     methods: {
@@ -39,23 +39,26 @@ export default {
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
                 return;
-            } else if (!this.classid) {
+            } else if (!this.classname) {
                 this.$message.error('请输入班级！');
                 return;
             } else {
                 /* this.$router.push({ path: "/" }); */ //无需向后台提交数据，方便前台调试,与后端交互时可以删除
-                console.log(this.userName);
-                this.$http.post('BackendAccount/register/', {
+                /* console.log(this.userName); */
+                this.$http.post('BackendAccount/register_teacher/', {
                     user_name: this.userName,
-                    password: this.password
+                    password: this.password,
+                    class_name:this.classname
                 }).then(response => {
-                    if (response.data !== 'The user exist') {//200是判断http请求是否成功
-                        this.$router.push({path: '/home', query: {userName: this.userName}});
-                    } else {
-                        alert('登录失败！');
+                    if (response.status === 200) {//200是判断http请求是否成功
+                        this.$router.push({path: '/home', query: {user_name: this.userName}});
+                    } else if (response.status === 400){
+                        this.$message.error('您注册的账号已存在，请重新注册！');
+                    }else {
+                        this.$message.error('注册失败！');
                     }
+                    
                 });
-                this.$router.push({path: '/register'});
             }
         }
     }

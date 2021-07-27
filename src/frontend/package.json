@@ -34,7 +34,7 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.20.1",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.14"
   },
   "eslintConfig": {
     "root": true,
