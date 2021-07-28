@@ -215,6 +215,11 @@ class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
     serializer_class = SubjectiveQuestionUserAnswerSerializer
 
 
+class TeacherCommentView(viewsets.ModelViewSet):
+    queryset = TeacherComment.objects.all()
+    serializer_class = TeacherCommentSerializer
+
+
 # 用于注册班级的函数
 def register_class(name):
     class_name = name

@@ -90,3 +90,9 @@ class SubjectiveQuestionUserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectiveQuestionUserAnswer
         fields = '__all__'
+
+
+class TeacherCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeacherComment
+        fields = '__all__'
