@@ -92,8 +92,8 @@ class ClassView(viewsets.ModelViewSet):
         start_time = request.data.get('start_time')
         due_time = request.data.get('due_time')
         repeatable = request.data.get('repeatable')
-        homework = Homework.objects.create(start_time=start_time, due_time=due_time, repeatable=repeatable,
-                                           the_clazz=clazz)
+        homework = Homework.objects.create(start_time=start_time, due_time=due_time,
+                                           repeatable=repeatable, clazz=clazz)
         homework.save()
         return Response('New homework succeed.')
 
@@ -103,11 +103,9 @@ class ClassView(viewsets.ModelViewSet):
         try:
             cur_user = request.user
             cur_account = BackendAccount.objects.get(user=cur_user)
-            managers = cur_account.account_manager.all()
-            for manager in managers:
-                if manager.get_status_display() == 'owner':
-                    serializer = ClassSerializer(manager.class_name)
-                    return Response(serializer.data)
+            clazz = cur_account.account_manager.get(is_owner=True).clazz
+            serializer = ClassSerializer(clazz)
+            return Response(serializer.data)
         except Exception:
             return Response('Get my own class failed.')
 
@@ -118,7 +116,7 @@ class ClassView(viewsets.ModelViewSet):
             cur_user = request.user
             cur_account = BackendAccount.objects.get(user=cur_user)
             managers = cur_account.account_manager.all()
-            class_list = managers.filter(status=1)  # 1代表manager 详细参见models内定义的status
+            class_list = managers.filter(is_owner=False)
             serializer = ClassSerializer(class_list, many=True)
             return Response(serializer.data)
         except Exception:
@@ -216,10 +214,9 @@ def register_class(name):
 
 
 # 用于添加manager表的函数
-def add_manager(if_teacher, account, class_name):
+def add_manager(is_owner, account, class_name):
     try:
-        if_owner = 0 if if_teacher else 1
-        new_manager = Manager.objects.create(status=if_owner, account=account, class_name=class_name)
+        new_manager = Manager.objects.create(is_owner=is_owner, account=account, class_name=class_name)
         new_manager.save()
     except Exception:
         raise Exception

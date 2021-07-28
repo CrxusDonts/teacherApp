@@ -13,12 +13,8 @@ class Class(models.Model):
 
 
 class Manager(models.Model):
-    status_choice = (
-        (0, 'owner'),
-        (1, 'manager'),
-    )
-    status = models.IntegerField(choices=status_choice, default=0)
-    class_name = models.ForeignKey(Class, related_name='class_manager', on_delete=models.CASCADE)
+    is_owner = models.BooleanField(default=False)
+    clazz = models.ForeignKey(Class, related_name='class_manager', on_delete=models.CASCADE)
     account = models.ForeignKey(BackendAccount, related_name='account_manager', on_delete=models.CASCADE)
 
 
@@ -39,14 +35,14 @@ class People(models.Model):
     )
     type = models.IntegerField(choices=type_choice, default=1)
     front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE)
-    my_class = models.ForeignKey(Class, on_delete=models.CASCADE)
+    clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
 
 
 class Homework(models.Model):
     start_time = models.DateTimeField()
     due_time = models.DateTimeField()
     repeatable = models.BooleanField(default=False)
-    the_clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
+    clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
 
 class ChoiceQuestion(models.Model):
     text_content = models.TextField(default='null')
