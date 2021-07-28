@@ -32,17 +32,15 @@ export default {
     methods: {
         login() {
             if (!this.userName) {
-                this.$message.error('请输入账号！');// message组件弹出框
-                return;
+                this.$message.error('请输入账号！');
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
-                return;
             } else {
-                this.$http.post('BackendAccount/login/', { // 其中的路由需要修改
+                this.$http.post('BackendAccount/login/', {
                     user_name: this.userName,
                     password: this.password
                 }).then(response => {
-                    if (response.status === 200) { // 200是判断http请求是否成功
+                    if (response.data === 'Login succeed.') {
                         this.$router.push({ path: '/home', query: { user_name: this.userName }});
                     } else {
                         alert('登录失败！');

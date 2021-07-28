@@ -34,7 +34,7 @@ class BackendAccountView(viewsets.ModelViewSet):
                 response_str = 'Add manager '
                 add_manager(True, new_backend_account, clazz)
         except IntegrityError:
-            return Response("User already existed.")
+            return Response('User already existed.')
         except Exception:
             return Response(response_str + 'failed.')
         return Response('Register succeed.')

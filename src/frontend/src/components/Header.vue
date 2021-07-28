@@ -38,6 +38,9 @@ export default {
             this.$router.push({ path: '/passwordModify', query: { userName: this.userName }});
         },
         exit() {
+            this.$http.post('BackendAccount/logout/').then(response => {
+                console.log(response);
+            });
             this.$router.push({ path: '/' });
         }
     }

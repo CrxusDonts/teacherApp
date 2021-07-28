@@ -34,22 +34,20 @@ export default {
     methods: {
         doRegister() {
             if (!this.userName) {
-                this.$message.error('请输入账号！');// message组件弹出框
+                this.$message.error('请输入账号！');
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
             } else if (!this.classname) {
                 this.$message.error('请输入班级！');
             } else {
-                /* this.$router.push({ path: "/" }); */ // 无需向后台提交数据，方便前台调试,与后端交互时可以删除
-                /* console.log(this.userName); */
                 this.$http.post('BackendAccount/register_teacher/', {
                     user_name: this.userName,
                     password: this.password,
                     class_name: this.classname
                 }).then(response => {
-                    if (response.status === 200) { // 200是判断http请求是否成功
+                    if (response.data === 'Register succeed.') {
                         this.$router.push({ path: '/home', query: { user_name: this.userName }});
-                    } else if (response.status === 400) {
+                    } else if (response.data === 'User already existed.') {
                         this.$message.error('您注册的账号已存在，请重新注册！');
                     } else {
                         this.$message.error('注册失败！');

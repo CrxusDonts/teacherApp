@@ -40,7 +40,6 @@ export default {
     methods: {
         handleSelect(key) {
             this.$router.push({ path: key });
-            // console.log(key, keyPath);
         }
     }
 };
