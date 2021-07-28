@@ -210,6 +210,11 @@ class SubjectiveQuestionView(viewsets.ModelViewSet):
     serializer_class = SubjectiveQuestionSerializer
 
 
+class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
+    queryset = SubjectiveQuestionUserAnswer.objects.all()
+    serializer_class = SubjectiveQuestionUserAnswerSerializer
+
+
 # 用于注册班级的函数
 def register_class(name):
     class_name = name

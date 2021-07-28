@@ -84,3 +84,9 @@ class SubjectiveQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubjectiveQuestion
         fields = '__all__'
+
+
+class SubjectiveQuestionUserAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectiveQuestionUserAnswer
+        fields = '__all__'
