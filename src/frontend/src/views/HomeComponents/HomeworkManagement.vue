@@ -25,13 +25,9 @@
             </el-table-column>
             <el-table-column align="right">
                 <template slot="header">
-                    <el-row :gutter="10" type="flex" justify="end">
-                        <el-col :span="6">
-                            <el-button type="success" plain icon="el-icon-plus" size="mini"
-                                       @click="newHomeworkDialogVisible = true">新建
-                            </el-button>
-                        </el-col>
-                    </el-row>
+                    <el-button type="success" plain icon="el-icon-plus" size="mini"
+                               @click="newHomeworkFormVisible = true">新建
+                    </el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-button type="primary" plain icon="el-icon-edit" size="mini"
@@ -49,16 +45,29 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!--气泡提示框 -->
-        <el-dialog
-            title="提示"
-            :visible.sync="newHomeworkDialogVisible"
-            width="30%">
-            <span>确定添加新作业吗</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="newHomeworkDialogVisible = false">取 消</el-button>
+        <!--表单提示框 -->
+        <el-dialog title="新建作业" :visible.sync="newHomeworkFormVisible">
+            <el-form :model="form">
+                <el-form-item label="作业名称" :label-width="formLabelWidth">
+                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="时间" :label-width="formLabelWidth">
+                    <div class="block">
+                        <el-date-picker
+                            v-model="form.timeValue"
+                            :destroy-on-close="true"
+                            type="datetimerange"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :default-time="['12:00:00']">
+                        </el-date-picker>
+                    </div>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="form={};newHomeworkFormVisible = false;">取 消</el-button>
                 <el-button type="primary" @click="newHomework">确 定</el-button>
-            </span>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -81,13 +90,20 @@ export default {
                 name: '王小虎',
                 address: '上海市普陀区金沙江路 1518 弄'
             }],
-            newHomeworkDialogVisible: false
+            form: {
+                name: '',
+                timeValue: ''
+            },
+            newHomeworkFormVisible: false,
+            formLabelWidth: '120px'
         };
     },
     methods: {
         newHomework() {
-            console.log(1);
-            this.newHomeworkDialogVisible = false;
+            this.newHomeworkFormVisible = false;
+            // TODO 像后端发送请求
+            // 清空表单
+            this.form = {};
         },
         handleEdit(index, row) {
             // TODO Edit
