@@ -60,11 +60,11 @@ export default {
             tableData: [{
                 id: '12',
                 name: '果果果',
-                status: '老师',
+                status: '老师'
             }, {
                 id: '20',
                 name: '王小虎',
-                status: '助教',
+                status: '助教'
             }],
             form: {
                 id: ''
@@ -76,19 +76,17 @@ export default {
     methods: {
         // 移除助教
         handleRemove(index, row) {
-            console.log(index, row);
+            // console.log(index, row);
         },
-        // 邀请助教
-        invite () {
+        invite() {
             this.dialogFormVisible = false;
             // 向后端发送请求
 
-            this.form.id='';
+            this.form.id = '';
         },
-        // 取消邀请
-        cancel () {
+        cancel() {
             this.dialogFormVisible = false;
-            this.form.id='';
+            this.form.id = '';
         }
     }
 };
