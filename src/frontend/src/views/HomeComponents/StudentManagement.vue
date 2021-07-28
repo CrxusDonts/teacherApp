@@ -26,8 +26,8 @@
             align="right"
             label="操作">
             <template slot-scope="scope">
-                <el-button plain icon="el-icon-edit" size="mini">编辑学生</el-button>
-                <el-button type="danger" plain icon="el-icon-delete" size="mini">移除学生</el-button>
+                <el-button plain icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑学生</el-button>
+                <el-button type="danger" plain icon="el-icon-delete" size="mini" @click="handleRemove(scope.$index, scope.row)">移除学生</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -40,15 +40,23 @@ export default {
         return {
             search: '',
             tableData: [{
-                id:'12',
+                id: '12',
                 name: '果果果',
-                gender: '男',
+                gender: '男'
             }, {
-                id:'19',
+                id: '19',
                 name: '王小虎',
-                gender: '男',
+                gender: '男'
             }]
         };
+    },
+    methods: {
+        handleEdit(index, row) {
+            // TODO 与后端交互
+        },
+        handleRemove(index, row) {
+            // TODO 与后端交互
+        }
     }
 };
 </script>

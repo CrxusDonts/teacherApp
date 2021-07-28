@@ -66,11 +66,11 @@ export default {
         };
     },
     methods: {
-        handleAccept(index,row) {
-            console.log(index,row);
+        handleAccept(index, row) {
+            // TODO 与后端交互
         },
-        handleRefuse(index,row) {
-            console.log(index,row);
+        handleRefuse(index, row) {
+            // TODO 与后端交互
         }
     }
 };
