@@ -205,6 +205,11 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
     serializer_class = CompletionQuestionUserAnswerSerializer
 
 
+class SubjectiveQuestionView(viewsets.ModelViewSet):
+    queryset = SubjectiveQuestion.objects.all()
+    serializer_class = SubjectiveQuestionSerializer
+
+
 # 用于注册班级的函数
 def register_class(name):
     class_name = name

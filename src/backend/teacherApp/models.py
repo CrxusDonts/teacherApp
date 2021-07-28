@@ -23,16 +23,8 @@ class FrontAccount(models.Model):
 
 class People(models.Model):
     name = models.CharField(default='', max_length=50)
-    sex_choice = (
-        (0, 'female'),
-        (1, 'male'),
-    )
-    sex = models.IntegerField(choices=sex_choice, default=1)
-    type_choice = (
-        (0, 'teacher'),
-        (1, 'student'),
-    )
-    type = models.IntegerField(choices=type_choice, default=1)
+    is_male = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
     front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE)
     clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
 
@@ -85,3 +77,8 @@ class CompletionQuestionUserAnswer(models.Model):
     answer = models.CharField(max_length=50, default='undefined')
     answer_order = models.IntegerField(default=0)
     question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)
+
+
+class SubjectiveQuestion(models.Model):
+    text_content = models.TextField(default='null')
+    homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)

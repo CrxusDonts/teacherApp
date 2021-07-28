@@ -78,3 +78,9 @@ class CompletionQuestionUserAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CompletionQuestionUserAnswer
         fields = '__all__'
+
+
+class SubjectiveQuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectiveQuestion
+        fields = '__all__'
