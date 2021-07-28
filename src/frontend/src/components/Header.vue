@@ -30,15 +30,15 @@
 export default {
     name: 'Header',
     props: ['userName'],
-    data: function () {
+    data: function() {
         return {};
     },
     methods: {
         passwordModify() {
-            this.$router.push({path: '/passwordModify', query: {userName: this.userName}});
+            this.$router.push({ path: '/passwordModify', query: { userName: this.userName }});
         },
         exit() {
-            this.$router.push({path: '/'});
+            this.$router.push({ path: '/' });
         }
     }
 };

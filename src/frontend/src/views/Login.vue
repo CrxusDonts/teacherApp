@@ -2,7 +2,7 @@
     <div id="poster">
         <el-form ref="loginForm" class="login-container" label-position="left"
                  label-width="0px">
-            <h3 class="login_title">系统登录</h3>
+            <h3 class="login-title">系统登录</h3>
             <el-form-item>
                 <el-input type="text" v-model="userName" prefix-icon="el-icon-user"
                           auto-complete="off" placeholder="账号"></el-input>
@@ -13,8 +13,8 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button class="methodButton" type="primary" @click="login">登录</el-button>
-                <el-button class="methodButton" type="primary" @click="register">注册</el-button>
+                <el-button class="method-Button" type="primary" @click="login">登录</el-button>
+                <el-button class="method-Button" type="primary" @click="register">注册</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -23,7 +23,7 @@
 <script>
 export default {
     name: 'Login',
-    data: function () {
+    data: function() {
         return {
             userName: '',
             password: ''
@@ -32,25 +32,25 @@ export default {
     methods: {
         login() {
             if (!this.userName) {
-                this.$message.error('请输入账号！');//message组件弹出框
+                this.$message.error('请输入账号！');// message组件弹出框
                 return;
-            }else if (!this.password) {
+            } else if (!this.password) {
                 this.$message.error('请输入密码！');
                 return;
-            }else {
-                this.$http.post('BackendAccount/login/',{//其中的路由需要修改
+            } else {
+                this.$http.post('BackendAccount/login/', { // 其中的路由需要修改
                     user_name: this.userName,
-                    password: this.password,
+                    password: this.password
                 }).then(response => {
-                    if (response.status === 200) {//200是判断http请求是否成功
-                        this.$router.push({path: '/home', query: {user_name: this.userName}});
+                    if (response.status === 200) { // 200是判断http请求是否成功
+                        this.$router.push({ path: '/home', query: { user_name: this.userName }});
                     } else {
-                        this.$message.error('登录失败！');
+                        alert('登录失败！');
                     }
                 });
             }
         },
-        register(){
+        register() {
             this.$router.push({ path: '/register' });
         }
     }
@@ -77,13 +77,13 @@ export default {
     box-shadow: 0 0 20px;
 }
 
-.login_title {
+.login-title {
     margin: 0 auto 40px;
     text-align: center;
     color: #505458;
 }
 
-.methodButton {
+.method-Button {
     width: 80px;
     height: 40px;
     border: none;

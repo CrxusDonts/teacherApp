@@ -2,7 +2,7 @@
     <div id="poster">
         <el-form ref="loginForm" class="passwordModify-container" label-position="left"
                  label-width="0px">
-            <h3 class="login_title">修改密码</h3>
+            <h3 class="login-title">修改密码</h3>
             <el-form-item>
                 <el-input type="password" v-model="oldPassword" prefix-icon="el-icon-lock"
                           auto-complete="off" placeholder="原密码"></el-input>
@@ -16,7 +16,7 @@
                           auto-complete="off" placeholder="再次输入新密码" v-on:keyup.enter.native="modify"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button class="methodButton" type="primary" @click="modify">确定修改</el-button>
+                <el-button class="method-Button" type="primary" @click="modify">确定修改</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -25,7 +25,7 @@
 <script>
 export default {
     name: 'passwordModify',
-    data: function () {
+    data: function() {
         return {
             oldPassword: '',
             newPassword: '',
@@ -35,19 +35,19 @@ export default {
     methods: {
         modify() {
             if (!this.oldPassword) {
-                this.$message.error('请输入原密码！');//message组件弹出框
+                this.$message.error('请输入原密码！');// message组件弹出框
             } else if (!this.newPassword) {
                 this.$message.error('请输入新密码！');
             } else if (!this.newPasswordAgain) {
                 this.$message.error('请再次输入新密码！');
-            } else if (this.newPassword!=this.newPasswordAgain) {
+            } else if (this.newPassword !== this.newPasswordAgain) {
                 this.$message.error('请保证两次密码输入一致！');
             } else {
-                this.$http.put('BackendAccount/change_password/', {//其中的路由需要修改
+                this.$http.put('BackendAccount/change_password/', { // 其中的路由需要修改
                     old_password: this.oldPassword,
-                    new_password:this.newPassword
-                }).then(response => {//在其中写后端交互方法
-                    if (response.status === 200) {//200是判断http请求是否成功
+                    new_password: this.newPassword
+                }).then(response => { // 在其中写后端交互方法
+                    if (response.status === 200) { // 200是判断http请求是否成功
                         this.$message.error('密码修改成功，请重新登录');
                     } else {
                         this.$message.error('密码修改失败，请重新修改');
@@ -79,13 +79,13 @@ export default {
     box-shadow: 0 0 20px;
 }
 
-.login_title {
+.login-title {
     margin: 0 auto 40px;
     text-align: center;
     color: #505458;
 }
 
-.methodButton {
+.method-Button {
     width: 100px;
     height: 40px;
     border: none;

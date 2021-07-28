@@ -1,7 +1,7 @@
 <template>
     <div>
         <Header v-bind:userName="userName"></Header>
-        <el-menu class="elMenu" default-active="homeworkManagement" mode="horizontal" @select="handleSelect"
+        <el-menu class="el-Menu" default-active="homeworkManagement" mode="horizontal" @select="handleSelect"
                  :router="true">
             <el-menu-item index="homeworkManagement">作业管理</el-menu-item>
             <el-submenu index="management">
@@ -33,13 +33,13 @@ export default {
             userName: 'admin'
         };
     },
-    components: {Header},
-    mounted: function () {
+    components: { Header },
+    mounted: function() {
         this.userName = this.$route.query.user_name;
     },
     methods: {
         handleSelect(key) {
-            this.$router.push({path: key});
+            this.$router.push({ path: key });
             // console.log(key, keyPath);
         }
     }
@@ -48,7 +48,7 @@ export default {
 
 <style scoped>
 
-.elMenu {
+.el-Menu {
     margin-top: 5px;
     margin-right: 5px;
     margin-left: 5px;

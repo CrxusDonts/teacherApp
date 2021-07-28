@@ -13,7 +13,6 @@ import GradeByClass from '../views/HomeComponents/GradeByClass';
 import GradeByStudent from '../views/HomeComponents/GradeByStudent';
 import SwitchClass from '../views/HomeComponents/SwitchClass';
 
-
 Vue.use(VueRouter);
 
 const originalPush = VueRouter.prototype.push;
@@ -46,7 +45,7 @@ const routes = [{
     name: 'Home',
     component: Home,
     redirect: '/homeworkManagement',
-    children:[
+    children: [
         {
             path: '/homeworkManagement',
             name: 'HomeworkManagement',
@@ -92,9 +91,8 @@ const routes = [{
 ];
 
 const router = new VueRouter({
-    mode:'history',
+    mode: 'history',
     routes
 });
-
 
 export default router;
