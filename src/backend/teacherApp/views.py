@@ -22,19 +22,19 @@ class BackendAccountView(viewsets.ModelViewSet):
         user_name = request.data.get('user_name')
         password = request.data.get('password')
         try:
-            with transaction.atomic():  # 使用with，这样在with下面的代码如果发生错误 自动回滚
+            with transaction.atomic():
                 new_user = User.objects.create_user(username=user_name, password=password)
-                response_str = 'class create '
+                response_str = 'Class create '
                 class_name = register_class(request.data.get('class_name'))
                 new_backend_account = BackendAccount.objects.create(user=new_user)
                 new_backend_account.save()
-                response_str = 'add manager'
+                response_str = 'Add manager '
                 add_manager(True, new_backend_account, class_name)
         except IntegrityError:
-            return Response("user_name already exists ", status=400)  # 返回bad request 说明user_name已经存在
+            return Response("User already existed.")
         except Exception:
-            return Response(response_str + 'failed', status=500)
-        return Response(status=200)
+            return Response(response_str + 'failed.')
+        return Response('Register succeed.')
 
     # 更改账户的密码
     @action(methods=['put'], detail=False)
@@ -47,10 +47,10 @@ class BackendAccountView(viewsets.ModelViewSet):
                 cur_user.set_password(new_password)
                 cur_user.save()
             except Exception:
-                return Response(status=500)
+                return Response('Modify password failed.')
         else:
-            return Response('authentication failed ', status=400)
-        return Response('modify password success', status=200)
+            return Response('Old password is not correct.')
+        return Response('Modify password succeed.')
 
     # 登陆
     @action(methods=['post'], detail=False)
@@ -60,11 +60,10 @@ class BackendAccountView(viewsets.ModelViewSet):
             password = request.data.get('password')
             user = authenticate(username=user_name, password=password)
             if user:
-                # 这里的login是django自带的login，实现用户登录功能
                 login(request, user)
-                return Response('login successfully', status=200)
+                return Response('Login succeed.')
             else:
-                return Response('login failed ', status=400)  # 返回bad request 说明登录失败
+                return Response('Login failed.')
         except Exception:
             return Response(status=500)
 
@@ -72,11 +71,11 @@ class BackendAccountView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def logout(self, request):
         try:
-            # 这里的logout是django自带的logout，实现用户登出功能，清除session
             logout(request)
-            return Response('logout successfully ', status=200)
+            return Response('logout succeed.')
         except Exception:
-            return Response(status=500)
+            return Response('logout failed.')
+
 
 
 class ClassView(viewsets.ModelViewSet):
@@ -89,14 +88,14 @@ class ClassView(viewsets.ModelViewSet):
         try:
             clazz = Class.objects.get(id=pk)
         except Exception:
-            return Response('Class not found', status=404)
+            return Response('Class not found.')
         start_time = request.data.get('start_time')
         due_time = request.data.get('due_time')
         repeatable = request.data.get('repeatable')
         homework = Homework.objects.create(start_time=start_time, due_time=due_time, repeatable=repeatable,
                                            the_clazz=clazz)
         homework.save()
-        return Response('New homework success', status=200)
+        return Response('New homework succeed.')
 
     # 获取我的班级
     @action(methods=['get'], detail=False)
@@ -108,10 +107,9 @@ class ClassView(viewsets.ModelViewSet):
             for manager in managers:
                 if manager.get_status_display() == 'owner':
                     serializer = ClassSerializer(manager.class_name)
-                    return Response(serializer.data, status=200)
+                    return Response(serializer.data)
         except Exception:
-            return Response(status=500)
-        return Response(status=500)
+            return Response('Get my own class failed.')
 
     # 获取我管理的（除了我的班级）班级列表
     @action(methods=['get'], detail=False)
@@ -122,9 +120,9 @@ class ClassView(viewsets.ModelViewSet):
             managers = cur_account.account_manager.all()
             class_list = managers.filter(status=1)  # 1代表manager 详细参见models内定义的status
             serializer = ClassSerializer(class_list, many=True)
-            return Response(serializer.data, status=200)
+            return Response(serializer.data)
         except Exception:
-            return Response(status=500)
+            return Response('Get my manage class failed.')
 
 
 class ManagerView(viewsets.ModelViewSet):
@@ -172,11 +170,11 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             homework = Homework.objects.get(id=pk)
         except Exception:
-            return Response('Homework not found', status=404)
+            return Response('Homework not found.')
         text_content = request.data.get('text_content')
         choice_question = ChoiceQuestion.objects.create(text_content=text_content, homework=homework)
         choice_question.save()
-        return Response('New choice_question success', status=200)
+        return Response('New choice question succeed.')
 
     # 添加填空题
     @action(methods=['post'], detail=True)
@@ -184,11 +182,11 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             homework = Homework.objects.get(id=pk)
         except Exception:
-            return Response('Homework not found', status=404)
+            return Response('Homework not found.')
         text_content = request.data.get('text_content')
         completion_question = CompletionQuestion.objects.create(text_content=text_content, homework=homework)
         completion_question.save()
-        return Response('New completion_question success', status=200)
+        return Response('New completion question succeed.')
 
 
 class CompletionQuestionView(viewsets.ModelViewSet):
