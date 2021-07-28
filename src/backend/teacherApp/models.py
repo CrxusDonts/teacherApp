@@ -2,7 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models, IntegrityError
 
 
-
 class BackendAccount(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE, null=True)
     open_id = models.CharField(default='', max_length=50)
@@ -43,6 +42,7 @@ class Homework(models.Model):
     due_time = models.DateTimeField()
     repeatable = models.BooleanField(default=False)
     clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
+
 
 class ChoiceQuestion(models.Model):
     text_content = models.TextField(default='null')

@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -23,13 +23,16 @@ class BackendAccountView(viewsets.ModelViewSet):
         password = request.data.get('password')
         try:
             with transaction.atomic():
+                response_str = 'User create '
                 new_user = User.objects.create_user(username=user_name, password=password)
                 response_str = 'Class create '
-                class_name = register_class(request.data.get('class_name'))
+                clazz = register_class(request.data.get('class_name'))
                 new_backend_account = BackendAccount.objects.create(user=new_user)
+                response_str = 'Add permission '
+                add_permission(new_backend_account)
                 new_backend_account.save()
                 response_str = 'Add manager '
-                add_manager(True, new_backend_account, class_name)
+                add_manager(True, new_backend_account, clazz)
         except IntegrityError:
             return Response("User already existed.")
         except Exception:
@@ -77,7 +80,6 @@ class BackendAccountView(viewsets.ModelViewSet):
             return Response('logout failed.')
 
 
-
 class ClassView(viewsets.ModelViewSet):
     queryset = Class.objects.all()
     serializer_class = ClassSerializer
@@ -115,8 +117,9 @@ class ClassView(viewsets.ModelViewSet):
         try:
             cur_user = request.user
             cur_account = BackendAccount.objects.get(user=cur_user)
-            managers = cur_account.account_manager.all()
-            class_list = managers.filter(is_owner=False)
+            class_list = []
+            for manager in cur_account.account_manager.all().filter(is_owner=False):
+                class_list.append(manager.clazz)
             serializer = ClassSerializer(class_list, many=True)
             return Response(serializer.data)
         except Exception:
@@ -216,7 +219,14 @@ def register_class(name):
 # 用于添加manager表的函数
 def add_manager(is_owner, account, class_name):
     try:
-        new_manager = Manager.objects.create(is_owner=is_owner, account=account, class_name=class_name)
+        new_manager = Manager.objects.create(is_owner=is_owner, account=account, clazz=class_name)
         new_manager.save()
     except Exception:
         raise Exception
+
+
+# 用于对用户添加权限的函数
+def add_permission(backend_account):
+    permissions = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
+    for permission in permissions:
+        backend_account.user.user_permissions.add(permission)
