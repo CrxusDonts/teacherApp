@@ -308,6 +308,22 @@ class ManageInvitationView(viewsets.ModelViewSet):
         except Exception:
             return Response('get_invitation failed.')
 
+    @action(methods=['post'], detail=False)
+    def handle_invitation(self, request):
+        try:
+            if_accept = request.data.get('if_accept')
+            invitation_id = request.data.get('invitation_id')
+            invitation = ManageInvitation.objects.get(id=invitation_id)
+            if if_accept:
+                clazz = invitation.clazz
+                account = invitation.invitee
+                new_manager = Manager.objects.create(is_owner=False, clazz=clazz, account=account)
+                new_manager.save()
+            invitation.delete()
+            return Response('handle_invitation succeed.')
+        except Exception:
+            return Response('handle_invitation failed.')
+
 
 # 用于注册班级的函数
 def register_class(name):
