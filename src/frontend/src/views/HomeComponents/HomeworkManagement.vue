@@ -55,6 +55,7 @@
                     <div class="block">
                         <el-date-picker
                             v-model="form.timeValue"
+                            value-format="yyyy-MM-dd HH:mm"
                             :destroy-on-close="true"
                             type="datetimerange"
                             start-placeholder="开始日期"
@@ -62,6 +63,10 @@
                             :default-time="['12:00:00']">
                         </el-date-picker>
                     </div>
+                </el-form-item>
+                <el-form-item label="是否可以重复提交" :label-width="formLabelWidth">
+                    <el-radio v-model="form.repeatable" :label="true">可以重复提交</el-radio>
+                    <el-radio v-model="form.repeatable" :label="false">不可重复提交</el-radio>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -92,16 +97,32 @@ export default {
             }],
             form: {
                 name: '',
-                timeValue: ''
+                timeValue: '',
+                repeatable: ''
             },
             newHomeworkFormVisible: false,
-            formLabelWidth: '120px'
+            formLabelWidth: '140px'
         };
     },
     methods: {
         newHomework() {
-            this.newHomeworkFormVisible = false;
-            // TODO 像后端发送请求
+            if (this.form.name === '' || this.form.timeValue === '' || this.form.repeatable === '') {
+                alert('请填入所有信息!');
+            } else {
+                this.newHomeworkFormVisible = false;
+                // 向后端发送请求
+                this.$http.post('Class/1/new_homework/', { // 暂时向id为1的班级添加作业 TODO 之后再改正
+                    start_time: this.form.timeValue[0],
+                    due_time: this.form.timeValue[1],
+                    repeatable: this.form.repeatable
+                }).then(response => {
+                    if (response.data === 'New homework succeed.') {
+                        alert('创建成功！');
+                    } else {
+                        alert('创建失败！');
+                    }
+                });
+            }
             // 清空表单
             this.form = {};
         },
