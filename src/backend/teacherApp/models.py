@@ -55,15 +55,6 @@ class ChoiceQuestionUserAnswer(models.Model):
     user = models.ForeignKey(People, on_delete=models.CASCADE)
 
 
-class Media(models.Model):
-    file = models.FileField(upload_to='./media/%Y/%m/%d/')
-    type_file = (
-        (0, 'image'),
-        (1, 'video'),
-    )
-    file_type = models.IntegerField(choices=type_file, default=1)
-
-
 class CompletionQuestion(models.Model):
     text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
@@ -103,3 +94,18 @@ class JoinClassRequest(models.Model):
 class ManageInvitation(models.Model):
     inviter = models.ForeignKey(BackendAccount, related_name="account_inviter", on_delete=models.CASCADE)
     invitee = models.ForeignKey(BackendAccount, related_name="account_invitee", on_delete=models.CASCADE)
+
+
+class Media(models.Model):
+    file = models.FileField(upload_to='./media/%Y/%m/%d/')
+    type_file = (
+        (0, 'image'),
+        (1, 'video'),
+    )
+    file_type = models.IntegerField(choices=type_file, default=1)
+    teacher_comment = models.ForeignKey(TeacherComment, on_delete=models.CASCADE, null=True)
+    choice_question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE, null=True)
+    completion_question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE, null=True)
+    subjective_question = models.ForeignKey(SubjectiveQuestion, on_delete=models.CASCADE, null=True)
+    subjective_question_user_answer = models.ForeignKey(SubjectiveQuestionUserAnswer,
+                                                        on_delete=models.CASCADE, null=True)
