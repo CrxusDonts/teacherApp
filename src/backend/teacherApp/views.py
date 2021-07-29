@@ -189,6 +189,36 @@ class HomeworkView(viewsets.ModelViewSet):
         completion_question.save()
         return Response('New completion question succeed.')
 
+    # 获取选择题
+    @action(methods=['get'], detail=True)
+    def get_choice_question(self, request, pk):
+        try:
+            choice_question_list = get_question(pk=pk, question_type='choice_question')
+        except Exception:
+            return Response('Homework not found.')
+        serializer = ChoiceQuestionSerializer(choice_question_list, many=True)
+        return Response(serializer.data)
+
+    # 获取填空题
+    @action(methods=['get'], detail=True)
+    def get_completion_question(self, request, pk):
+        try:
+            completion_question_list = get_question(pk=pk, question_type='completion_question')
+        except Exception:
+            return Response('Homework not found.')
+        serializer = ChoiceQuestionSerializer(completion_question_list, many=True)
+        return Response(serializer.data)
+
+    # 获取主观题
+    @action(methods=['get'], detail=True)
+    def get_subjective_question(self, request, pk):
+        try:
+            subjective_question_list = get_question(pk=pk, question_type='subjective_question')
+        except Exception:
+            return Response('Homework not found.')
+        serializer = SubjectiveQuestionSerializer(subjective_question_list, many=True)
+        return Response(serializer.data)
+
 
 class CompletionQuestionView(viewsets.ModelViewSet):
     queryset = CompletionQuestion.objects.all()
@@ -245,3 +275,22 @@ def add_permission(backend_account):
     permissions = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
     for permission in permissions:
         backend_account.user.user_permissions.add(permission)
+
+
+# 用于返回作业的函数
+def get_question(pk, question_type):
+    try:
+        homework = Homework.objects.get(id=pk)
+    except Exception:
+        raise Exception
+    question_list = []
+    if question_type == 'choice_question':
+        for choice_question in ChoiceQuestion.objects.filter(homework=homework):
+            question_list.append(choice_question)
+    elif question_type == 'completion_question':
+        for completion_question in CompletionQuestion.objects.filter(homework=homework):
+            question_list.append(completion_question)
+    elif question_type == 'subjective_question':
+        for subjective_question in SubjectiveQuestion.objects.filter(homework=homework):
+            question_list.append(subjective_question)
+    return question_list
