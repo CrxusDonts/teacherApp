@@ -189,6 +189,18 @@ class HomeworkView(viewsets.ModelViewSet):
         completion_question.save()
         return Response('New completion question succeed.')
 
+    # 添加主观题
+    @action(methods=['post'], detail=True)
+    def new_subjective_question(self, request, pk):
+        try:
+            homework = Homework.objects.get(id=pk)
+        except Exception:
+            return Response('Homework not found.')
+        text_content = request.data.get('text_content')
+        subjective_question = SubjectiveQuestion.objects.create(text_content=text_content, homework=homework)
+        subjective_question.save()
+        return Response('New subjective question succeed.')
+
     # 获取选择题
     @action(methods=['get'], detail=True)
     def get_choice_question(self, request, pk):
