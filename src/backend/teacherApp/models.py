@@ -92,8 +92,9 @@ class JoinClassRequest(models.Model):
 
 
 class ManageInvitation(models.Model):
-    inviter = models.ForeignKey(BackendAccount, related_name="account_inviter", on_delete=models.CASCADE)
-    invitee = models.ForeignKey(BackendAccount, related_name="account_invitee", on_delete=models.CASCADE)
+    inviter = models.ForeignKey(BackendAccount, related_name='account_inviter', on_delete=models.CASCADE)
+    invitee = models.ForeignKey(BackendAccount, related_name='account_invitee', on_delete=models.CASCADE)
+    clazz = models.ForeignKey(Class, related_name='class_invitation', on_delete=models.CASCADE)
 
 
 class Media(models.Model):

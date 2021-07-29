@@ -284,6 +284,30 @@ class ManageInvitationView(viewsets.ModelViewSet):
     queryset = ManageInvitation.objects.all()
     serializer_class = ManageInvitationSerializer
 
+    @action(methods=['post'], detail=False)
+    def invite_assistant(self, request):
+        try:
+            inviter = BackendAccount.objects.get(user=request.user)
+            invitee = BackendAccount.objects.get(user=User.objects.get(username=request.data.get('user_name')))
+            clazz = Class.objects.get(id=request.data.get('class_id'))
+            new_invitation = ManageInvitation.objects.create(inviter=inviter, invitee=invitee, clazz=clazz)
+            new_invitation.save()
+            return Response('invite succeed.')
+        except Exception:
+            return Response('invite failed.')
+
+    @action(methods=['get'], detail=False)
+    def get_invitation(self, request):
+        try:
+            cur_account = BackendAccount.objects.get(user=request.user)
+            invitation_list = []
+            for invitation in cur_account.account_invitee.all():
+                invitation_list.append(invitation)
+            serializer = ManageInvitationSerializer(invitation_list, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response('get_invitation failed.')
+
 
 # 用于注册班级的函数
 def register_class(name):
