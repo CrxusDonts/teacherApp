@@ -96,3 +96,9 @@ class TeacherCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeacherComment
         fields = '__all__'
+
+
+class JoinClassRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JoinClassRequest
+        fields = '__all__'

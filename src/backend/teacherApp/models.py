@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, IntegrityError
+from rest_framework import permissions
 
 
 class BackendAccount(models.Model):
@@ -91,3 +92,8 @@ class SubjectiveQuestionUserAnswer(models.Model):
 
 class TeacherComment(models.Model):
     text_content = models.TextField(default='null')
+
+
+class JoinClassRequest(models.Model):
+    class_id = models.IntegerField(default=0)
+    people = models.ForeignKey(People, on_delete=models.CASCADE)

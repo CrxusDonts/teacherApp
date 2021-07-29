@@ -18,6 +18,7 @@ router.register('CompletionQuestionAnswer', views.CompletionQuestionAnswerView)
 router.register('CompletionQuestionUserAnswer', views.CompletionQuestionUserAnswerView)
 router.register('SubjectiveQuestion', views.SubjectiveQuestionView)
 router.register('TeacherComment', views.TeacherCommentView)
+router.register('JoinClassRequest', views.JoinClassRequestView)
 
 urlpatterns = [
     path('', include(router.urls)),

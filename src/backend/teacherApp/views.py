@@ -4,8 +4,6 @@ from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from django.core.serializers import serialize
-from rest_framework.utils import json
 
 from .serializers import *
 
@@ -15,6 +13,7 @@ from .serializers import *
 class BackendAccountView(viewsets.ModelViewSet):
     queryset = BackendAccount.objects.all()
     serializer_class = BackendAccountSerializer
+    permission_classes = [permissions.AllowAny]
 
     # 注册后台账户
     @action(methods=['post'], detail=False)
@@ -258,6 +257,11 @@ class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
 
 
 class TeacherCommentView(viewsets.ModelViewSet):
+    queryset = TeacherComment.objects.all()
+    serializer_class = TeacherCommentSerializer
+
+
+class JoinClassRequestView(viewsets.ModelViewSet):
     queryset = TeacherComment.objects.all()
     serializer_class = TeacherCommentSerializer
 
