@@ -138,6 +138,18 @@ class ClassView(viewsets.ModelViewSet):
         except Exception:
             return Response('Get my manage class failed.')
 
+    @action(methods=['get'], detail=True)
+    def get_class_managers(self, request, pk):
+        try:
+            clazz = Class.objects.get(id=pk)
+            manager_list = []
+            for manager in clazz.class_manager.all():
+                manager_list.append(manager.account)
+            serializer = BackendAccountSerializer(manager_list, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response('get_class_managers failed.')
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
