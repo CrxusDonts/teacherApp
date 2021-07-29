@@ -12,6 +12,7 @@ import InviteMe from '../components/HomeComponents/InviteMe';
 import GradeByClass from '../components/HomeComponents/GradeByClass';
 import GradeByStudent from '../components/HomeComponents/GradeByStudent';
 import SwitchClass from '../components/HomeComponents/SwitchClass';
+import EditHomework from '../views/EditHomework'
 
 Vue.use(VueRouter);
 
@@ -36,8 +37,13 @@ const routes = [{
 // 修改密码界面
 {
     path: '/passwordmodify',
-    name: 'Passwordmodify',
+    name: 'PasswordModify',
     component: Passwordmodify
+},
+{
+    path: '/edithomework',
+    name: 'EditHomework',
+    component: EditHomework
 },
 // 主页及其子页面
 {
