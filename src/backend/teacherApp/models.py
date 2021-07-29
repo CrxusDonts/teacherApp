@@ -31,6 +31,7 @@ class People(models.Model):
 
 
 class Homework(models.Model):
+    title = models.CharField(max_length=20, default='undefined')
     start_time = models.DateTimeField()
     due_time = models.DateTimeField()
     repeatable = models.BooleanField(default=False)

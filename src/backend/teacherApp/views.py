@@ -90,13 +90,27 @@ class ClassView(viewsets.ModelViewSet):
             clazz = Class.objects.get(id=pk)
         except Exception:
             return Response('Class not found.')
+        title = request.data.get('title')
         start_time = request.data.get('start_time')
         due_time = request.data.get('due_time')
         repeatable = request.data.get('repeatable')
-        homework = Homework.objects.create(start_time=start_time, due_time=due_time,
+        homework = Homework.objects.create(title=title, start_time=start_time, due_time=due_time,
                                            repeatable=repeatable, clazz=clazz)
         homework.save()
         return Response('New homework succeed.')
+
+    # 获取班级的作业
+    @action(methods=['get'], detail=True)
+    def get_homeworks(self, request, pk):
+        try:
+            clazz = Class.objects.get(id=pk)
+        except Exception:
+            return Response('Class not found.')
+        homework_list = []
+        for homework in Homework.objects.filter(clazz=clazz):
+            homework_list.append(homework)
+        serializer = HomeworkSerializer(homework_list, many=True)
+        return Response(serializer.data)
 
     # 获取我的班级
     @action(methods=['get'], detail=False)
