@@ -138,6 +138,18 @@ class ClassView(viewsets.ModelViewSet):
         except Exception:
             return Response('Get my manage class failed.')
 
+    @action(methods=['get'], detail=True)
+    def get_class_managers(self, request, pk):
+        try:
+            clazz = Class.objects.get(id=pk)
+            manager_list = []
+            for manager in clazz.class_manager.all():
+                manager_list.append(manager.account)
+            serializer = BackendAccountSerializer(manager_list, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response('get_class_managers failed.')
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
@@ -307,6 +319,22 @@ class ManageInvitationView(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception:
             return Response('get_invitation failed.')
+
+    @action(methods=['post'], detail=False)
+    def handle_invitation(self, request):
+        try:
+            if_accept = request.data.get('if_accept')
+            invitation_id = request.data.get('invitation_id')
+            invitation = ManageInvitation.objects.get(id=invitation_id)
+            if if_accept:
+                clazz = invitation.clazz
+                account = invitation.invitee
+                new_manager = Manager.objects.create(is_owner=False, clazz=clazz, account=account)
+                new_manager.save()
+            invitation.delete()
+            return Response('handle_invitation succeed.')
+        except Exception:
+            return Response('handle_invitation failed.')
 
 
 # 用于注册班级的函数
