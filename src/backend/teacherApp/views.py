@@ -280,6 +280,11 @@ class JoinClassRequestView(viewsets.ModelViewSet):
     serializer_class = TeacherCommentSerializer
 
 
+class ManageInvitationView(viewsets.ModelViewSet):
+    queryset = ManageInvitation.objects.all()
+    serializer_class = ManageInvitationSerializer
+
+
 # 用于注册班级的函数
 def register_class(name):
     class_name = name
@@ -302,8 +307,8 @@ def add_manager(is_owner, account, class_name):
 
 # 用于对用户添加权限的函数
 def add_permission(backend_account):
-    permissions = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
-    for permission in permissions:
+    permission_list = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
+    for permission in permission_list:
         backend_account.user.user_permissions.add(permission)
 
 

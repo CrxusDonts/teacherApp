@@ -102,3 +102,9 @@ class JoinClassRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = JoinClassRequest
         fields = '__all__'
+
+
+class ManageInvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ManageInvitation
+        fields = '__all__'

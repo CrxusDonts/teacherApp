@@ -98,3 +98,8 @@ class TeacherComment(models.Model):
 class JoinClassRequest(models.Model):
     class_id = models.IntegerField(default=0)
     people = models.ForeignKey(People, on_delete=models.CASCADE)
+
+
+class ManageInvitation(models.Model):
+    inviter = models.ForeignKey(BackendAccount, related_name="account_inviter", on_delete=models.CASCADE)
+    invitee = models.ForeignKey(BackendAccount, related_name="account_invitee", on_delete=models.CASCADE)
