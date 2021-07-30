@@ -12,7 +12,7 @@ import InviteMe from '../components/HomeComponents/InviteMe';
 import GradeByClass from '../components/HomeComponents/GradeByClass';
 import GradeByStudent from '../components/HomeComponents/GradeByStudent';
 import SwitchClass from '../components/HomeComponents/SwitchClass';
-import EditHomework from '../views/EditHomework'
+import EditHomework from '../views/EditHomework';
 
 Vue.use(VueRouter);
 

@@ -85,20 +85,20 @@ export default {
             tableData: [{
                 id: 1,
                 title: '三年级二班第二次作业',
-                start_time: "2021-07-27 16:17",
-                due_time: "2021-08-03 16:17",
+                start_time: '2021-07-27 16:17',
+                due_time: '2021-08-03 16:17',
                 repeatable: 1
             }, {
                 id: 2,
                 title: '三年级二班第一次作业',
-                start_time: "2021-07-27 16:17",
-                due_time: "2021-08-03 16:17",
+                start_time: '2021-07-27 16:17',
+                due_time: '2021-08-03 16:17',
                 repeatable: 1
             }, {
                 id: 3,
                 title: '三年级二班第三次作业',
-                start_time: "2021-07-27 16:17",
-                due_time: "2021-08-03 16:17",
+                start_time: '2021-07-27 16:17',
+                due_time: '2021-08-03 16:17',
                 repeatable: 1
             }],
             form: {

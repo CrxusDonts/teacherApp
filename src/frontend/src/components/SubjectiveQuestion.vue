@@ -9,21 +9,24 @@
 
 <script>
 export default {
-  name: "SubjectiveQuestion",
-  props: ['subjectiveQuestion', 'order']
-}
+    name: 'SubjectiveQuestion',
+    props: ['subjectiveQuestion', 'order']
+};
 </script>
 
 <style scoped>
 .subjective-question {
-  padding-bottom: 10px;
-  background-color: white;
+    padding-bottom: 10px;
+    margin-top: -20px;
+    background-color: white;
 }
+
 .text-content {
-  padding-top: 20px;
-  font-size: 25px;
+    padding-top: 20px;
+    font-size: 25px;
 }
+
 p + p {
-  margin-top: -5px;
+    margin-top: -5px;
 }
 </style>
