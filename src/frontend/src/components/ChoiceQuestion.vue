@@ -3,7 +3,10 @@
     <p class="text-content">
       {{order}}.{{choiceQuestion.text_content}}
     </p>
-    <p class="option" v-for="option in options" :key="option.id">{{option.order}}.{{option.answer}}</p>
+    <p class="option" v-for="option in options" :key="option.id">
+      <i v-if="option.if_correct" class="el-icon-check"></i>
+      <i v-if="!option.if_correct" class="el-icon-close"></i>
+      {{option.order}}.{{option.answer}}</p>
     <el-button type="primary" icon="el-icon-edit" circle @click="newHomeworkFormVisible = true"></el-button>
     <!--表单提示框 -->
     <el-dialog title="编辑题目" :visible.sync="newHomeworkFormVisible">
@@ -12,20 +15,22 @@
           <el-input :value=this.choiceQuestion.text_content autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item :model="form" v-for="(option, index) in options" :key="option.id">
-          <el-form-item v-bind:label=optionConstant+(index+1) :label-width="formLabelWidth">
+          <el-form-item :label=optionConstant+(index+1) :label-width="formLabelWidth">
             <el-input v-model=option.answer autocomplete="off"></el-input>
           </el-form-item>
-          <el-form-item label="是否正确" :label-width="formLabelWidth">
-            <el-radio-group>
-              <el-radio label="是" :key="option.if_correct"></el-radio>
-              <el-radio label="否"></el-radio>
+          <el-form-item>
+            <el-radio-group class="radio-group" v-model="option.if_correct">
+              <el-radio :label="true">正确</el-radio>
+              <el-radio :label="false">错误</el-radio>
             </el-radio-group>
+            <el-button class="delete-button" type="danger" icon="el-icon-delete" circle
+                       @click="deleteOption(option)"></el-button>
           </el-form-item>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="form={};newHomeworkFormVisible = false;">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="success" @click=newOption>新增选项</el-button>
+        <el-button @click="form={};newHomeworkFormVisible = false;" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -35,11 +40,15 @@
 export default {
     name: 'ChoiceQuestion',
     props: ['choiceQuestion', 'order'],
+    maxId: '',
     mounted: function() {
-        this.form.name = this.choiceQuestion.text_content;
+        this.maxId = this.options[this.options.length - 1].id;
     },
     data() {
         return {
+            form: {
+                resource: ''
+            },
             options: [
                 {
                     id: 1,
@@ -62,6 +71,29 @@ export default {
             formLabelWidth: '140px',
             optionConstant: '选项'
         };
+    },
+    methods: {
+        deleteOption(option) {
+            this.options.contains = function(obj) {
+                let i = this.length;
+                while (i--) {
+                    if (this[i] === obj) {
+                        return i;
+                    }
+                }
+                return false;
+            };
+            this.options.splice(this.options.contains(option), 1);
+        },
+        newOption() {
+            const option = {
+                id: this.maxId++,
+                order: 'D',
+                answer: '',
+                if_correct: true
+            };
+            this.options.push(option);
+        }
     }
 };
 
@@ -85,5 +117,16 @@ export default {
 
 p + p {
     margin-top: -5px;
+}
+
+.radio-group {
+    float: left;
+    margin-top: 15px;
+    margin-left: 145px;
+}
+
+.delete-button {
+    float: right;
+    margin-top: 5px;
 }
 </style>
