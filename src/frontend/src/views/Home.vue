@@ -16,9 +16,10 @@
                 <el-menu-item index="gradeByClass">按班级统计</el-menu-item>
                 <el-menu-item index="gradeByStudent">按学生统计</el-menu-item>
             </el-submenu>
-            <el-menu-item index="switchClass">班级切换</el-menu-item>
+            <el-menu-item index="switchClass" :route=
+                "{ path: 'switchClass', query: { userName: this.userName, classId: this.classId} }">班级切换</el-menu-item>
         </el-menu>
-        <router-view/>
+        <router-view @classIdChanged="classIdChanged"></router-view>
     </div>
 </template>
 
@@ -30,16 +31,31 @@ export default {
     data() {
         return {
             activeIndex: 'homeworkManagement',
-            userName: 'admin'
+            userName: '',
+            className: '',
+            classId: ''
         };
     },
     components: { Header },
     mounted: function() {
-        this.userName = this.$route.query.user_name;
+        if (this.userName === '') {
+            this.userName = this.$route.query.user_name;
+        }
+        this.$http.get('Class/get_my_class/').then(response => {
+            if (response.data !== 'Get my own class failed.') {
+                this.className = response.data.class_name;
+                this.classId = response.data.id;
+            } else {
+                alert('获取班级失败！');
+            }
+        });
     },
     methods: {
         handleSelect(key) {
             this.$router.push({ path: key });
+        },
+        classIdChanged(val) {
+            this.classId = val;
         }
     }
 };

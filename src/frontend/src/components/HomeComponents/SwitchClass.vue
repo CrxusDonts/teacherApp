@@ -1,9 +1,33 @@
 <template>
-  <el-carousel :interval="4000" type="card" height="300px">
-    <el-carousel-item v-for="item in 6" :key="item" @click="toClassId">
-      <h3 class="medium">{{ item }}</h3>
-    </el-carousel-item>
-  </el-carousel>
+    <div>
+        <el-table
+            :data="tableData"
+            stripe
+            style="width: 100%;
+            margin-top: 10px;">
+            <el-table-column align="center"
+                             type="index"
+                             :width="100">
+            </el-table-column>
+            <el-table-column
+                prop="id"
+                label="班级序号"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="class_name"
+                label="班级名称"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                align="right"
+                label="操作">
+                <template slot-scope="scope">
+                    <el-button plain icon="el-icon-edit" size="mini" @click="handleSwitch(scope.$index)">切换</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
 
 <script>
@@ -11,18 +35,40 @@ export default {
     name: 'SwitchClass',
     data() {
         return {
-            items: ''
+            tableData: [{
+                id: '',
+                class_name: ''
+            }],
+            classId: '',
+            userName: ''
         };
     },
-    mounted: function() {
-        this.$http.get('') // TODO 填写需要的地址
-            .then((response) => {
-                this.items = response.data;
+    mounted() {
+        this.classId = this.$route.query.classId;
+        this.userName = this.$route.query.userName;
+        this.$http.get('Class/get_my_class/').then(response => {
+            if (response.data !== 'Get my own class failed.') {
+                this.data = response.data;
+                this.tableData[0].id = response.data.id;
+                this.tableData[0].class_name = response.data.class_name;
+            } else {
+                alert('失败！');
+            }
+            this.$http.get('Class/get_manage_class_list/').then(response => {
+                if (response.data !== 'Get my manage class failed.') {
+                    if (response.data.length !== 0) {
+                        this.tableData.push({ id: response.data.id, class_name: response.data.class_name });
+                    }
+                } else {
+                    alert('失败！');
+                }
             });
+        });
     },
     methods: {
-        toClassId: function() {
-            // TODO 实现页面跳转，跳转至对应班级界面
+        handleSwitch(index) {
+            this.classId = this.tableData[index].id;
+            this.$emit('classIdChanged', this.classId);
         }
     }
 };
