@@ -10,18 +10,18 @@
                              :width="100">
             </el-table-column>
             <el-table-column
-                prop="date"
-                label="日期"
+                prop="title"
+                label="标题"
+                width="250">
+            </el-table-column>
+            <el-table-column
+                prop="start_time"
+                label="开始时间"
                 width="180">
             </el-table-column>
             <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                label="地址">
+                prop="due_time"
+                label="结束时间">
             </el-table-column>
             <el-table-column align="right">
                 <template slot="header">
@@ -83,17 +83,23 @@ export default {
     data() {
         return {
             tableData: [{
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
+                id: 1,
+                title: '三年级二班第二次作业',
+                start_time: "2021-07-27 16:17",
+                due_time: "2021-08-03 16:17",
+                repeatable: 1
             }, {
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
+                id: 2,
+                title: '三年级二班第一次作业',
+                start_time: "2021-07-27 16:17",
+                due_time: "2021-08-03 16:17",
+                repeatable: 1
             }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
+                id: 3,
+                title: '三年级二班第三次作业',
+                start_time: "2021-07-27 16:17",
+                due_time: "2021-08-03 16:17",
+                repeatable: 1
             }],
             form: {
                 name: '',
@@ -127,7 +133,7 @@ export default {
             this.form = {};
         },
         handleEdit(index, row) {
-            // TODO Edit
+            this.$router.push({ path: '/edithomework', query: { homeWork: row }});
         },
         handleShare(index, row) {
             // TODO Share
