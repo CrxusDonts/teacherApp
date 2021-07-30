@@ -7,14 +7,14 @@
       <i v-if="option.if_correct" class="el-icon-check"></i>
       <i v-if="!option.if_correct" class="el-icon-close"></i>
       {{option.order}}.{{option.answer}}</p>
-    <el-button type="primary" icon="el-icon-edit" circle @click="newHomeworkFormVisible = true"></el-button>
-    <!--表单提示框 -->
-    <el-dialog title="编辑题目" :visible.sync="newHomeworkFormVisible">
-      <el-form :model="form">
+    <el-button type="primary" icon="el-icon-edit" circle @click="editChoiceQuestionFormVisible = true"></el-button>
+    <!--编辑选择题页面 -->
+    <el-dialog title="编辑题目" :visible.sync="editChoiceQuestionFormVisible">
+      <el-form>
         <el-form-item label="题目" :label-width="formLabelWidth">
           <el-input :value=this.choiceQuestion.text_content autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item :model="form" v-for="(option, index) in options" :key="option.id">
+        <el-form-item v-for="(option, index) in options" :key="option.id">
           <el-form-item :label=optionConstant+(index+1) :label-width="formLabelWidth">
             <el-input v-model=option.answer autocomplete="off"></el-input>
           </el-form-item>
@@ -29,8 +29,10 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="success" @click=newOption>新增选项</el-button>
-        <el-button @click="form={};newHomeworkFormVisible = false;" type="primary">确定</el-button>
+        <el-button type="primary" @click=newOption>新增选项</el-button>
+        <el-button type="primary" icon="el-icon-picture-outline">添加图片</el-button>
+        <el-button type="primary" icon="el-icon-video-camera">添加视频</el-button>
+        <el-button @click="editChoiceQuestionFormVisible = false;" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -41,14 +43,8 @@ export default {
     name: 'ChoiceQuestion',
     props: ['choiceQuestion', 'order'],
     maxId: '',
-    mounted: function() {
-        this.maxId = this.options[this.options.length - 1].id;
-    },
     data() {
         return {
-            form: {
-                resource: ''
-            },
             options: [
                 {
                     id: 1,
@@ -67,7 +63,7 @@ export default {
                     if_correct: false
                 }
             ],
-            newHomeworkFormVisible: false,
+            editChoiceQuestionFormVisible: false,
             formLabelWidth: '140px',
             optionConstant: '选项'
         };
@@ -87,7 +83,7 @@ export default {
         },
         newOption() {
             const option = {
-                id: this.maxId++,
+                id: this.options[this.options.length - 1].id + 1,
                 order: 'D',
                 answer: '',
                 if_correct: true

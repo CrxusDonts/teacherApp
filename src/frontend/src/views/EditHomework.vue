@@ -7,18 +7,20 @@
     </el-header>
     <ChoiceQuestion v-for="(choiceQuestion, index) in choiceQuestions" v-bind:choiceQuestion="choiceQuestion"
                     v-bind:order='order + index' :key="choiceQuestion.id">
-
     </ChoiceQuestion>
+    <el-button type="success" style="margin-top: 5px;" @click=newChoiceQuestion>新增选择题</el-button>
     <CompletionQuestion v-for="(completionQuestion, index) in this.completionQuestions"
                         v-bind:completionQuestion="completionQuestion"
                         v-bind:order='order + choiceQuestions.length + index' :key="completionQuestion.id">
 
     </CompletionQuestion>
+    <el-button type="success" style="margin-top: 5px;" @click=newCompletionQuestion>新增填空题</el-button>
     <SubjectiveQuestion v-for="(subjectiveQuestion, index) in this.subjectiveQuestions"
                         v-bind:subjectiveQuestion="subjectiveQuestion"
                         v-bind:order='order + choiceQuestions.length + completionQuestions.length + index'
                         :key="subjectiveQuestion.id">
     </SubjectiveQuestion>
+    <el-button type="success" style="margin-top: 5px;" @click=newSubjectiveQuestion>新增主观题</el-button>
   </div>
 </template>
 
@@ -81,6 +83,27 @@ export default {
     methods: {
         goBack() {
             this.$router.push({ path: '/home' });
+        },
+        newChoiceQuestion() {
+            const choiceQuestion = {
+                id: this.choiceQuestions[this.choiceQuestions.length - 1].id + 1,
+                text_content: '请输入题目'
+            };
+            this.choiceQuestions.push(choiceQuestion);
+        },
+        newCompletionQuestion() {
+            const completionQuestion = {
+                id: this.completionQuestions[this.completionQuestions.length - 1].id + 1,
+                text_content: '请输入题目'
+            };
+            this.completionQuestions.push(completionQuestion);
+        },
+        newSubjectiveQuestion() {
+            const subjectiveQuestion = {
+                id: this.subjectiveQuestions[this.subjectiveQuestions.length - 1].id + 1,
+                text_content: '请输入题目'
+            };
+            this.subjectiveQuestions.push(subjectiveQuestion);
         }
     }
 };
