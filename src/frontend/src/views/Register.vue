@@ -46,7 +46,7 @@ export default {
                     class_name: this.classname
                 }).then(response => {
                     if (response.data === 'Register succeed.') {
-                        this.$router.push({ path: '/home', query: { user_name: this.userName }});
+                        this.$router.push({ path: '/home' + this.userName });
                     } else if (response.data === 'User already existed.') {
                         this.$message.error('您注册的账号已存在，请重新注册！');
                     } else {

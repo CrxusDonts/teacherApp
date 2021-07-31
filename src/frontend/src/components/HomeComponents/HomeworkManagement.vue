@@ -107,8 +107,14 @@ export default {
                 repeatable: ''
             },
             newHomeworkFormVisible: false,
-            formLabelWidth: '140px'
+            formLabelWidth: '140px',
+            classId: '',
+            userName: ''
         };
+    },
+    mounted() {
+        this.classId = this.$route.query.classId;
+        this.userName = this.$route.query.userName;
     },
     methods: {
         newHomework() {

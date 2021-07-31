@@ -45,7 +45,7 @@ export default {
     },
     mounted() {
         this.classId = this.$route.query.classId;
-        this.userName = this.$route.query.userName;
+        this.userName = this.$route.params.userName;
         this.$http.get('Class/get_my_class/').then(response => {
             if (response.data !== 'Get my own class failed.') {
                 this.data = response.data;

@@ -70,8 +70,14 @@ export default {
                 id: ''
             },
             dialogFormVisible: false,
-            formLabelWidth: '120px'
+            formLabelWidth: '120px',
+            classId: '',
+            userName: ''
         };
+    },
+    mounted() {
+        this.classId = this.$route.query.classId;
+        this.userName = this.$route.query.userName;
     },
     methods: {
         // 移除助教
@@ -81,7 +87,16 @@ export default {
         invite() {
             this.dialogFormVisible = false;
             // 向后端发送请求
-
+            this.$http.post('ManageInvitation/invite_assistant/', {
+                user_name: this.userName,
+                class_id: this.classId
+            }).then(response => {
+                if (response.data === 'invite succeed.') {
+                    alert('邀请成功！');
+                } else {
+                    alert('邀请失败！');
+                }
+            });
             this.form.id = '';
         },
         cancel() {

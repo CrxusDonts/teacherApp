@@ -47,8 +47,14 @@ export default {
                 id: '19',
                 name: '王小虎',
                 gender: '男'
-            }]
+            }],
+            classId: '',
+            userName: ''
         };
+    },
+    mounted() {
+        this.classId = this.$route.query.classId;
+        this.userName = this.$route.query.userName;
     },
     methods: {
         handleEdit(index, row) {

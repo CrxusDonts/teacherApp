@@ -41,7 +41,7 @@ export default {
                     password: this.password
                 }).then(response => {
                     if (response.data === 'Login succeed.') {
-                        this.$router.push({ path: '/home', query: { user_name: this.userName }});
+                        this.$router.push({ path: '/home/' + this.userName });
                     } else {
                         alert('登录失败！');
                     }

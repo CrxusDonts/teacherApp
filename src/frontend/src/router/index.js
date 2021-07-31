@@ -47,47 +47,47 @@ const routes = [{
 },
 // 主页及其子页面
 {
-    path: '/home',
+    path: '/home/:userName',
     name: 'Home',
     component: Home,
     children: [
         {
-            path: '/homeworkManagement',
+            path: 'homeworkManagement',
             name: 'HomeworkManagement',
             component: HomeworkManagement
         },
         {
-            path: '/studentManagement',
+            path: 'studentManagement',
             name: 'StudentManagement',
             component: StudentManagement
         },
         {
-            path: '/studentApply',
+            path: 'studentApply',
             name: 'StudentApply',
             component: StudentApply
         },
         {
-            path: '/assistantManagement',
+            path: 'assistantManagement',
             name: 'AssistantManagement',
             component: AssistantManagement
         },
         {
-            path: '/inviteMe',
+            path: 'inviteMe',
             name: 'InviteMe',
             component: InviteMe
         },
         {
-            path: '/gradeByClass',
+            path: 'gradeByClass',
             name: 'GradeByClass',
             component: GradeByClass
         },
         {
-            path: '/gradeByStudent',
+            path: 'gradeByStudent',
             name: 'GradeByStudent',
             component: GradeByStudent
         },
         {
-            path: '/switchClass',
+            path: 'switchClass',
             name: 'SwitchClass',
             component: SwitchClass
         }

@@ -62,8 +62,14 @@ export default {
                 id: ''
             },
             dialogFormVisible: false,
-            formLabelWidth: '120px'
+            formLabelWidth: '120px',
+            classId: '',
+            userName: ''
         };
+    },
+    mounted() {
+        this.classId = this.$route.query.classId;
+        this.userName = this.$route.query.userName;
     },
     methods: {
         handleAccept(index, row) {
