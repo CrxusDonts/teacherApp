@@ -5,19 +5,19 @@
       {{homeWork.title}}
       <el-button type="primary" class="go-back" @click=goBack>返回</el-button>
     </el-header>
-    <ChoiceQuestion v-for="(choiceQuestion, index) in choiceQuestions" v-bind:choiceQuestion="choiceQuestion"
-                    v-bind:order='order + index' :key="choiceQuestion.id">
+    <ChoiceQuestion v-for="(choiceQuestion, index) in choiceQuestions" :choicequestion="choiceQuestion"
+                    :order='order + index' :key="choiceQuestion.id">
     </ChoiceQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newChoiceQuestion>新增选择题</el-button>
     <CompletionQuestion v-for="(completionQuestion, index) in this.completionQuestions"
-                        v-bind:completionQuestion="completionQuestion"
-                        v-bind:order='order + choiceQuestions.length + index' :key="completionQuestion.id">
+                        :completionquestion="completionQuestion"
+                        :order='order + choiceQuestions.length + index' :key="completionQuestion.id">
 
     </CompletionQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newCompletionQuestion>新增填空题</el-button>
     <SubjectiveQuestion v-for="(subjectiveQuestion, index) in this.subjectiveQuestions"
-                        v-bind:subjectiveQuestion="subjectiveQuestion"
-                        v-bind:order='order + choiceQuestions.length + completionQuestions.length + index'
+                        :subjectivequestion="subjectiveQuestion"
+                        :order='order + choiceQuestions.length + completionQuestions.length + index'
                         :key="subjectiveQuestion.id">
     </SubjectiveQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newSubjectiveQuestion>新增主观题</el-button>
@@ -35,13 +35,7 @@ export default {
         return {
             order: 1,
             userName: 'admin',
-            homeWork: {
-                id: 1,
-                title: '三年级二班第一次作业',
-                start_time: '2021/07/27 16:17',
-                due_time: '2021/08/03 16:17',
-                repeatable: 1
-            },
+            homeWork: '',
             choiceQuestions: [{
                 id: 1,
                 text_content: '请选出下列是动物的生物'
@@ -52,20 +46,20 @@ export default {
             }
             ],
             completionQuestions: [{
-                id: 1,
+                id: 3,
                 text_content: '床前明月光，__________'
             },
             {
-                id: 2,
+                id: 4,
                 text_content: '国破山河在，__________'
             }
             ],
             subjectiveQuestions: [{
-                id: 1,
+                id: 5,
                 text_content: '请如视频所示制作一个剪纸作品。'
             },
             {
-                id: 2,
+                id: 6,
                 text_content: '请画出图片中的主要内容。'
             }
             ]

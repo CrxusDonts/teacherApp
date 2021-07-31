@@ -99,7 +99,7 @@ class ManageInvitation(models.Model):
 
 
 class Media(models.Model):
-    file = models.FileField(upload_to='./media/%Y/%m/%d/')
+    url = models.FileField(upload_to='./media/%Y/%m/%d/')
     type_file = (
         (0, 'image'),
         (1, 'video'),
