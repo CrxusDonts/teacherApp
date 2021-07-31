@@ -114,7 +114,7 @@ export default {
     },
     mounted() {
         this.classId = this.$route.query.classId;
-        this.userName = this.$route.query.userName;
+        this.userName = this.$route.params.userName;
     },
     methods: {
         newHomework() {
@@ -123,7 +123,7 @@ export default {
             } else {
                 this.newHomeworkFormVisible = false;
                 // 向后端发送请求
-                this.$http.post('Class/1/new_homework/', { // 暂时向id为1的班级添加作业 TODO 之后再改正
+                this.$http.post('Class/' + this.classId + '/new_homework/', {
                     start_time: this.form.timeValue[0],
                     due_time: this.form.timeValue[1],
                     repeatable: this.form.repeatable

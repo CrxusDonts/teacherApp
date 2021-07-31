@@ -54,7 +54,7 @@ export default {
     },
     mounted() {
         this.classId = this.$route.query.classId;
-        this.userName = this.$route.query.userName;
+        this.userName = this.$route.params.userName;
     },
     methods: {
         handleAccept(index, row) {

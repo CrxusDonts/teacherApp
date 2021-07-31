@@ -77,7 +77,7 @@ export default {
     },
     mounted() {
         this.classId = this.$route.query.classId;
-        this.userName = this.$route.query.userName;
+        this.userName = this.$route.params.userName;
     },
     methods: {
         // 移除助教
@@ -88,7 +88,7 @@ export default {
             this.dialogFormVisible = false;
             // 向后端发送请求
             this.$http.post('ManageInvitation/invite_assistant/', {
-                user_name: this.userName,
+                user_name: this.form.id,
                 class_id: this.classId
             }).then(response => {
                 if (response.data === 'invite succeed.') {
