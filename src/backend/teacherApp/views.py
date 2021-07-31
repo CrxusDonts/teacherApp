@@ -4,7 +4,6 @@ from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
 from .serializers import *
 
 
@@ -155,6 +154,21 @@ class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
     serializer_class = ManagerSerializer
 
+    @action(methods=['post'], detail=False)
+    def get_teacher(self, request):
+        try:
+            cur_class_id = request.data.get('class_id')
+            cur_class = Class.objects.get(id=cur_class_id)
+            cur_user = request.user
+            manger_list = []
+            for manger in cur_class.class_manager.all():
+                if manger.account.user != cur_user:
+                    manger_list.append(manger.account)
+            serializer = BackendAccountSerializer(manger_list, many=True)
+            return Response(serializer.data)
+        except Exception:
+            return Response('get_teacher failed.')
+
 
 class FrontAccountView(viewsets.ModelViewSet):
     queryset = FrontAccount.objects.all()
@@ -185,6 +199,15 @@ class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
 
+    @action(methods=['get'], detail=False)
+    def test_get(self, request):
+        try:
+            media = Media.objects.get(id=12)
+            file = media.file
+            return Response(file)
+        except Exception as e:
+            return Response(str(e))
+
 
 class HomeworkView(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
@@ -200,7 +223,7 @@ class HomeworkView(viewsets.ModelViewSet):
         text_content = request.data.get('text_content')
         choice_question = ChoiceQuestion.objects.create(text_content=text_content, homework=homework)
         choice_question.save()
-        return Response('New choice question succeed.')
+        return Response(choice_question.id)
 
     # 添加填空题
     @action(methods=['post'], detail=True)
@@ -337,7 +360,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
             return Response('handle_invitation failed.')
 
 
-# 用于注册班级的函数
+# 用于注册班级的方法
 def register_class(name):
     class_name = name
     try:
@@ -348,7 +371,7 @@ def register_class(name):
     return new_class
 
 
-# 用于添加manager表的函数
+# 用于添加manager表的方法
 def add_manager(is_owner, account, class_name):
     try:
         new_manager = Manager.objects.create(is_owner=is_owner, account=account, clazz=class_name)
@@ -357,14 +380,14 @@ def add_manager(is_owner, account, class_name):
         raise Exception
 
 
-# 用于对用户添加权限的函数
+# 用于对用户添加权限的方法
 def add_permission(backend_account):
     permission_list = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
     for permission in permission_list:
         backend_account.user.user_permissions.add(permission)
 
 
-# 用于返回作业的函数
+# 用于返回作业的方法
 def get_question(pk, question_type):
     try:
         homework = Homework.objects.get(id=pk)
@@ -381,3 +404,5 @@ def get_question(pk, question_type):
         for subjective_question in SubjectiveQuestion.objects.filter(homework=homework):
             question_list.append(subjective_question)
     return question_list
+
+

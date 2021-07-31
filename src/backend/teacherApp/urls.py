@@ -1,4 +1,7 @@
+from django.conf.urls.static import static
 from django.urls import path, include
+
+from api import settings
 from . import views
 from rest_framework import routers
 
@@ -24,3 +27,4 @@ router.register('ManageInvitation', views.ManageInvitationView)
 urlpatterns = [
     path('', include(router.urls)),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

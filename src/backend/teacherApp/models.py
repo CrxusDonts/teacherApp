@@ -45,6 +45,7 @@ class ChoiceQuestion(models.Model):
 
 class Options(models.Model):
     question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
+    text_content = models.TextField(default='null')
     order = models.IntegerField(default=0)
     if_correct = models.BooleanField(default=False)
 
