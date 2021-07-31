@@ -4,6 +4,8 @@ from django.db import transaction
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.utils import json
+
 from .serializers import *
 
 
@@ -137,18 +139,6 @@ class ClassView(viewsets.ModelViewSet):
         except Exception:
             return Response('Get my manage class failed.')
 
-    @action(methods=['get'], detail=True)
-    def get_class_managers(self, request, pk):
-        try:
-            clazz = Class.objects.get(id=pk)
-            manager_list = []
-            for manager in clazz.class_manager.all():
-                manager_list.append(manager.account)
-            serializer = BackendAccountSerializer(manager_list, many=True)
-            return Response(serializer.data)
-        except Exception:
-            return Response('get_class_managers failed.')
-
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
@@ -160,12 +150,15 @@ class ManagerView(viewsets.ModelViewSet):
             cur_class_id = request.data.get('class_id')
             cur_class = Class.objects.get(id=cur_class_id)
             cur_user = request.user
-            manger_list = []
-            for manger in cur_class.class_manager.all():
-                if manger.account.user != cur_user:
-                    manger_list.append(manger.account)
-            serializer = BackendAccountSerializer(manger_list, many=True)
-            return Response(serializer.data)
+            manager_list = []
+            for manager in cur_class.class_manager.all():
+                if manager.account.user != cur_user:
+                    data = json.dumps({
+                        'id': manager.account.id,
+                        'username': manager.account.user.username
+                    })
+                    manager_list.append(data)
+            return Response(manager_list)
         except Exception:
             return Response('get_teacher failed.')
 
@@ -202,6 +195,18 @@ class OptionsView(viewsets.ModelViewSet):
             return Response('add_option succeed.')
         except Exception:
             return Response('add_option failed.')
+
+    @action(methods=['get'], detail=True)
+    def get_options(self, request, pk):
+        try:
+            question = ChoiceQuestion.objects.get(id=pk)
+            option_list = []
+            for option in question.question_option.all().order_by('order'):
+                option_list.append(option.text_content)
+            return Response(option_list)
+            pass
+        except Exception as e:
+            return Response('get_options failed.')
 
 
 class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):

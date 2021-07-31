@@ -44,16 +44,16 @@ class ChoiceQuestion(models.Model):
 
 
 class Options(models.Model):
-    question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(ChoiceQuestion, related_name='question_option', on_delete=models.CASCADE)
     text_content = models.TextField(default='null')
     order = models.IntegerField(default=0)
     if_correct = models.BooleanField(default=False)
 
 
 class ChoiceQuestionUserAnswer(models.Model):
-    question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(ChoiceQuestion, related_name='question_answer', on_delete=models.CASCADE)
     answer_order = models.IntegerField(default=0)
-    user = models.ForeignKey(People, on_delete=models.CASCADE)
+    user = models.ForeignKey(People, related_name='user_answer', on_delete=models.CASCADE)
 
 
 class CompletionQuestion(models.Model):
