@@ -406,3 +406,21 @@ def get_question(pk, question_type):
     return question_list
 
 
+# 用于保存媒体文件的方法
+def save_media(request):
+    try:
+        with transaction.atomic():
+            file_type = request.data.get('file_type')
+            file = request.FILES.get('file')
+            if not file:
+                raise Exception
+            if file_type == 'image':
+                new_media = Media.objects.create(file=file, file_type=0)
+            elif file_type == 'video':
+                new_media = Media.objects.create(file=file, file_type=1)
+            elif file_type == 'voice':
+                pass  # TODO:实现存储音频的方法（等待具体明确音频格式）
+            new_media.save()
+            return new_media
+    except Exception:
+        return 'failed.'
