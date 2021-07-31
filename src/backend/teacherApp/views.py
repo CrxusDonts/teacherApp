@@ -189,6 +189,20 @@ class OptionsView(viewsets.ModelViewSet):
     queryset = Options.objects.all()
     serializer_class = OptionsSerializer
 
+    @action(methods=['post'], detail=True)
+    def add_option(self, request, pk):
+        try:
+            question = ChoiceQuestion.objects.get(id=pk)
+            text_content = request.data.get('text_content')
+            order = request.data.get('order')
+            if_correct = request.data.get('if_correct')
+            new_options = Options.objects.create \
+                (question=question, text_content=text_content, order=order, if_correct=if_correct)
+            new_options.save()
+            return Response('add_option succeed.')
+        except Exception:
+            return Response('add_option failed.')
+
 
 class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = ChoiceQuestionUserAnswer.objects.all()
