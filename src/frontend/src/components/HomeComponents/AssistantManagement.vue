@@ -10,18 +10,9 @@
                              :width="100">
             </el-table-column>
             <el-table-column
-                prop="id"
+                prop="userName"
                 label="账号"
                 width="180">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                label="姓名"
-                width="180">
-            </el-table-column>
-            <el-table-column
-                prop="status"
-                label="身份">
             </el-table-column>
             <el-table-column
                 align="right"
@@ -57,15 +48,7 @@ export default {
     name: 'AssistantManagement',
     data() {
         return {
-            tableData: [{
-                id: '12',
-                name: '果果果',
-                status: '老师'
-            }, {
-                id: '20',
-                name: '王小虎',
-                status: '助教'
-            }],
+            tableData: [],
             form: {
                 id: ''
             },
@@ -78,11 +61,22 @@ export default {
     mounted() {
         this.classId = this.$route.query.classId;
         this.userName = this.$route.params.userName;
+        this.$http.post('Manager/get_teacher/', {
+            class_id: this.classId
+        }).then(response => {
+            if (response.data !== 'get_teacher failed.') {
+                for (let i = 0;i < response.data.length;i++) {
+                    this.tableData.push({ userName: this.getUserName(response.data[i]) });
+                }
+            } else {
+                alert('获取管理人员失败！');
+            }
+        });
     },
     methods: {
         // 移除助教
         handleRemove(index, row) {
-            // console.log(index, row);
+            // TODO 等待后端功能实现再填写
         },
         invite() {
             this.dialogFormVisible = false;
@@ -102,6 +96,9 @@ export default {
         cancel() {
             this.dialogFormVisible = false;
             this.form.id = '';
+        },
+        getUserName(string) {
+            return string.split(',')[1].split(':')[1].split('"')[1];
         }
     }
 };

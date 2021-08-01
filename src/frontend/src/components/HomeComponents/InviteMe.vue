@@ -1,6 +1,6 @@
 <template>
     <el-table
-        :data="tableData"
+        :data="inviteMe"
         stripe
         style="width: 100%;
             margin-top: 10px;">
@@ -9,22 +9,17 @@
                          :width="100">
         </el-table-column>
         <el-table-column
-            prop="invitor_id"
+            prop="invitorUserName"
             label="邀请人账号"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="invitor_name"
-            label="邀请人姓名"
-            width="180">
-        </el-table-column>
-        <el-table-column
-            prop="class_id"
+            prop="inviteClassId"
             label="邀请班级号"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="class_name"
+            prop="inviteClassName"
             label="邀请班级名">
         </el-table-column>
         <el-table-column
@@ -47,17 +42,7 @@ export default {
     name: 'InviteMe',
     data() {
         return {
-            tableData: [{
-                invitor_id: '12',
-                invitor_name: '果果果',
-                class_id: '34',
-                class_name: '1'
-            }, {
-                invitor_id: '12',
-                invitor_name: '果果果',
-                class_id: '34',
-                class_name: '1'
-            }],
+            inviteMe: [],
             form: {
                 id: ''
             },
@@ -70,13 +55,30 @@ export default {
     mounted() {
         this.classId = this.$route.query.classId;
         this.userName = this.$route.params.userName;
+        this.$http.get('ManageInvitation/get_invitation/').then(response => {
+            for (let i = 0;i < response.data.length;i++) {
+                this.inviteMe.push({ invitationId: response.data[i].id, invitorUserName: response.data[i].inviter, inviteClassId: response.data[i].clazz, inviteClassName: '1465' });
+            }
+        });
     },
     methods: {
-        handleAccept(index, row) {
+        handleAccept(index) {
             // TODO 与后端交互
+            this.$http.post('ManageInvitation/handle_invitation/', {
+                if_accept: 1,
+                invitation_id: this.inviteMe[index].invitationId
+            }).then(response => {
+                console.log(response.data);
+            });
         },
-        handleRefuse(index, row) {
+        handleRefuse(index) {
             // TODO 与后端交互
+            this.$http.post('ManageInvitation/handle_invitation/', {
+                if_accept: 0,
+                invitation_id: this.inviteMe[index].invitationId
+            }).then(response => {
+                console.log(response.data);
+            });
         }
     }
 };
