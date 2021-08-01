@@ -76,6 +76,10 @@ export default {
             });
     },
     beforeDestroy() {
+        this.$http.put('ChoiceQuestion/' + this.choiceQuestion.id + '/', {
+            text_content: this.choiceQuestion.text_content,
+            homework: this.choiceQuestion.homework
+        });
         for (let i = 0; i < this.options.length; i++) {
             this.$http.put('Options/' + this.options[i].id + '/', {
                 text_content: this.options[i].text_content,

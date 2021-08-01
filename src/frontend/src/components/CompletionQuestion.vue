@@ -65,6 +65,10 @@ export default {
             });
     },
     beforeDestroy() {
+        this.$http.put('CompletionQuestion/' + this.completionQuestion.id + '/', {
+            text_content: this.completionQuestion.text_content,
+            homework: this.completionQuestion.homework
+        });
         for (let i = 0; i < this.answers.length; i++) {
             this.$http.put('CompletionQuestionAnswer/' + this.answers[i].id + '/', {
                 answer: this.answers[i].answer,

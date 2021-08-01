@@ -35,6 +35,12 @@ export default {
     mounted() {
         this.subjectiveQuestion = this.subjectivequestion;
     },
+    beforeDestroy() {
+        this.$http.put('SubjectiveQuestion/' + this.subjectiveQuestion.id + '/', {
+            text_content: this.subjectiveQuestion.text_content,
+            homework: this.subjectiveQuestion.homework
+        });
+    },
     data() {
         return {
             fileList: [

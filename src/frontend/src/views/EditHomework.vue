@@ -67,26 +67,6 @@ export default {
                 this.subjectiveQuestions = response.data;
             });
     },
-    beforeDestroy() {
-        for (let i = 0; i < this.choiceQuestions.length; i++) {
-            this.$http.put('ChoiceQuestion/' + this.choiceQuestions[i].id + '/', {
-                text_content: this.choiceQuestions[i].text_content,
-                homework: this.choiceQuestions[i].homework
-            });
-        }
-        for (let i = 0; i < this.completionQuestions.length; i++) {
-            this.$http.put('CompletionQuestion/' + this.completionQuestions[i].id + '/', {
-                text_content: this.completionQuestions[i].text_content,
-                homework: this.completionQuestions[i].homework
-            });
-        }
-        for (let i = 0; i < this.subjectiveQuestions.length; i++) {
-            this.$http.put('SubjectiveQuestion/' + this.subjectiveQuestions[i].id + '/', {
-                text_content: this.subjectiveQuestions[i].text_content,
-                homework: this.subjectiveQuestions[i].homework
-            });
-        }
-    },
     methods: {
         goBack() {
             this.$router.push({ path: '/home/' + this.userName });
@@ -106,6 +86,11 @@ export default {
             });
         },
         newSubjectiveQuestion() {
+            this.$http.post('Homework/' + this.homework.id + '/new_subjective_question/', {
+                text_content: '请输入题目'
+            }).then(response => {
+                this.subjectiveQuestions.push(response.data);
+            });
         }
     }
 };
