@@ -159,8 +159,25 @@ class ManagerView(viewsets.ModelViewSet):
                     })
                     manager_list.append(data)
             return Response(manager_list)
-        except Exception as e:
-            return Response(str(e))
+        except Exception:
+            return Response('get_teacher failed.')
+
+    @action(methods=['post'], detail=False)
+    def delete_teacher(self, request):
+        try:
+            user_name = request.data.get('user_name')
+            class_id = request.data.get('class_id')
+            target_class = Class.objects.get(id=class_id)
+            target_user = User.objects.get(username=user_name)
+            target_account = BackendAccount.objects.get(user=target_user)
+            manager = target_account.account_manager.all().get(clazz=target_class)
+            if manager.is_owner:
+                raise Exception
+            else:
+                manager.delete()
+            return Response('delete_teacher succeed.')
+        except Exception:
+            return Response('delete_teacher failed.')
 
 
 class FrontAccountView(viewsets.ModelViewSet):
@@ -205,11 +222,10 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
         except Exception:
             return Response('get_options failed.')
 
+
 class OptionsView(viewsets.ModelViewSet):
     queryset = Options.objects.all()
     serializer_class = OptionsSerializer
-
-
 
 
 class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
@@ -452,7 +468,7 @@ def save_media(request):
             elif file_type == 'video':
                 new_media = Media.objects.create(file=file, file_type=1)
             elif file_type == 'voice':
-                pass  # TODO:实现存储音频的方法（等待具体明确音频格式）
+                pass  # TODO:实现存储音频的方法 等待具体明确音频格式
             new_media.save()
             return new_media
     except Exception:
