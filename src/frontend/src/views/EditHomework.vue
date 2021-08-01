@@ -2,23 +2,24 @@
   <div>
     <Header v-bind:userName="userName"></Header>
     <el-header class="title">
-      {{homeWork.title}}
+      {{ homework.title }}
       <el-button type="primary" class="go-back" @click=goBack>返回</el-button>
     </el-header>
     <ChoiceQuestion v-for="(choiceQuestion, index) in choiceQuestions" :choicequestion="choiceQuestion"
-                    :order='order + index' :key="choiceQuestion.id">
+                    :order='order + index' :key="choiceQuestionConst+choiceQuestion.id">
     </ChoiceQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newChoiceQuestion>新增选择题</el-button>
     <CompletionQuestion v-for="(completionQuestion, index) in this.completionQuestions"
                         :completionquestion="completionQuestion"
-                        :order='order + choiceQuestions.length + index' :key="completionQuestion.id">
+                        :order='order + choiceQuestions.length + index'
+                        :key="completionQuestionConst+completionQuestion.id">
 
     </CompletionQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newCompletionQuestion>新增填空题</el-button>
     <SubjectiveQuestion v-for="(subjectiveQuestion, index) in this.subjectiveQuestions"
                         :subjectivequestion="subjectiveQuestion"
                         :order='order + choiceQuestions.length + completionQuestions.length + index'
-                        :key="subjectiveQuestion.id">
+                        :key="subjectiveQuestionConst+subjectiveQuestion.id">
     </SubjectiveQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newSubjectiveQuestion>新增主观题</el-button>
   </div>
@@ -35,34 +36,13 @@ export default {
         return {
             order: 1,
             userName: 'admin',
-            homeWork: '',
-            choiceQuestions: [{
-                id: 1,
-                text_content: '请选出下列是动物的生物'
-            },
-            {
-                id: 2,
-                text_content: '请选出下列是植物的生物'
-            }
-            ],
-            completionQuestions: [{
-                id: 3,
-                text_content: '床前明月光，__________'
-            },
-            {
-                id: 4,
-                text_content: '国破山河在，__________'
-            }
-            ],
-            subjectiveQuestions: [{
-                id: 5,
-                text_content: '请如视频所示制作一个剪纸作品。'
-            },
-            {
-                id: 6,
-                text_content: '请画出图片中的主要内容。'
-            }
-            ]
+            homework: '',
+            choiceQuestionConst: 'choiceQuestion',
+            completionQuestionConst: 'completionQuestion',
+            subjectiveQuestionConst: 'subjectiveQuestion',
+            choiceQuestions: [],
+            completionQuestions: [],
+            subjectiveQuestions: []
         };
     },
     components: {
@@ -71,33 +51,56 @@ export default {
         CompletionQuestion,
         SubjectiveQuestion
     },
-    created: function() {
-        this.homeWork = this.$route.query.homeWork;
+    mounted: function() {
+        this.homework = this.$route.query.homework;
+        this.userName = this.$route.query.userName;
+        this.$http.get('Homework/' + this.homework.id + '/get_choice_question/')
+            .then(response => {
+                this.choiceQuestions = response.data;
+            });
+        this.$http.get('Homework/' + this.homework.id + '/get_completion_question/')
+            .then(response => {
+                this.completionQuestions = response.data;
+            });
+        this.$http.get('Homework/' + this.homework.id + '/get_subjective_question/')
+            .then(response => {
+                this.subjectiveQuestions = response.data;
+            });
+    },
+    beforeDestroy() {
+        for (let i = 0; i < this.choiceQuestions.length; i++) {
+            this.$http.put('ChoiceQuestion/' + this.choiceQuestions[i].id + '/', {
+                text_content: this.choiceQuestions[i].text_content,
+                homework: this.choiceQuestions[i].homework
+            });
+        }
+        for (let i = 0; i < this.completionQuestions.length; i++) {
+            this.$http.put('CompletionQuestion/' + this.completionQuestions[i].id + '/', {
+                text_content: this.completionQuestions[i].text_content,
+                homework: this.completionQuestions[i].homework
+            });
+        }
+        for (let i = 0; i < this.subjectiveQuestions.length; i++) {
+            this.$http.put('SubjectiveQuestion/' + this.subjectiveQuestions[i].id + '/', {
+                text_content: this.subjectiveQuestions[i].text_content,
+                homework: this.subjectiveQuestions[i].homework
+            });
+        }
     },
     methods: {
         goBack() {
-            this.$router.push({ path: '/home' });
+            this.$router.push({ path: '/home/' + this.userName });
         },
         newChoiceQuestion() {
-            const choiceQuestion = {
-                id: this.choiceQuestions[this.choiceQuestions.length - 1].id + 1,
+            this.$http.post('Homework/' + this.homework.id + '/new_choice_question/', {
                 text_content: '请输入题目'
-            };
-            this.choiceQuestions.push(choiceQuestion);
+            }).then(response => {
+                this.choiceQuestions.push(response.data);
+            });
         },
         newCompletionQuestion() {
-            const completionQuestion = {
-                id: this.completionQuestions[this.completionQuestions.length - 1].id + 1,
-                text_content: '请输入题目'
-            };
-            this.completionQuestions.push(completionQuestion);
         },
         newSubjectiveQuestion() {
-            const subjectiveQuestion = {
-                id: this.subjectiveQuestions[this.subjectiveQuestions.length - 1].id + 1,
-                text_content: '请输入题目'
-            };
-            this.subjectiveQuestions.push(subjectiveQuestion);
         }
     }
 };

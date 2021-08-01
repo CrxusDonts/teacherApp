@@ -187,7 +187,8 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
             new_options = Options.objects.create \
                 (question=question, text_content=text_content, order=order, if_correct=if_correct)
             new_options.save()
-            return Response('add_option succeed.')
+            serializer = OptionsSerializer(new_options)
+            return Response(serializer.data)
         except Exception:
             return Response('add_option failed.')
 
@@ -235,7 +236,8 @@ class HomeworkView(viewsets.ModelViewSet):
         text_content = request.data.get('text_content')
         choice_question = ChoiceQuestion.objects.create(text_content=text_content, homework=homework)
         choice_question.save()
-        return Response(choice_question.id)
+        serializer = ChoiceQuestionSerializer(choice_question)
+        return Response(serializer.data)
 
     # 添加填空题
     @action(methods=['post'], detail=True)
@@ -246,8 +248,8 @@ class HomeworkView(viewsets.ModelViewSet):
             return Response('Homework not found.')
         text_content = request.data.get('text_content')
         completion_question = CompletionQuestion.objects.create(text_content=text_content, homework=homework)
-        completion_question.save()
-        return Response('New completion question succeed.')
+        serializer = CompletionQuestionSerializer(completion_question)
+        return Response(serializer.data)
 
     # 添加主观题
     @action(methods=['post'], detail=True)
@@ -258,8 +260,8 @@ class HomeworkView(viewsets.ModelViewSet):
             return Response('Homework not found.')
         text_content = request.data.get('text_content')
         subjective_question = SubjectiveQuestion.objects.create(text_content=text_content, homework=homework)
-        subjective_question.save()
-        return Response('New subjective question succeed.')
+        serializer = SubjectiveQuestionSerializer(subjective_question)
+        return Response(serializer.data)
 
     # 获取选择题
     @action(methods=['get'], detail=True)

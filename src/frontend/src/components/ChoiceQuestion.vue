@@ -8,9 +8,9 @@
     <p class="option" v-for="option in options" :key="option.id">
       <i v-if="option.if_correct" class="el-icon-check"></i>
       <i v-if="!option.if_correct" class="el-icon-close"></i>
-      {{option.order}}.{{option.answer}}</p>
+      {{option.order}}.{{option.text_content}}</p>
     <el-button type="primary" icon="el-icon-edit" circle @click="editChoiceQuestionFormVisible = true"></el-button>
-    <!--编辑选择题页面 -->
+    <!--编辑选择题页面-->
     <el-dialog title="编辑题目" :visible.sync="editChoiceQuestionFormVisible">
       <el-form>
         <!--题目输入框-->
@@ -20,7 +20,7 @@
         <!--选项输入框-->
         <el-form-item v-for="(option, index) in options" :key="option.id">
           <el-form-item :label=optionConstant+(index+1) :label-width="formLabelWidth">
-            <el-input v-model=option.answer autocomplete="off"></el-input>
+            <el-input v-model=option.text_content autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item>
             <el-radio-group class="radio-group" v-model="option.if_correct">
@@ -52,29 +52,9 @@ export default {
     name: 'ChoiceQuestion',
     props: ['choicequestion', 'order'],
     maxId: '',
-    mounted() {
-        this.choiceQuestion = this.choicequestion;
-    },
     data() {
         return {
-            options: [
-                {
-                    id: 1,
-                    order: 'A',
-                    answer: '兔子',
-                    if_correct: true
-                }, {
-                    id: 2,
-                    order: 'B',
-                    answer: '狗',
-                    if_correct: true
-                }, {
-                    id: 3,
-                    order: 'C',
-                    answer: '萝卜',
-                    if_correct: false
-                }
-            ],
+            options: [],
             fileList: [
                 {
                     id: 2,
@@ -88,8 +68,25 @@ export default {
             isMax: false
         };
     },
+    mounted() {
+        this.choiceQuestion = this.choicequestion;
+        this.$http.get('ChoiceQuestion/' + this.choiceQuestion.id + '/get_options/')
+            .then(response => {
+                this.options = response.data;
+            });
+    },
+    beforeDestroy() {
+        for (let i = 0; i < this.options.length; i++) {
+            this.$http.put('Options/' + this.options[i].id + '/', {
+                text_content: this.options[i].text_content,
+                if_correct: this.options[i].if_correct,
+                question: this.options[i].question
+            });
+        }
+    },
     methods: {
         deleteOption(option) {
+            this.$http.delete('Options/' + option.id + '/');
             this.options.contains = function(obj) {
                 let i = this.length;
                 while (i--) {
@@ -102,22 +99,21 @@ export default {
             this.options.splice(this.options.contains(option), 1);
         },
         newOption() {
-            const option = {
-                id: this.options.length > 0 ? this.options[this.options.length - 1].id + 1 : 1,
-                order: 'D',
-                answer: '请输入选项',
-                if_correct: true
-            };
-            this.options.push(option);
+            this.$http.post('ChoiceQuestion/' + this.choiceQuestion.id + '/add_option/', {
+                text_content: '请输入选项内容',
+                order: this.options.length > 0 ? this.options[this.options.length - 1].order + 1 : 1,
+                if_correct: 1,
+                question: this.choiceQuestion
+            }).then(response => {
+                this.options.push(response.data);
+            });
         },
         change(file, fileList) {
-            console.log('change');
             if (fileList.length >= 3) {
                 this.isMax = true;
             }
         },
         remove(file, fileList) {
-            console.log('remove');
             if (fileList.length < 3) {
                 this.isMax = false;
             }

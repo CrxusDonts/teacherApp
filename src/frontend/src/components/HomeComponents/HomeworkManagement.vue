@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table
-            :data="tableData"
+            :data="homeworks"
             stripe
             style="width: 100%;
             margin-top: 10px;">
@@ -17,7 +17,7 @@
             <el-table-column
                 prop="start_time"
                 label="开始时间"
-                width="180">
+                width="200">
             </el-table-column>
             <el-table-column
                 prop="due_time"
@@ -49,7 +49,7 @@
         <el-dialog title="新建作业" :visible.sync="newHomeworkFormVisible">
             <el-form :model="form">
                 <el-form-item label="作业名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                    <el-input v-model="form.title" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="时间" :label-width="formLabelWidth">
                     <div class="block">
@@ -82,27 +82,9 @@ export default {
     name: 'HomeworkManagement',
     data() {
         return {
-            tableData: [{
-                id: 1,
-                title: '三年级二班第二次作业',
-                start_time: '2021-07-27 16:17',
-                due_time: '2021-08-03 16:17',
-                repeatable: 1
-            }, {
-                id: 2,
-                title: '三年级二班第一次作业',
-                start_time: '2021-07-27 16:17',
-                due_time: '2021-08-03 16:17',
-                repeatable: 1
-            }, {
-                id: 3,
-                title: '三年级二班第三次作业',
-                start_time: '2021-07-27 16:17',
-                due_time: '2021-08-03 16:17',
-                repeatable: 1
-            }],
+            homeworks: [],
             form: {
-                name: '',
+                title: '',
                 timeValue: '',
                 repeatable: ''
             },
@@ -115,6 +97,13 @@ export default {
     mounted() {
         this.classId = this.$route.query.classId;
         this.userName = this.$route.params.userName;
+        this.$http.get('Class/' + this.classId + '/get_homeworks/').then(response => {
+            if (response.data !== 'Get my own class failed.') {
+                this.homeworks = response.data;
+            } else {
+                alert('获取班级失败！');
+            }
+        });
     },
     methods: {
         newHomework() {
@@ -124,8 +113,9 @@ export default {
                 this.newHomeworkFormVisible = false;
                 // 向后端发送请求
                 this.$http.post('Class/' + this.classId + '/new_homework/', {
+                    title: this.form.title,
                     start_time: this.form.timeValue[0],
-                    due_time: this.form.timeValue[1],
+                    due_time: this.form.timeValue[0],
                     repeatable: this.form.repeatable
                 }).then(response => {
                     if (response.data === 'New homework succeed.') {
@@ -139,7 +129,10 @@ export default {
             this.form = {};
         },
         handleEdit(index, row) {
-            this.$router.push({ path: '/edithomework', query: { homeWork: row }});
+            this.$router.push({ path: '/edithomework', query: {
+                homework: row,
+                userName: this.userName
+            }});
         },
         handleShare(index, row) {
             // TODO Share
