@@ -56,29 +56,49 @@ export default {
         this.classId = this.$route.query.classId;
         this.userName = this.$route.params.userName;
         this.$http.get('ManageInvitation/get_invitation/').then(response => {
-            for (let i = 0;i < response.data.length;i++) {
-                this.inviteMe.push({ invitationId: response.data[i].id, invitorUserName: response.data[i].inviter, inviteClassId: response.data[i].clazz, inviteClassName: '1465' });
+            if (response.data !== 'get_invitation failed.') {
+                for (let i = 0; i < response.data.length; i++) {
+                    this.inviteMe.push({
+                        invitationId: this.getInviteId(response.data[i]),
+                        invitorUserName: this.getInviter(response.data[i]),
+                        inviteClassId: this.getInviterClassId(response.data[i]),
+                        inviteClassName: this.getInviterClassName(response.data[i])
+                    });
+                }
+            } else {
+                alert('获取邀请列表，请重试！');
             }
         });
     },
     methods: {
         handleAccept(index) {
-            // TODO 与后端交互
             this.$http.post('ManageInvitation/handle_invitation/', {
                 if_accept: 1,
                 invitation_id: this.inviteMe[index].invitationId
-            }).then(response => {
-                console.log(response.data);
+            }).then(() => {
+                this.inviteMe.splice(index, index + 1);
             });
         },
         handleRefuse(index) {
-            // TODO 与后端交互
             this.$http.post('ManageInvitation/handle_invitation/', {
                 if_accept: 0,
                 invitation_id: this.inviteMe[index].invitationId
-            }).then(response => {
-                console.log(response.data);
+            }).then(() => {
+                this.inviteMe.splice(index, index + 1);
             });
+        },
+        // 由于后端返回的是字符串，所以要对字符串进行处理
+        getInviteId(string) {
+            return string.split(',')[0].split(':')[1];
+        },
+        getInviter(string) {
+            return string.split(',')[1].split(':')[1].split('"')[1];
+        },
+        getInviterClassId(string) {
+            return string.split(',')[2].split(':')[1];
+        },
+        getInviterClassName(string) {
+            return string.split(',')[3].split(':')[1].split('"')[1];
         }
     }
 };

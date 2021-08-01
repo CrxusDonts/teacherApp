@@ -75,22 +75,36 @@ export default {
     },
     methods: {
         // 移除助教
-        handleRemove(index, row) {
-            // TODO 等待后端功能实现再填写
+        handleRemove(index) {
+            this.$http.post('Manager/delete_teacher/', {
+                user_name: this.tableData[index].userName,
+                class_id: this.classId
+            }).then(response => {
+                if (response.data !== 'delete_teacher failed.') {
+                    alert('移除成功！');
+                    this.tableData.splice(index, index + 1);
+                } else {
+                    alert('移除失败！不能移除该班的拥有者');
+                }
+            });
         },
         invite() {
             this.dialogFormVisible = false;
             // 向后端发送请求
-            this.$http.post('ManageInvitation/invite_assistant/', {
-                user_name: this.form.id,
-                class_id: this.classId
-            }).then(response => {
-                if (response.data === 'invite succeed.') {
-                    alert('邀请成功！');
-                } else {
-                    alert('邀请失败！');
-                }
-            });
+            if (!this.ifContain(this.tableData, this.form.id)) {
+                this.$http.post('ManageInvitation/invite_assistant/', {
+                    user_name: this.form.id,
+                    class_id: this.classId
+                }).then(response => {
+                    if (response.data === 'invite succeed.') {
+                        alert('邀请成功！');
+                    } else if (response.data === 'invite failed.') {
+                        alert('邀请失败！请检查用户名');
+                    }
+                });
+            } else {
+                alert('该用户已在班级中。');
+            }
             this.form.id = '';
         },
         cancel() {
@@ -99,6 +113,14 @@ export default {
         },
         getUserName(string) {
             return string.split(',')[1].split(':')[1].split('"')[1];
+        },
+        ifContain(tableData, id) {
+            for (let i = 0;i < tableData.length;i++) {
+                if (tableData[i].userName === id) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 };

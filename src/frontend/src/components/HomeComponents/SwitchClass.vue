@@ -56,8 +56,9 @@ export default {
             }
             this.$http.get('Class/get_manage_class_list/').then(response => {
                 if (response.data !== 'Get my manage class failed.') {
-                    if (response.data.length !== 0) {
-                        this.tableData.push({ id: response.data.id, class_name: response.data.class_name });
+                    console.log(response.data);
+                    for (let i = 0;i < response.data.length;i++) {
+                        this.tableData.push({ id: response.data[i].id, class_name: response.data[i].class_name });
                     }
                 } else {
                     alert('失败！');

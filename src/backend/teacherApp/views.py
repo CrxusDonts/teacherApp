@@ -386,7 +386,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
             inviter = BackendAccount.objects.get(user=request.user)
             invitee = BackendAccount.objects.get(user=User.objects.get(username=request.data.get('user_name')))
             clazz = Class.objects.get(id=request.data.get('class_id'))
-            invitation = ManageInvitation.objects.get(inviter=inviter, invitee=invitee, clazz=clazz)
+            invitation = ManageInvitation.objects.filter(inviter=inviter, invitee=invitee, clazz=clazz).all()
             response_str = 'invite succeed.'
             if not invitation:
                 new_invitation = ManageInvitation.objects.create(inviter=inviter, invitee=invitee, clazz=clazz)
