@@ -44,16 +44,16 @@ class ChoiceQuestion(models.Model):
 
 
 class Options(models.Model):
-    question = models.ForeignKey(ChoiceQuestion, related_name='question_option', on_delete=models.CASCADE)
+    question = models.ForeignKey(ChoiceQuestion, related_name='ChoiceQuestion_option', on_delete=models.CASCADE)
     text_content = models.TextField(default='null')
     order = models.IntegerField(default=0)
     if_correct = models.BooleanField(default=False)
 
 
 class ChoiceQuestionUserAnswer(models.Model):
-    question = models.ForeignKey(ChoiceQuestion, related_name='question_answer', on_delete=models.CASCADE)
+    question = models.ForeignKey(ChoiceQuestion, related_name='ChoiceQuestion_answer', on_delete=models.CASCADE)
     answer_order = models.IntegerField(default=0)
-    user = models.ForeignKey(People, related_name='user_answer', on_delete=models.CASCADE)
+    user = models.ForeignKey(People, related_name='ChoiceQuestionUser_answer', on_delete=models.CASCADE)
 
 
 class CompletionQuestion(models.Model):
@@ -64,13 +64,15 @@ class CompletionQuestion(models.Model):
 class CompletionQuestionAnswer(models.Model):
     answer = models.CharField(max_length=50, default='undefined')
     answer_order = models.IntegerField(default=0)
-    question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(CompletionQuestion, related_name='CompletionQuestion_answer', on_delete=models.CASCADE)
 
 
 class CompletionQuestionUserAnswer(models.Model):
     answer = models.CharField(max_length=50, default='undefined')
     answer_order = models.IntegerField(default=0)
-    question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(CompletionQuestion, related_name='CompletionQuestionUser_answer',
+                                 on_delete=models.CASCADE)
+    user = models.ForeignKey(People, related_name='CompletionUser_answer', on_delete=models.CASCADE)
 
 
 class SubjectiveQuestion(models.Model):

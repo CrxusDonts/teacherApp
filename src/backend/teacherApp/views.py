@@ -159,8 +159,8 @@ class ManagerView(viewsets.ModelViewSet):
                     })
                     manager_list.append(data)
             return Response(manager_list)
-        except Exception:
-            return Response('get_teacher failed.')
+        except Exception as e:
+            return Response(str(e))
 
 
 class FrontAccountView(viewsets.ModelViewSet):
@@ -176,11 +176,6 @@ class PeopleView(viewsets.ModelViewSet):
 class ChoiceQuestionView(viewsets.ModelViewSet):
     queryset = ChoiceQuestion.objects.all()
     serializer_class = ChoiceQuestionSerializer
-
-
-class OptionsView(viewsets.ModelViewSet):
-    queryset = Options.objects.all()
-    serializer_class = OptionsSerializer
 
     @action(methods=['post'], detail=True)
     def add_option(self, request, pk):
@@ -201,12 +196,19 @@ class OptionsView(viewsets.ModelViewSet):
         try:
             question = ChoiceQuestion.objects.get(id=pk)
             option_list = []
-            for option in question.question_option.all().order_by('order'):
-                option_list.append(option.text_content)
-            return Response(option_list)
+            for option in question.ChoiceQuestion_option.all().order_by('order'):
+                option_list.append(option)
+            serializer = OptionsSerializer(option_list, many=True)
+            return Response(serializer.data)
             pass
-        except Exception as e:
+        except Exception:
             return Response('get_options failed.')
+
+class OptionsView(viewsets.ModelViewSet):
+    queryset = Options.objects.all()
+    serializer_class = OptionsSerializer
+
+
 
 
 class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
@@ -217,15 +219,6 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
-
-    @action(methods=['get'], detail=False)
-    def test_get(self, request):
-        try:
-            media = Media.objects.get(id=12)
-            file = media.file
-            return Response(file)
-        except Exception as e:
-            return Response(str(e))
 
 
 class HomeworkView(viewsets.ModelViewSet):
@@ -308,10 +301,29 @@ class CompletionQuestionAnswerView(viewsets.ModelViewSet):
     queryset = CompletionQuestionAnswer.objects.all()
     serializer_class = CompletionQuestionAnswerSerializer
 
+    @action(methods=['post'], detail=True)
+    def set_answer(self, request, pk):
+        try:
+            question = CompletionQuestion.objects.get(id=pk)
+            answer = request.data.get('answer')
+            order = request.data.get('order')
+            new_answer = CompletionQuestionAnswer.objects.create(answer=answer, answer_order=order, question=question)
+            new_answer.save()
+            return Response('set_answer succeed.')
+        except Exception as e:
+            return Response('set_answer failed.')
+
 
 class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = CompletionQuestionUserAnswer.objects.all()
     serializer_class = CompletionQuestionUserAnswerSerializer
+
+    @action(methods=['post'], detail=True)
+    def set_user_answer(self, request, pk):
+        try:
+            pass  # TODO:作答函数
+        except Exception as e:
+            return Response(str(e))
 
 
 class SubjectiveQuestionView(viewsets.ModelViewSet):
