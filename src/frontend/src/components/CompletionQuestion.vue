@@ -8,6 +8,7 @@
     <span>答案：</span><span class="answer" v-for="answer in answers" :key="answer.id">{{answer.answer}}</span><br>
     <el-button type="primary" icon="el-icon-edit" circle
                @click="editCompletionQuestionFormVisible = true" style="margin-top: 8px;"></el-button>
+    <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑填空题页面 -->
     <el-dialog title="编辑题目" :visible.sync="editCompletionQuestionFormVisible">
       <el-form>
@@ -40,7 +41,7 @@
 <script>
 export default {
     name: 'CompletionQuestion',
-    props: ['completionquestion', 'order'],
+    props: ['completionquestion', 'order', 'index'],
     data() {
         return {
             answers: [],
@@ -77,6 +78,12 @@ export default {
         }
     },
     methods: {
+        deleteQuestion() {
+            this.$http.delete('CompletionQuestion/' + this.completionQuestion.id + '/');
+            this.completionQuestion = '';
+            this.answers = [];
+            this.$parent.deleteCompletionQuestion(this.index);
+        },
         deleteAnswer(answer) {
             this.$http.delete('CompletionQuestionAnswer/' + answer.id + '/');
             this.answers.contains = function(obj) {

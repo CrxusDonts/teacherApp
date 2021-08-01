@@ -10,6 +10,7 @@
       <i v-if="!option.if_correct" class="el-icon-close"></i>
       {{option.order}}.{{option.text_content}}</p>
     <el-button type="primary" icon="el-icon-edit" circle @click="editChoiceQuestionFormVisible = true"></el-button>
+    <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑选择题页面-->
     <el-dialog title="编辑题目" :visible.sync="editChoiceQuestionFormVisible">
       <el-form>
@@ -50,7 +51,7 @@
 <script>
 export default {
     name: 'ChoiceQuestion',
-    props: ['choicequestion', 'order'],
+    props: ['choicequestion', 'order', 'index'],
     maxId: '',
     data() {
         return {
@@ -76,10 +77,12 @@ export default {
             });
     },
     beforeDestroy() {
-        this.$http.put('ChoiceQuestion/' + this.choiceQuestion.id + '/', {
-            text_content: this.choiceQuestion.text_content,
-            homework: this.choiceQuestion.homework
-        });
+        if (this.choiceQuestion !== '') {
+            this.$http.put('ChoiceQuestion/' + this.choiceQuestion.id + '/', {
+                text_content: this.choiceQuestion.text_content,
+                homework: this.choiceQuestion.homework
+            });
+        }
         for (let i = 0; i < this.options.length; i++) {
             this.$http.put('Options/' + this.options[i].id + '/', {
                 text_content: this.options[i].text_content,
@@ -89,6 +92,12 @@ export default {
         }
     },
     methods: {
+        deleteQuestion() {
+            this.$http.delete('ChoiceQuestion/' + this.choiceQuestion.id + '/');
+            this.choiceQuestion = '';
+            this.options = [];
+            this.$parent.deleteChoiceQuestion(this.index);
+        },
         deleteOption(option) {
             this.$http.delete('Options/' + option.id + '/');
             this.options.contains = function(obj) {

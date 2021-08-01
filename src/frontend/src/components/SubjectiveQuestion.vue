@@ -7,6 +7,7 @@
     </el-image><br>
     <el-button type="primary" icon="el-icon-edit" circle
                @click="editSubjectQuestionFormVisible = true"></el-button>
+    <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑主观题页面 -->
     <el-dialog title="编辑题目" :visible.sync="editSubjectQuestionFormVisible">
       <el-form>
@@ -31,7 +32,7 @@
 <script>
 export default {
     name: 'SubjectiveQuestion',
-    props: ['subjectivequestion', 'order'],
+    props: ['subjectivequestion', 'order', 'index'],
     mounted() {
         this.subjectiveQuestion = this.subjectivequestion;
     },
@@ -56,6 +57,11 @@ export default {
         };
     },
     methods: {
+        deleteQuestion() {
+            this.$http.delete('SubjectiveQuestion/' + this.subjectiveQuestion.id + '/');
+            this.subjectiveQuestion = '';
+            this.$parent.deleteSubjectiveQuestion(this.index);
+        },
         change(file, fileList) {
             console.log('change');
             if (fileList.length >= 3) {

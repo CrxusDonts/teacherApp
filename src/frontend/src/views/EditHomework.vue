@@ -6,12 +6,12 @@
       <el-button type="primary" class="go-back" @click=goBack>返回</el-button>
     </el-header>
     <ChoiceQuestion v-for="(choiceQuestion, index) in choiceQuestions" :choicequestion="choiceQuestion"
-                    :order='order + index' :key="choiceQuestionConst+choiceQuestion.id">
+                    :order='order + index' :index="index" :key="choiceQuestionConst+choiceQuestion.id">
     </ChoiceQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newChoiceQuestion>新增选择题</el-button>
     <CompletionQuestion v-for="(completionQuestion, index) in this.completionQuestions"
                         :completionquestion="completionQuestion"
-                        :order='order + choiceQuestions.length + index'
+                        :order='order + choiceQuestions.length + index' :index="index"
                         :key="completionQuestionConst+completionQuestion.id">
 
     </CompletionQuestion>
@@ -19,7 +19,7 @@
     <SubjectiveQuestion v-for="(subjectiveQuestion, index) in this.subjectiveQuestions"
                         :subjectivequestion="subjectiveQuestion"
                         :order='order + choiceQuestions.length + completionQuestions.length + index'
-                        :key="subjectiveQuestionConst+subjectiveQuestion.id">
+                        :index="index" :key="subjectiveQuestionConst+subjectiveQuestion.id">
     </SubjectiveQuestion>
     <el-button type="success" style="margin-top: 5px;" @click=newSubjectiveQuestion>新增主观题</el-button>
   </div>
@@ -91,6 +91,15 @@ export default {
             }).then(response => {
                 this.subjectiveQuestions.push(response.data);
             });
+        },
+        deleteChoiceQuestion(index) {
+            this.choiceQuestions.splice(index, 1);
+        },
+        deleteCompletionQuestion(index) {
+            this.completionQuestions.splice(index, 1);
+        },
+        deleteSubjectiveQuestion(index) {
+            this.subjectiveQuestions.splice(index, 1);
         }
     }
 };
