@@ -149,15 +149,13 @@ class ManagerView(viewsets.ModelViewSet):
         try:
             cur_class_id = request.data.get('class_id')
             cur_class = Class.objects.get(id=cur_class_id)
-            cur_user = request.user
             manager_list = []
             for manager in cur_class.class_manager.all():
-                if manager.account.user != cur_user:
-                    data = json.dumps({
-                        'id': manager.account.id,
-                        'username': manager.account.user.username
-                    })
-                    manager_list.append(data)
+                data = json.dumps({
+                    'id': manager.account.id,
+                    'username': manager.account.user.username
+                })
+                manager_list.append(data)
             return Response(manager_list)
         except Exception:
             return Response('get_teacher failed.')
@@ -386,9 +384,14 @@ class ManageInvitationView(viewsets.ModelViewSet):
             cur_account = BackendAccount.objects.get(user=request.user)
             invitation_list = []
             for invitation in cur_account.account_invitee.all():
-                invitation_list.append(invitation)
-            serializer = ManageInvitationSerializer(invitation_list, many=True)
-            return Response(serializer.data)
+                data = json.dumps({
+                    'id': invitation.id,
+                    'inviter': invitation.inviter.user.username,
+                    'class_id': invitation.clazz.id,
+                    'class_name': invitation.clazz.class_name
+                })
+                invitation_list.append(data)
+            return Response(invitation_list)
         except Exception:
             return Response('get_invitation failed.')
 
@@ -468,7 +471,7 @@ def save_media(request):
             elif file_type == 'video':
                 new_media = Media.objects.create(file=file, file_type=1)
             elif file_type == 'voice':
-                pass  # TODO:实现存储音频的方法 等待具体明确音频格式
+                pass  # TODO:实现存储音频的方法 (等待具体明确音频格式)
             new_media.save()
             return new_media
     except Exception:
