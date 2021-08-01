@@ -98,7 +98,7 @@ export default {
         this.classId = this.$route.query.classId;
         this.userName = this.$route.params.userName;
         this.$http.get('Class/' + this.classId + '/get_homeworks/').then(response => {
-            if (response.data !== 'Get my own class failed.') {
+            if (response.data !== 'Class not found.') {
                 this.homeworks = response.data;
             } else {
                 alert('获取班级失败！');
@@ -115,18 +115,20 @@ export default {
                 this.$http.post('Class/' + this.classId + '/new_homework/', {
                     title: this.form.title,
                     start_time: this.form.timeValue[0],
-                    due_time: this.form.timeValue[0],
+                    due_time: this.form.timeValue[1],
                     repeatable: this.form.repeatable
                 }).then(response => {
                     if (response.data === 'New homework succeed.') {
                         alert('创建成功！');
+                        this.homeworks.push({ title: this.form.title, start_time: this.form.timeValue,
+                            due_time: this.form.timeValue[1], repeatable: this.form.repeatable });
                     } else {
                         alert('创建失败！');
                     }
+                    // 清空表单
+                    this.form = {};
                 });
             }
-            // 清空表单
-            this.form = {};
         },
         handleEdit(index, row) {
             this.$router.push({ path: '/edithomework', query: {
@@ -140,8 +142,9 @@ export default {
         handleCancel(index, row) {
             // TODO Cancel
         },
-        handleDelete(index, row) {
-            // TODO Delete
+        handleDelete(index) {
+            this.$http.delete('Homework/' + this.homeworks[index].id);
+            this.homeworks.splice(index, index + 1);
         }
     }
 };
