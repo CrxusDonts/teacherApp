@@ -41,22 +41,9 @@
 export default {
     name: 'CompletionQuestion',
     props: ['completionquestion', 'order'],
-    mounted() {
-        this.completionQuestion = this.completionquestion;
-    },
     data() {
         return {
-            answers: [
-                {
-                    id: 1,
-                    answer: '疑似地上霜'
-                }, {
-                    id: 2,
-                    answer: '明月几时有'
-                }, {
-                    id: 3,
-                    answer: '把酒问青天'
-                }],
+            answers: [],
             fileList: [
                 {
                     id: 2,
@@ -70,8 +57,24 @@ export default {
             isMax: false
         };
     },
+    mounted() {
+        this.completionQuestion = this.completionquestion;
+        this.$http.get('CompletionQuestion/' + this.completionQuestion.id + '/get_answers/')
+            .then(response => {
+                this.answers = response.data;
+            });
+    },
+    beforeDestroy() {
+        for (let i = 0; i < this.answers.length; i++) {
+            this.$http.put('CompletionQuestionAnswer/' + this.answers[i].id + '/', {
+                answer: this.answers[i].answer,
+                question: this.answers[i].question
+            });
+        }
+    },
     methods: {
         deleteAnswer(answer) {
+            this.$http.delete('CompletionQuestionAnswer/' + answer.id + '/');
             this.answers.contains = function(obj) {
                 let i = this.length;
                 while (i--) {
@@ -84,20 +87,19 @@ export default {
             this.answers.splice(this.answers.contains(answer), 1);
         },
         newAnswer() {
-            const answer = {
-                id: this.answers.length > 0 ? this.answers[this.answers.length - 1].id + 1 : 1,
-                answer: '请输入答案'
-            };
-            this.answers.push(answer);
+            this.$http.post('CompletionQuestion/' + this.completionQuestion.id + '/add_answer/', {
+                answer: '请输入答案内容',
+                order: this.answers.length > 0 ? this.answers[this.answers.length - 1].answer_order + 1 : 1
+            }).then(response => {
+                this.answers.push(response.data);
+            });
         },
         change(file, fileList) {
-            console.log('change');
             if (fileList.length >= 3) {
                 this.isMax = true;
             }
         },
         remove(file, fileList) {
-            console.log('remove');
             if (fileList.length < 3) {
                 this.isMax = false;
             }

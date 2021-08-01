@@ -312,22 +312,36 @@ class CompletionQuestionView(viewsets.ModelViewSet):
     queryset = CompletionQuestion.objects.all()
     serializer_class = CompletionQuestionSerializer
 
-
-class CompletionQuestionAnswerView(viewsets.ModelViewSet):
-    queryset = CompletionQuestionAnswer.objects.all()
-    serializer_class = CompletionQuestionAnswerSerializer
-
     @action(methods=['post'], detail=True)
-    def set_answer(self, request, pk):
+    def add_answer(self, request, pk):
         try:
             question = CompletionQuestion.objects.get(id=pk)
             answer = request.data.get('answer')
             order = request.data.get('order')
             new_answer = CompletionQuestionAnswer.objects.create(answer=answer, answer_order=order, question=question)
             new_answer.save()
-            return Response('set_answer succeed.')
+            serializer = CompletionQuestionAnswerSerializer(new_answer)
+            return Response(serializer.data)
         except Exception as e:
-            return Response('set_answer failed.')
+            return Response(str(e))
+
+    @action(methods=['get'], detail=True)
+    def get_answers(self, request, pk):
+        try:
+            question = CompletionQuestion.objects.get(id=pk)
+            answers = []
+            for answer in question.CompletionQuestion_answer.all().order_by('answer_order'):
+                answers.append(answer)
+            serializer = CompletionQuestionAnswerSerializer(answers, many=True)
+            return Response(serializer.data)
+            pass
+        except Exception as e:
+            return Response(str(e))
+
+
+class CompletionQuestionAnswerView(viewsets.ModelViewSet):
+    queryset = CompletionQuestionAnswer.objects.all()
+    serializer_class = CompletionQuestionAnswerSerializer
 
 
 class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
@@ -335,7 +349,7 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
     serializer_class = CompletionQuestionUserAnswerSerializer
 
     @action(methods=['post'], detail=True)
-    def set_user_answer(self, request, pk):
+    def add_user_answer(self, request, pk):
         try:
             pass  # TODO:作答函数
         except Exception as e:

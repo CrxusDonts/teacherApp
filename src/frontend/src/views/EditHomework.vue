@@ -99,6 +99,11 @@ export default {
             });
         },
         newCompletionQuestion() {
+            this.$http.post('Homework/' + this.homework.id + '/new_completion_question/', {
+                text_content: '请输入题目'
+            }).then(response => {
+                this.completionQuestions.push(response.data);
+            });
         },
         newSubjectiveQuestion() {
         }
