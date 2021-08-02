@@ -4,15 +4,15 @@
                  label-width="0px">
             <h3 class="login-title">修改密码</h3>
             <el-form-item>
-                <el-input type="password" v-model="oldPassword" prefix-icon="el-icon-lock"
+                <el-input type="password" v-model="old_password" prefix-icon="el-icon-lock" :autofocus="true"
                           auto-complete="off" placeholder="原密码"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input type="password" v-model="newPassword" prefix-icon="el-icon-lock"
+                <el-input type="password" v-model="new_password" prefix-icon="el-icon-lock"
                           auto-complete="off" placeholder="新密码"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input type="password" v-model="newPasswordAgain" prefix-icon="el-icon-lock"
+                <el-input type="password" v-model="new_password_again" prefix-icon="el-icon-lock"
                           auto-complete="off" placeholder="再次输入新密码" v-on:keyup.enter.native="modify"></el-input>
             </el-form-item>
             <el-form-item>
@@ -27,25 +27,25 @@ export default {
     name: 'passwordModify',
     data: function() {
         return {
-            oldPassword: '',
-            newPassword: '',
-            newPasswordAgain: ''
+            old_password: '',
+            new_password: '',
+            new_password_again: ''
         };
     },
     methods: {
         modify() {
-            if (!this.oldPassword) {
+            if (!this.old_password) {
                 this.$message.error('请输入原密码！');// message组件弹出框
-            } else if (!this.newPassword) {
+            } else if (!this.new_password) {
                 this.$message.error('请输入新密码！');
-            } else if (!this.newPasswordAgain) {
+            } else if (!this.new_password_again) {
                 this.$message.error('请再次输入新密码！');
-            } else if (this.newPassword !== this.newPasswordAgain) {
+            } else if (this.new_password !== this.new_password_again) {
                 this.$message.error('请保证两次密码输入一致！');
             } else {
                 this.$http.put('BackendAccount/change_password/', {
-                    old_password: this.oldPassword,
-                    new_password: this.newPassword
+                    old_password: this.old_password,
+                    new_password: this.new_password
                 }).then(response => {
                     console.log(response.data);
                     if (response.data === 'Modify password succeed.') {

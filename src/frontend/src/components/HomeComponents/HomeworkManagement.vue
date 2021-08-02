@@ -26,7 +26,7 @@
             <el-table-column align="right">
                 <template slot="header">
                     <el-button type="success" plain icon="el-icon-plus" size="mini"
-                               @click="newHomeworkFormVisible = true">新建
+                               @click="new_homework_form_visible = true">新建
                     </el-button>
                 </template>
                 <template slot-scope="scope">
@@ -46,15 +46,15 @@
             </el-table-column>
         </el-table>
         <!--表单提示框 -->
-        <el-dialog title="新建作业" :visible.sync="newHomeworkFormVisible">
+        <el-dialog title="新建作业" :visible.sync="new_homework_form_visible">
             <el-form :model="form">
-                <el-form-item label="作业名称" :label-width="formLabelWidth">
+                <el-form-item label="作业名称" :label-width="form_label_width">
                     <el-input v-model="form.title" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="时间" :label-width="formLabelWidth">
+                <el-form-item label="时间" :label-width="form_label_width">
                     <div class="block">
                         <el-date-picker
-                            v-model="form.timeValue"
+                            v-model="form.time_value"
                             value-format="yyyy-MM-dd HH:mm"
                             :destroy-on-close="true"
                             type="datetimerange"
@@ -64,13 +64,13 @@
                         </el-date-picker>
                     </div>
                 </el-form-item>
-                <el-form-item label="是否可以重复提交" :label-width="formLabelWidth">
+                <el-form-item label="是否可以重复提交" :label-width="form_label_width">
                     <el-radio v-model="form.repeatable" :label="true">可以重复提交</el-radio>
                     <el-radio v-model="form.repeatable" :label="false">不可重复提交</el-radio>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="form={};newHomeworkFormVisible = false;">取 消</el-button>
+                <el-button @click="form={};new_homework_form_visible = false;">取 消</el-button>
                 <el-button type="primary" @click="newHomework">确 定</el-button>
             </div>
         </el-dialog>
@@ -85,19 +85,19 @@ export default {
             homeworks: [],
             form: {
                 title: '',
-                timeValue: '',
+                time_value: '',
                 repeatable: ''
             },
-            newHomeworkFormVisible: false,
-            formLabelWidth: '140px',
-            classId: '',
-            userName: ''
+            new_homework_form_visible: false,
+            form_label_width: '140px',
+            class_id: '',
+            user_name: ''
         };
     },
     mounted() {
-        this.classId = this.$route.query.classId;
-        this.userName = this.$route.params.userName;
-        this.$http.get('Class/' + this.classId + '/get_homeworks/').then(response => {
+        this.class_id = this.$route.query.class_id;
+        this.user_name = this.$route.params.user_name;
+        this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(response => {
             if (response.data !== 'Class not found.') {
                 this.homeworks = response.data;
             } else {
@@ -107,21 +107,21 @@ export default {
     },
     methods: {
         newHomework() {
-            if (this.form.name === '' || this.form.timeValue === '' || this.form.repeatable === '') {
+            if (this.form.name === '' || this.form.time_value === '' || this.form.repeatable === '') {
                 alert('请填入所有信息!');
             } else {
-                this.newHomeworkFormVisible = false;
+                this.new_homework_form_visible = false;
                 // 向后端发送请求
-                this.$http.post('Class/' + this.classId + '/new_homework/', {
+                this.$http.post('Class/' + this.class_id + '/new_homework/', {
                     title: this.form.title,
-                    start_time: this.form.timeValue[0],
-                    due_time: this.form.timeValue[1],
+                    start_time: this.form.time_value[0],
+                    due_time: this.form.time_value[1],
                     repeatable: this.form.repeatable
                 }).then(response => {
                     if (response.data === 'New homework succeed.') {
                         alert('创建成功！');
-                        this.homeworks.push({ title: this.form.title, start_time: this.form.timeValue,
-                            due_time: this.form.timeValue[1], repeatable: this.form.repeatable });
+                        this.homeworks.push({ title: this.form.title, start_time: this.form.time_value,
+                            due_time: this.form.time_value[1], repeatable: this.form.repeatable });
                     } else {
                         alert('创建失败！');
                     }
@@ -133,7 +133,7 @@ export default {
         handleEdit(index, row) {
             this.$router.push({ path: '/edithomework', query: {
                 homework: row,
-                userName: this.userName
+                user_name: this.user_name
             }});
         },
         handleShare(index, row) {

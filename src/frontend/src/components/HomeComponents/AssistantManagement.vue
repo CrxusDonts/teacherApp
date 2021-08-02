@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table
-            :data="tableData"
+            :data="assistant"
             stripe
             style="width: 100%;
             margin-top: 10px;">
@@ -10,7 +10,7 @@
                              :width="100">
             </el-table-column>
             <el-table-column
-                prop="userName"
+                prop="user_name"
                 label="账号"
                 width="180">
             </el-table-column>
@@ -19,7 +19,7 @@
                 label="操作">
                 <template slot="header">
                     <el-button type="success" plain icon="el-icon-plus" size="mini"
-                               @click="dialogFormVisible = true">邀请</el-button>
+                               @click="dialog_form_visible = true">邀请</el-button>
                 </template>
                 <template slot-scope="scope">
                     <el-button type="danger" plain icon="el-icon-delete" size="mini"
@@ -28,9 +28,9 @@
             </el-table-column>
         </el-table>
         <!--邀请助教对话框-->
-        <el-dialog title="邀请助教" :visible.sync="dialogFormVisible">
+        <el-dialog title="邀请助教" :visible.sync="dialog_form_visible">
             <el-form :model="form">
-                <el-form-item label="账号" :label-width="formLabelWidth">
+                <el-form-item label="账号" :label-width="form_label_width">
                     <!-- 暂未实现自动获得焦点-->
                     <el-input v-model="form.id" autocomplete="off" :autofocus="true"></el-input>
                 </el-form-item>
@@ -48,25 +48,25 @@ export default {
     name: 'AssistantManagement',
     data() {
         return {
-            tableData: [],
+            assistant: [],
             form: {
                 id: ''
             },
-            dialogFormVisible: false,
-            formLabelWidth: '120px',
-            classId: '',
-            userName: ''
+            dialog_form_visible: false,
+            form_label_width: '120px',
+            class_id: '',
+            user_name: ''
         };
     },
     mounted() {
-        this.classId = this.$route.query.classId;
-        this.userName = this.$route.params.userName;
+        this.class_id = this.$route.query.class_id;
+        this.user_name = this.$route.params.user_name;
         this.$http.post('Manager/get_teacher/', {
-            class_id: this.classId
+            class_id: this.class_id
         }).then(response => {
             if (response.data !== 'get_teacher failed.') {
                 for (let i = 0;i < response.data.length;i++) {
-                    this.tableData.push({ userName: this.getUserName(response.data[i]) });
+                    this.assistant.push({ user_name: this.getUserName(response.data[i]) });
                 }
             } else {
                 alert('获取管理人员失败！');
@@ -77,24 +77,24 @@ export default {
         // 移除助教
         handleRemove(index) {
             this.$http.post('Manager/delete_teacher/', {
-                user_name: this.tableData[index].userName,
-                class_id: this.classId
+                user_name: this.assistant[index].userName,
+                class_id: this.class_id
             }).then(response => {
                 if (response.data !== 'delete_teacher failed.') {
                     alert('移除成功！');
-                    this.tableData.splice(index, index + 1);
+                    this.assistant.splice(index, index + 1);
                 } else {
                     alert('移除失败！不能移除该班的拥有者');
                 }
             });
         },
         invite() {
-            this.dialogFormVisible = false;
+            this.dialog_form_visible = false;
             // 向后端发送请求
-            if (!this.ifContain(this.tableData, this.form.id)) {
+            if (!this.ifContain(this.assistant, this.form.id)) {
                 this.$http.post('ManageInvitation/invite_assistant/', {
                     user_name: this.form.id,
-                    class_id: this.classId
+                    class_id: this.class_id
                 }).then(response => {
                     if (response.data === 'invite succeed.') {
                         alert('邀请成功！');
@@ -108,7 +108,7 @@ export default {
             this.form.id = '';
         },
         cancel() {
-            this.dialogFormVisible = false;
+            this.dialog_form_visible = false;
             this.form.id = '';
         },
         getUserName(string) {

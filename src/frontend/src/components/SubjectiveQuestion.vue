@@ -1,29 +1,29 @@
 <template>
   <div class="subjective-question">
     <p class="text-content">
-      {{order}}.{{subjectiveQuestion.text_content}}
+        {{ order }}.{{ subjective_question.text_content }}
     </p>
-    <el-image class="image" v-for="file in fileList" :key="file.url" :src="file.url" :preview-src-list="fileList">
+    <el-image class="image" v-for="file in file_list" :key="file.url" :src="file.url" :preview-src-list="file_list">
     </el-image><br>
     <el-button type="primary" icon="el-icon-edit" circle
-               @click="editSubjectQuestionFormVisible = true"></el-button>
+               @click="edit_subject_question_form_visible = true"></el-button>
     <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑主观题页面 -->
-    <el-dialog title="编辑题目" :visible.sync="editSubjectQuestionFormVisible">
+    <el-dialog title="编辑题目" :visible.sync="edit_subject_question_form_visible">
       <el-form>
-        <el-form-item label="题目" :label-width="formLabelWidth">
-          <el-input v-model=subjectiveQuestion.text_content autocomplete="off"></el-input>
+        <el-form-item label="题目" :label-width="form_label_width">
+          <el-input v-model=subjective_question.text_content autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <!--图片上传框-->
-      <el-upload action="#" list-type="picture-card" :file-list="fileList"
-                 :class = "{disabled:isMax}" :limit = 3 :on-change = "change"
+      <el-upload action="#" list-type="picture-card" :file-list="file_list"
+                 :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
                  :on-remove = "remove" :before-upload = "beforeAvatarUpload">
         <i class="el-icon-upload"></i>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editSubjectQuestionFormVisible = false;" type="primary">确定</el-button>
+        <el-button @click="edit_subject_question_form_visible = false;" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -34,44 +34,44 @@ export default {
     name: 'SubjectiveQuestion',
     props: ['subjectivequestion', 'order', 'index'],
     mounted() {
-        this.subjectiveQuestion = this.subjectivequestion;
+        this.subjective_question = this.subjectivequestion;
     },
     beforeDestroy() {
-        this.$http.put('SubjectiveQuestion/' + this.subjectiveQuestion.id + '/', {
-            text_content: this.subjectiveQuestion.text_content,
-            homework: this.subjectiveQuestion.homework
+        this.$http.put('SubjectiveQuestion/' + this.subjective_question.id + '/', {
+            text_content: this.subjective_question.text_content,
+            homework: this.subjective_question.homework
         });
     },
     data() {
         return {
-            fileList: [
+            file_list: [
                 {
                     id: 2,
                     url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
                 }
             ],
-            editSubjectQuestionFormVisible: false,
-            formLabelWidth: '140px',
-            subjectiveQuestion: '',
-            isMax: false
+            edit_subject_question_form_visible: false,
+            form_label_width: '140px',
+            subjective_question: '',
+            is_max: false
         };
     },
     methods: {
         deleteQuestion() {
-            this.$http.delete('SubjectiveQuestion/' + this.subjectiveQuestion.id + '/');
-            this.subjectiveQuestion = '';
+            this.$http.delete('SubjectiveQuestion/' + this.subjective_question.id + '/');
+            this.subjective_question = '';
             this.$parent.deleteSubjectiveQuestion(this.index);
         },
         change(file, fileList) {
             console.log('change');
             if (fileList.length >= 3) {
-                this.isMax = true;
+                this.is_max = true;
             }
         },
         remove(file, fileList) {
             console.log('remove');
             if (fileList.length < 3) {
-                this.isMax = false;
+                this.is_max = false;
             }
         },
         beforeAvatarUpload(file) {
@@ -90,8 +90,8 @@ export default {
                 .then(response => {
                     if (response.status === 201) {
                         console.log(response.data);
-                        this.fileList.push(response.data);
-                        console.log(this.fileList);
+                        this.file_list.push(response.data);
+                        console.log(this.file_list);
                     } else {
                         alert('上传失败');
                     }

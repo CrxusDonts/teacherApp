@@ -47,7 +47,7 @@ const routes = [{
 },
 // 主页及其子页面
 {
-    path: '/home/:userName',
+    path: '/home/:user_name',
     name: 'Home',
     component: Home,
     children: [

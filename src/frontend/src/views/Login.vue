@@ -4,7 +4,7 @@
                  label-width="0px">
             <h3 class="login-title">系统登录</h3>
             <el-form-item>
-                <el-input type="text" v-model="userName" prefix-icon="el-icon-user"
+                <el-input type="text" v-model="user_name" prefix-icon="el-icon-user" :autofocus="true"
                           auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
             <el-form-item>
@@ -25,23 +25,23 @@ export default {
     name: 'Login',
     data: function() {
         return {
-            userName: '',
+            user_name: '',
             password: ''
         };
     },
     methods: {
         login() {
-            if (!this.userName) {
+            if (!this.user_name) {
                 this.$message.error('请输入账号！');
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
             } else {
                 this.$http.post('BackendAccount/login/', {
-                    user_name: this.userName,
+                    user_name: this.user_name,
                     password: this.password
                 }).then(response => {
                     if (response.data === 'Login succeed.') {
-                        this.$router.push({ path: '/home/' + this.userName });
+                        this.$router.push({ path: '/home/' + this.user_name });
                     } else {
                         alert('登录失败！');
                     }

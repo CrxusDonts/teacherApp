@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table
-            :data="tableData"
+            :data="classes"
             stripe
             style="width: 100%;
             margin-top: 10px;">
@@ -35,30 +35,29 @@ export default {
     name: 'SwitchClass',
     data() {
         return {
-            tableData: [{
+            classes: [{
                 id: '',
                 class_name: ''
             }],
-            classId: '',
-            userName: ''
+            class_id: '',
+            user_name: ''
         };
     },
     mounted() {
-        this.classId = this.$route.query.classId;
-        this.userName = this.$route.params.userName;
+        this.class_id = this.$route.query.class_id;
+        this.user_name = this.$route.params.user_name;
         this.$http.get('Class/get_my_class/').then(response => {
             if (response.data !== 'Get my own class failed.') {
                 this.data = response.data;
-                this.tableData[0].id = response.data.id;
-                this.tableData[0].class_name = response.data.class_name;
+                this.classes[0].id = response.data.id;
+                this.classes[0].class_name = response.data.class_name;
             } else {
                 alert('失败！');
             }
             this.$http.get('Class/get_manage_class_list/').then(response => {
                 if (response.data !== 'Get my manage class failed.') {
-                    console.log(response.data);
                     for (let i = 0;i < response.data.length;i++) {
-                        this.tableData.push({ id: response.data[i].id, class_name: response.data[i].class_name });
+                        this.classes.push({ id: response.data[i].id, class_name: response.data[i].class_name });
                     }
                 } else {
                     alert('失败！');
@@ -68,8 +67,8 @@ export default {
     },
     methods: {
         handleSwitch(index) {
-            this.classId = this.tableData[index].id;
-            this.$emit('classIdChanged', this.classId);
+            this.class_id = this.classes[index].id;
+            this.$emit('classIdChanged', this.class_id);
         }
     }
 };

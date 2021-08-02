@@ -11,7 +11,7 @@
     <el-dropdown :show-timeout=10 :hide-timeout=50 style="float: right;
     padding-right: 10px;">
       <div class="el-dropdown-link">
-        <span>你好,{{userName}}</span>
+        <span>你好,{{user_name}}</span>
         <span style="float: right;
                     margin-left: 10px;">
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" :size=40></el-avatar>
@@ -29,13 +29,13 @@
 <script>
 export default {
     name: 'Header',
-    props: ['userName'],
+    props: ['user_name'],
     data: function() {
         return {};
     },
     methods: {
         passwordModify() {
-            this.$router.push({ path: '/passwordModify', query: { userName: this.userName }});
+            this.$router.push({ path: '/passwordModify' });
         },
         exit() {
             this.$http.post('BackendAccount/logout/');

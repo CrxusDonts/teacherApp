@@ -1,6 +1,6 @@
 <template>
     <el-table
-        :data="tableData"
+        :data="student_apply"
         stripe
         style="width: 100%;
             margin-top: 10px;">
@@ -38,8 +38,7 @@ export default {
     name: 'StudentApply',
     data() {
         return {
-            search: '',
-            tableData: [{
+            student_apply: [{
                 id: '12',
                 name: '果果果',
                 gender: '男'
@@ -48,13 +47,13 @@ export default {
                 name: '王小虎',
                 gender: '男'
             }],
-            classId: '',
-            userName: ''
+            class_id: '',
+            user_name: ''
         };
     },
     mounted() {
-        this.classId = this.$route.query.classId;
-        this.userName = this.$route.params.userName;
+        this.class_id = this.$route.query.class_id;
+        this.user_name = this.$route.params.user_name;
     },
     methods: {
         handleAccept(index, row) {

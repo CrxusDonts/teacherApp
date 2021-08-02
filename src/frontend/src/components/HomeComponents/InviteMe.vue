@@ -1,6 +1,6 @@
 <template>
     <el-table
-        :data="inviteMe"
+        :data="invite_me"
         stripe
         style="width: 100%;
             margin-top: 10px;">
@@ -9,17 +9,17 @@
                          :width="100">
         </el-table-column>
         <el-table-column
-            prop="invitorUserName"
+            prop="invitor_user_name"
             label="邀请人账号"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="inviteClassId"
+            prop="invite_class_id"
             label="邀请班级号"
             width="180">
         </el-table-column>
         <el-table-column
-            prop="inviteClassName"
+            prop="invite_class_name"
             label="邀请班级名">
         </el-table-column>
         <el-table-column
@@ -42,27 +42,27 @@ export default {
     name: 'InviteMe',
     data() {
         return {
-            inviteMe: [],
+            invite_me: [],
             form: {
                 id: ''
             },
-            dialogFormVisible: false,
-            formLabelWidth: '120px',
-            classId: '',
-            userName: ''
+            dialog_form_visible: false,
+            form_label_width: '120px',
+            class_id: '',
+            user_name: ''
         };
     },
     mounted() {
-        this.classId = this.$route.query.classId;
-        this.userName = this.$route.params.userName;
+        this.class_id = this.$route.query.class_id;
+        this.user_name = this.$route.params.user_name;
         this.$http.get('ManageInvitation/get_invitation/').then(response => {
             if (response.data !== 'get_invitation failed.') {
                 for (let i = 0; i < response.data.length; i++) {
-                    this.inviteMe.push({
-                        invitationId: this.getInviteId(response.data[i]),
-                        invitorUserName: this.getInviter(response.data[i]),
-                        inviteClassId: this.getInviterClassId(response.data[i]),
-                        inviteClassName: this.getInviterClassName(response.data[i])
+                    this.invite_me.push({
+                        invitation_id: this.getInviteId(response.data[i]),
+                        invitor_user_name: this.getInviter(response.data[i]),
+                        invite_class_id: this.getInviterClassId(response.data[i]),
+                        invite_class_name: this.getInviterClassName(response.data[i])
                     });
                 }
             } else {
@@ -74,17 +74,17 @@ export default {
         handleAccept(index) {
             this.$http.post('ManageInvitation/handle_invitation/', {
                 if_accept: 1,
-                invitation_id: this.inviteMe[index].invitationId
+                invitation_id: this.invite_me[index].invitation_id
             }).then(() => {
-                this.inviteMe.splice(index, index + 1);
+                this.invite_me.splice(index, index + 1);
             });
         },
         handleRefuse(index) {
             this.$http.post('ManageInvitation/handle_invitation/', {
                 if_accept: 0,
-                invitation_id: this.inviteMe[index].invitationId
+                invitation_id: this.invite_me[index].invitationId
             }).then(() => {
-                this.inviteMe.splice(index, index + 1);
+                this.invite_me.splice(index, index + 1);
             });
         },
         // 由于后端返回的是字符串，所以要对字符串进行处理

@@ -3,7 +3,7 @@
         <el-form ref="loginForm" class="Register-container" label-position="left" label-width="0px">
             <h3 class="login-title">注册</h3>
             <el-form-item>
-                <el-input type="text" v-model="userName" prefix-icon="el-icon-user"
+                <el-input type="text" v-model="user_name" prefix-icon="el-icon-user" :autofocus="true"
                           auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
             <el-form-item>
@@ -11,7 +11,7 @@
                           auto-complete="off" placeholder="密码"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input type="text" v-model="classname" prefix-icon="el-icon-menu"
+                <el-input type="text" v-model="class_name" prefix-icon="el-icon-menu"
                           auto-complete="off" placeholder="班级" v-on:keyup.enter.native="doRegister"></el-input>
             </el-form-item>
             <el-form-item>
@@ -26,24 +26,24 @@ export default {
     name: 'Register',
     data: function() {
         return {
-            userName: '',
+            user_name: '',
             password: '',
-            classname: ''
+            class_name: ''
         };
     },
     methods: {
         doRegister() {
-            if (!this.userName) {
+            if (!this.user_name) {
                 this.$message.error('请输入账号！');
             } else if (!this.password) {
                 this.$message.error('请输入密码！');
-            } else if (!this.classname) {
+            } else if (!this.class_name) {
                 this.$message.error('请输入班级！');
             } else {
                 this.$http.post('BackendAccount/register_teacher/', {
-                    user_name: this.userName,
+                    user_name: this.user_name,
                     password: this.password,
-                    class_name: this.classname
+                    class_name: this.class_name
                 }).then(response => {
                     if (response.data === 'Register succeed.') {
                         this.$router.push({ path: '/' });

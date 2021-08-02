@@ -1,7 +1,7 @@
 <template>
   <div class="subjective-question">
     <p class="text-content">
-      {{order}}.{{choiceQuestion.text_content}}
+        {{ order }}.{{ choice_question.text_content }}
     </p>
     <el-image class="image" v-for="file in fileList" :key="file.url" :src="file.url" :preview-src-list="fileList">
     </el-image><br>
@@ -9,18 +9,18 @@
       <i v-if="option.if_correct" class="el-icon-check"></i>
       <i v-if="!option.if_correct" class="el-icon-close"></i>
       {{option.order}}.{{option.text_content}}</p>
-    <el-button type="primary" icon="el-icon-edit" circle @click="editChoiceQuestionFormVisible = true"></el-button>
+    <el-button type="primary" icon="el-icon-edit" circle @click="edit_choice_question_form_visible = true"></el-button>
     <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑选择题页面-->
-    <el-dialog title="编辑题目" :visible.sync="editChoiceQuestionFormVisible">
+    <el-dialog title="编辑题目" :visible.sync="edit_choice_question_form_visible">
       <el-form>
         <!--题目输入框-->
-        <el-form-item label="题目" :label-width="formLabelWidth">
-          <el-input v-model=choiceQuestion.text_content autocomplete="off"></el-input>
+        <el-form-item label="题目" :label-width="form_label_width">
+          <el-input v-model=choice_question.text_content autocomplete="off"></el-input>
         </el-form-item>
         <!--选项输入框-->
         <el-form-item v-for="(option, index) in options" :key="option.id">
-          <el-form-item :label=optionConstant+(index+1) :label-width="formLabelWidth">
+          <el-form-item :label=option_constant+(index+1) :label-width="form_label_width">
             <el-input v-model=option.text_content autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item>
@@ -35,14 +35,14 @@
       </el-form>
       <!--图片上传框-->
       <el-upload action="#" list-type="picture-card" :file-list="fileList"
-                 :class = "{disabled:isMax}" :limit = 3 :on-change = "change"
+                 :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
                  :on-remove = "remove" :before-upload = "beforeAvatarUpload">
         <i class="el-icon-picture-outline"></i>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click=newOption>新增选项</el-button>
-        <el-button @click="editChoiceQuestionFormVisible = false;" type="primary">确定</el-button>
+        <el-button @click="edit_choice_question_form_visible = false;" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -62,25 +62,25 @@ export default {
                     url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
                 }
             ],
-            editChoiceQuestionFormVisible: false,
-            formLabelWidth: '140px',
-            optionConstant: '选项',
-            choiceQuestion: '',
-            isMax: false
+            edit_choice_question_form_visible: false,
+            form_label_width: '140px',
+            option_constant: '选项',
+            choice_question: '',
+            is_max: false
         };
     },
     mounted() {
-        this.choiceQuestion = this.choicequestion;
-        this.$http.get('ChoiceQuestion/' + this.choiceQuestion.id + '/get_options/')
+        this.choice_question = this.choicequestion;
+        this.$http.get('ChoiceQuestion/' + this.choice_question.id + '/get_options/')
             .then(response => {
                 this.options = response.data;
             });
     },
     beforeDestroy() {
-        if (this.choiceQuestion !== '') {
-            this.$http.put('ChoiceQuestion/' + this.choiceQuestion.id + '/', {
-                text_content: this.choiceQuestion.text_content,
-                homework: this.choiceQuestion.homework
+        if (this.choice_question !== '') {
+            this.$http.put('ChoiceQuestion/' + this.choice_question.id + '/', {
+                text_content: this.choice_question.text_content,
+                homework: this.choice_question.homework
             });
         }
         for (let i = 0; i < this.options.length; i++) {
@@ -93,8 +93,8 @@ export default {
     },
     methods: {
         deleteQuestion() {
-            this.$http.delete('ChoiceQuestion/' + this.choiceQuestion.id + '/');
-            this.choiceQuestion = '';
+            this.$http.delete('ChoiceQuestion/' + this.choice_question.id + '/');
+            this.choice_question = '';
             this.options = [];
             this.$parent.deleteChoiceQuestion(this.index);
         },
@@ -112,23 +112,23 @@ export default {
             this.options.splice(this.options.contains(option), 1);
         },
         newOption() {
-            this.$http.post('ChoiceQuestion/' + this.choiceQuestion.id + '/add_option/', {
+            this.$http.post('ChoiceQuestion/' + this.choice_question.id + '/add_option/', {
                 text_content: '请输入选项内容',
                 order: this.options.length > 0 ? this.options[this.options.length - 1].order + 1 : 1,
                 if_correct: 1,
-                question: this.choiceQuestion
+                question: this.choice_question
             }).then(response => {
                 this.options.push(response.data);
             });
         },
         change(file, fileList) {
             if (fileList.length >= 3) {
-                this.isMax = true;
+                this.is_max = true;
             }
         },
         remove(file, fileList) {
             if (fileList.length < 3) {
-                this.isMax = false;
+                this.is_max = false;
             }
         },
         beforeAvatarUpload(file) {
