@@ -77,14 +77,16 @@ export default {
                 invitation_id: this.invite_me[index].invitation_id
             }).then(() => {
                 this.invite_me.splice(index, index + 1);
+                this.$emit('nums_of_invite_me_changed');
             });
         },
         handleRefuse(index) {
             this.$http.post('ManageInvitation/handle_invitation/', {
                 if_accept: 0,
-                invitation_id: this.invite_me[index].invitationId
+                invitation_id: this.invite_me[index].invitation_id
             }).then(() => {
                 this.invite_me.splice(index, index + 1);
+                this.$emit('nums_of_invite_me_changed');
             });
         },
         // 由于后端返回的是字符串，所以要对字符串进行处理

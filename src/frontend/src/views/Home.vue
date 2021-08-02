@@ -14,7 +14,8 @@
                 <el-menu-item index="assistantManagement" :route=
                     "{ path: 'assistantManagement', query: { class_id: this.class_id} }">助教管理</el-menu-item>
                 <el-menu-item index="inviteMe" :route=
-                    "{ path: 'inviteMe', query: { class_id: this.class_id} }">邀请我的 <el-badge :value="12" /></el-menu-item>
+                    "{ path: 'inviteMe', query: { class_id: this.class_id} }">邀请我的
+                    <el-badge v-if="num_of_invite_me > 0" v-bind:value="num_of_invite_me" /></el-menu-item>
             </el-submenu>
             <el-submenu index="grade">
                 <template slot="title">成绩统计</template>
@@ -26,7 +27,7 @@
             <el-menu-item index="switchClass" :route=
                 "{ path: 'switchClass', query: { class_id: this.class_id} }">班级切换</el-menu-item>
         </el-menu>
-        <router-view @classIdChanged="classIdChanged"></router-view>
+        <router-view @classIdChanged="classIdChanged" @nums_of_invite_me_changed="nums_of_invite_me_changed"></router-view>
     </div>
 </template>
 
@@ -39,12 +40,21 @@ export default {
         return {
             user_name: '',
             class_name: '',
-            class_id: ''
+            class_id: '',
+            num_of_invite_me: ''
         };
     },
     components: { Header },
     mounted: function() {
         this.user_name = this.$route.params.user_name;
+        // 获取气泡数量
+        this.$http.get('ManageInvitation/get_invitation/').then(response => {
+            if (response.data !== 'get_invitation failed.') {
+                this.num_of_invite_me = response.data.length;
+            } else {
+                alert('获取邀请列表，请重试！');
+            }
+        });
         this.$http.get('Class/get_my_class/').then(response => {
             if (response.data !== 'Get my own class failed.') {
                 this.class_name = response.data.class_name;
@@ -61,6 +71,9 @@ export default {
         },
         classIdChanged(val) {
             this.class_id = val;
+        },
+        nums_of_invite_me_changed() {
+            this.num_of_invite_me -= 1;
         }
     }
 };
