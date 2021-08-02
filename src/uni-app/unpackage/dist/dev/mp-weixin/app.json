@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/home/Home",
+    "pages/home/TeacherHome",
+    "pages/home/StudentHome"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "BugMakers",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "usingComponents": {
+    "cu-custom": "/colorui/components/cu-custom"
+  },
+  "sitemapLocation": "sitemap.json"
+}
