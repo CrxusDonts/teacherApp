@@ -1,14 +1,14 @@
 <template>
   <div class="subjective-question">
     <p class="text-content">
-        {{ order }}.{{ choice_question.text_content }}
+      {{ order }}.{{ choice_question.text_content }}
     </p>
-    <el-image class="image" v-for="file in fileList" :key="file.url" :src="file.url" :preview-src-list="fileList">
+    <el-image class="image" v-for="file in file_list" :key="file.url" :src="file.url" :preview-src-list="file_list">
     </el-image><br>
     <p class="option" v-for="option in options" :key="option.id">
       <i v-if="option.if_correct" class="el-icon-check"></i>
       <i v-if="!option.if_correct" class="el-icon-close"></i>
-      {{option.order}}.{{option.text_content}}</p>
+      {{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}</p>
     <el-button type="primary" icon="el-icon-edit" circle @click="edit_choice_question_form_visible = true"></el-button>
     <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
     <!--编辑选择题页面-->
@@ -34,7 +34,7 @@
         </el-form-item>
       </el-form>
       <!--图片上传框-->
-      <el-upload action="#" list-type="picture-card" :file-list="fileList"
+      <el-upload action="#" list-type="picture-card" :file-list="file_list"
                  :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
                  :on-remove = "remove" :before-upload = "beforeAvatarUpload">
         <i class="el-icon-picture-outline"></i>
@@ -56,7 +56,7 @@ export default {
     data() {
         return {
             options: [],
-            fileList: [
+            file_list: [
                 {
                     id: 2,
                     url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
@@ -86,6 +86,7 @@ export default {
         for (let i = 0; i < this.options.length; i++) {
             this.$http.put('Options/' + this.options[i].id + '/', {
                 text_content: this.options[i].text_content,
+                order: this.options[i].order,
                 if_correct: this.options[i].if_correct,
                 question: this.options[i].question
             });
@@ -109,7 +110,11 @@ export default {
                 }
                 return false;
             };
-            this.options.splice(this.options.contains(option), 1);
+            let optionIndex = this.options.contains(option);
+            this.options.splice(optionIndex, 1);
+            for (; optionIndex < this.options.length; optionIndex++) {
+                this.options[optionIndex].order--;
+            }
         },
         newOption() {
             this.$http.post('ChoiceQuestion/' + this.choice_question.id + '/add_option/', {
@@ -147,8 +152,8 @@ export default {
                 .then(response => {
                     if (response.status === 201) {
                         console.log(response.data);
-                        this.fileList.push(response.data);
-                        console.log(this.fileList);
+                        this.file_list.push(response.data);
+                        console.log(this.file_list);
                     } else {
                         alert('上传失败');
                     }
