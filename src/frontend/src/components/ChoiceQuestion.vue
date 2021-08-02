@@ -6,8 +6,8 @@
     <el-image class="image" v-for="file in file_list" :key="file.url" :src="file.url" :preview-src-list="file_list">
     </el-image><br>
     <p class="option" v-for="option in options" :key="option.id">
-      <i v-if="option.if_correct" class="el-icon-check"></i>
-      <i v-if="!option.if_correct" class="el-icon-close"></i>
+      <em v-if="option.if_correct" class="el-icon-check"></em>
+      <em v-if="!option.if_correct" class="el-icon-close"></em>
       {{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}</p>
     <el-button type="primary" icon="el-icon-edit" circle @click="edit_choice_question_form_visible = true"></el-button>
     <el-button type="danger" icon="el-icon-delete" circle @click=deleteQuestion></el-button>
@@ -37,7 +37,7 @@
       <el-upload action="#" list-type="picture-card" :file-list="file_list"
                  :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
                  :on-remove = "remove" :before-upload = "beforeAvatarUpload">
-        <i class="el-icon-picture-outline"></i>
+        <em class="el-icon-picture-outline"></em>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">

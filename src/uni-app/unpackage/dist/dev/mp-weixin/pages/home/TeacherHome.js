@@ -153,14 +153,34 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   props: ['open_id'],
   data: function data() {
     return {
-      clazz: {
+      clazz: [
+      {
         id: 1304,
-        class_name: '非人类研究中心' } };
+        class_name: 非人类研究中心 },
+
+      {
+        id: 1603,
+        class_name: 夹心糖俱乐部 }] };
+
 
 
   },

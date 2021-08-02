@@ -19,7 +19,7 @@
       <el-upload action="#" list-type="picture-card" :file-list="file_list"
                  :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
                  :on-remove = "remove" :before-upload = "beforeAvatarUpload">
-        <i class="el-icon-upload"></i>
+        <em class="el-icon-upload"></em>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">

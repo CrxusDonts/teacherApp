@@ -131,15 +131,30 @@ __webpack_require__.r(__webpack_exports__);
 Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   props: ['open_id'],
+  data: function data() {
+    return {
+      clazz: {
+        id: 1304,
+        class_name: '非人类研究中心' } };
+
+
+  },
   onLoad: function onLoad(option) {
     this.open_id = option.open_id;
-  },
-  data: function data() {
-    return {};
-
   } };exports.default = _default;
 
 /***/ })

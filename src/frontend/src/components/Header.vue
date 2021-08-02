@@ -20,7 +20,7 @@
           <el-dropdown-item :divided=true @click.native="passwordModify">修改密码</el-dropdown-item>
           <el-dropdown-item :divided=true @click.native="exit">退出登录</el-dropdown-item>
         </el-dropdown-menu>
-        <i class="el-icon-arrow-down el-icon--right"></i>
+        <em class="el-icon-arrow-down el-icon--right"></em>
       </div>
     </el-dropdown>
   </el-card>
