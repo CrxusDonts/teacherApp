@@ -101,15 +101,24 @@ class ManageInvitation(models.Model):
 
 
 class Media(models.Model):
-    url = models.FileField(upload_to='./media/%Y/%m/%d/')
+    url = models.FileField(upload_to='./static/media/%Y/%m/%d/')
     type_file = (
         (0, 'image'),
         (1, 'video'),
+        (2, 'voice')
     )
     file_type = models.IntegerField(choices=type_file, default=1)
-    teacher_comment = models.ForeignKey(TeacherComment, on_delete=models.CASCADE, null=True)
-    choice_question = models.ForeignKey(ChoiceQuestion, on_delete=models.CASCADE, null=True)
-    completion_question = models.ForeignKey(CompletionQuestion, on_delete=models.CASCADE, null=True)
-    subjective_question = models.ForeignKey(SubjectiveQuestion, on_delete=models.CASCADE, null=True)
+    teacher_comment = models.ForeignKey(TeacherComment, related_name='comment_media', on_delete=models.CASCADE,
+                                        null=True)
+    choice_question = models.ForeignKey(ChoiceQuestion, related_name='choice_media', on_delete=models.CASCADE,
+                                        null=True)
+    completion_question = models.ForeignKey(CompletionQuestion, related_name='completion_media',
+                                            on_delete=models.CASCADE,
+                                            null=True)
+    subjective_question = models.ForeignKey(SubjectiveQuestion, related_name='subjective_media',
+                                            on_delete=models.CASCADE,
+                                            null=True)
     subjective_question_user_answer = models.ForeignKey(SubjectiveQuestionUserAnswer,
-                                                        on_delete=models.CASCADE, null=True)
+                                                        related_name='subjective_user_answer_media',
+                                                        on_delete=models.CASCADE,
+                                                        null=True)

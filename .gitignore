@@ -43,4 +43,4 @@ src/frontend/.config/
 src/frontend/.npm/
 .cache
 src/backend/teacherApp/migrations
-src/backend/media
+src/backend/static/media

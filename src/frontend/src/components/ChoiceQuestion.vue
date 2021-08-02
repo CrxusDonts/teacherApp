@@ -59,7 +59,7 @@ export default {
             file_list: [
                 {
                     id: 2,
-                    url: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg'
+                    url: 'http://localhost:8002/static/media/2021/7/30/Diana.jpg'
                 }
             ],
             edit_choice_question_form_visible: false,
