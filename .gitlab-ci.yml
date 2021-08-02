@@ -16,3 +16,4 @@ lint:
     - npm install
     # Run lint
     - npm run lint
+    - npm run lint:css
