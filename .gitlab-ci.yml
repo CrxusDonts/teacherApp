@@ -1,14 +1,18 @@
 stages:
-  - test
-  - build
+  - lint
 
-test:
-  stage: test
-  script: echo "Running tests"
-
-build:
-  stage: build
-  script: echo "Building the app"
-
-
-
+lint:
+  stage: lint
+  image: node:latest
+  cache :
+    key: "lint_cache"
+    paths: 
+      - ./src/frontend/node_modules/
+  script:
+    #Install eslint
+    - npm config set registry https://registry.npm.taobao.org
+    - cd src
+    - cd frontend
+    - npm install
+    # Run lint
+    - npm run lint
