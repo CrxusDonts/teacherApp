@@ -180,6 +180,15 @@ class ClassView(viewsets.ModelViewSet):
         except Exception:
             return Response('Get my manage class failed.')
 
+    @action(methods=['post'], detail=False)
+    def get_people_count_of_class(self, request):
+        try:
+            class_id = request.data.get('class_id')
+            target_class = Class.objects.get(id=class_id)
+            return Response(target_class.class_people.filter(is_teacher=False).count())
+        except Exception as e:
+            return Response(str(e))
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
