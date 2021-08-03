@@ -514,3 +514,13 @@ def register_student_account(open_id):
             return new_account
     except Exception:
         raise Exception
+
+
+# 自动登录方法
+def auto_login(request, target_account):
+    try:
+        target_user = target_account.user
+        target_user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, target_user)
+    except Exception:
+        raise Exception

@@ -2,7 +2,6 @@ import json
 from django.contrib.auth.models import User
 
 from django.test import TestCase
-
 from teacherApp.models import *
 from teacherApp.views import *
 
@@ -126,7 +125,7 @@ class InterfaceTest(TestCase):
         self.password = 'password4test2'
         self.class_name = 'class4test2'
         self.base_url = 'http://localhost:8002/teacherApp/'
-        User.objects. \
+        self.user = User.objects. \
             create_superuser(username=self.user_name, password=self.password, email='1291923247@qq.com')
         self.client.login(username=self.user_name, password=self.password)
 
@@ -137,3 +136,4 @@ class InterfaceTest(TestCase):
     def test_register_student_account(self):
         account = register_student_account('123456789')
         self.assertEqual(account.open_id, '123456789')
+
