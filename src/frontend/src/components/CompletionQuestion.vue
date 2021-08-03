@@ -1,5 +1,5 @@
 <template>
-  <div class="subjective-question">
+  <div class="completion-question">
     <p class="text-content">
         {{ order }}.{{ completion_question.text_content }}
     </p>
@@ -151,7 +151,7 @@ export default {
     margin-left: 50px;
 }
 
-.subjective-question {
+.completion-question {
     padding-bottom: 10px;
     margin-top: -20px;
     background-color: white;

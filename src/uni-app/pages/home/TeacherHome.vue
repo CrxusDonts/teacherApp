@@ -1,50 +1,51 @@
 <template>
 	<view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
-						<view class="action">
-							<text class="cuIcon-title text-orange "></text> 班级列表
-						</view>
-					</view>
-					<view class="cu-list menu-avatar">
-						<view class="cu-item">
-							<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
-							<view class="content">
-								<view class="text-grey">凯尔</view>
-								<view class="text-gray text-sm flex">
-									<view class="text-cut">
-										<text class="cuIcon-infofill text-red  margin-right-xs"></text>
-										我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。
-									</view> </view>
-							</view>
-							<view class="action">
-								<view class="text-grey text-xs">22:20</view>
-								<view class="cu-tag round bg-grey sm">5</view>
-							</view>
-						</view>
-						</view>
-					</view>
+			<view class="action">
+				<text class="cuIcon-title text-blue "></text> {{'欢迎你，' + user.user_name}}
+			</view>
+			<button class="cu-btn bg-grey margin-right">退出登陆</button>
+		</view>
+		<view class="cu-list menu-avatar">
+			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="clazz in classes" @click="toClassManagement(clazz)">
+				<view class="cu-avatar round lg cuIcon-group"></view>
+				<view class="content">
+					<view class="text-grey">{{clazz.class_name}}</view>
+				</view>
+				<view class="action">
+					<view class="cu-tag round bg-grey sm">5</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
 export default {
-	props:['open_id'],
 	data() {
 	    return {
-			clazz: [
+			user: '',
+			classes: [
 				{
 					id: 1304,
-					class_name: 非人类研究中心
+					class_name: '非人类研究中心'
 				},
 				{
 					id: 1603,
-					class_name: 夹心糖俱乐部
+					class_name: '嘉心糖俱乐部'
 				}
 			]
 	    };
 	},
 	onLoad: function (option) {
-		this.open_id = option.open_id;
+		this.user = JSON.parse(option.user);
+	},
+	methods: {
+		toClassManagement(clazz) {
+			uni.navigateTo({
+				url: '../ClassManagement?clazz=' + JSON.stringify(clazz)
+			});
+		}
 	}
 };
 </script>

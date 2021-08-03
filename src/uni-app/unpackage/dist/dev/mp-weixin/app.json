@@ -2,7 +2,11 @@
   "pages": [
     "pages/home/Home",
     "pages/home/TeacherHome",
-    "pages/home/StudentHome"
+    "pages/home/StudentHome",
+    "pages/TeacherLogin",
+    "pages/ClassManagement",
+    "pages/HomeworkManagement",
+    "pages/homeworkChecking/HomeworkChecking"
   ],
   "subPackages": [],
   "window": {

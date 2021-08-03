@@ -20,20 +20,21 @@ export default {
 		}
 	},
 	mounted() {
+		// 获取open_id
 		uni.login({
 		  success: res => {
 		    const appid = 'wx9d16d4512ab0e560';
 		    const secret = '739d9212f30d5daf9bc419528967de60';
 		    const url = 'https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + secret + '&js_code=' + res.code + '&grant_type=authorization_code';
 		    uni.request({
-		      url: url, 
-		      method: 'GET', 
+		      url: url,
+		      method: 'GET',
 		      success: result => {
 		        this.open_id = result.data.openid;
 		      },
 		      fail: err => {
 				  console.log('获取openId失败')
-			  } 
+			  }
 		    });
 		  }
 		});
@@ -41,7 +42,7 @@ export default {
     methods: {
 		toTeacherHome() {
 			uni.navigateTo({
-				url: './TeacherHome?open_id='+this.open_id
+				url: '../TeacherLogin'
 			});
 		},
 		toStudentHome() {

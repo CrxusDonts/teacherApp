@@ -8,6 +8,18 @@
 		},
 		{
 			"path":"pages/home/StudentHome"
+		},
+		{
+			"path":"pages/TeacherLogin"
+		},
+		{
+			"path":"pages/ClassManagement"
+		},
+		{
+			"path":"pages/HomeworkManagement"
+		},
+		{
+			"path":"pages/homeworkChecking/HomeworkChecking"
 		}
 	],
 	"globalStyle": {
