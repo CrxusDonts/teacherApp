@@ -1,3 +1,5 @@
+import string
+import random
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction
@@ -78,6 +80,18 @@ class BackendAccountView(viewsets.ModelViewSet):
             return Response('logout succeed.')
         except Exception:
             return Response('logout failed.')
+
+    # @action(methods=['post'], detail=False)
+    # def determine_first_login(self, request):
+    #     try:
+    #         open_id = request.data.get('open_id')
+    #         if FrontAccount.objects.filter(open_id=open_id).count() != 1:
+    #             return Response('first login')
+    #         else:
+    #
+    #         return Response('first login')
+    #     except Exception as e:
+    #         return Response(str(e))
 
 
 class ClassView(viewsets.ModelViewSet):
@@ -176,18 +190,6 @@ class ManagerView(viewsets.ModelViewSet):
             return Response('delete_teacher succeed.')
         except Exception:
             return Response('delete_teacher failed.')
-
-    # @action(methods=['post'], detail=False)
-    # def determine_first_login(self, request):
-    #     try:
-    #         open_id = request.data.get('open_id')
-    #         if FrontAccount.objects.filter(open_id=open_id).count() != 1:
-    #             return Response('first login')
-    #         else:
-    #
-    #         return Response('first login')
-    #     except Exception as e:
-    #         return Response(str(e))
 
 
 class PeopleView(viewsets.ModelViewSet):
@@ -497,3 +499,18 @@ def get_media(pk):
         return target_media
     except Exception as e:
         raise e
+
+
+# 注册一个学生账户的方法
+def register_student_account(open_id):
+    try:
+        with transaction.atomic():
+            ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+            user_name = 'student' + ran_str + str(BackendAccount.objects.all().count())
+            password = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+            new_user = User.objects.create_user(username=user_name, password=password)
+            new_account = BackendAccount.objects.create(user=new_user, open_id=open_id)
+            new_account.save()
+            return new_account
+    except Exception:
+        raise Exception

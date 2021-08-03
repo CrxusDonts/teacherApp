@@ -133,4 +133,7 @@ class InterfaceTest(TestCase):
     def test_register_class(self):
         clazz = register_class(self.class_name)
         self.assertEqual(clazz.class_name, self.class_name)
-    
+
+    def test_register_student_account(self):
+        account = register_student_account('123456789')
+        self.assertEqual(account.open_id, '123456789')
