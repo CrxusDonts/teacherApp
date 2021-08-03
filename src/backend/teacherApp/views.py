@@ -189,6 +189,19 @@ class ClassView(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e))
 
+    @action(methods=['post'], detail=False)
+    def get_students(self, request):
+        try:
+            class_id = request.data.get('class_id')
+            target_class = Class.objects.get(id=class_id)
+            students = []
+            for student in target_class.class_people.filter(is_teacher=False).all():
+                students.append(student)
+            serializer = PeopleSerializer(students, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(str(e))
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
