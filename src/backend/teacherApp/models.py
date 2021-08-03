@@ -18,15 +18,11 @@ class Manager(models.Model):
     account = models.ForeignKey(BackendAccount, related_name='account_manager', on_delete=models.CASCADE)
 
 
-class FrontAccount(models.Model):
-    open_id = models.CharField(default='', max_length=50)
-
-
 class People(models.Model):
     name = models.CharField(default='', max_length=50)
     is_male = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
-    front_account = models.ForeignKey(FrontAccount, on_delete=models.CASCADE)
+    account = models.ForeignKey(BackendAccount, related_name='account_people', on_delete=models.CASCADE, null=True)
     clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
 
 
@@ -107,7 +103,7 @@ class Media(models.Model):
         (1, 'video'),
         (2, 'voice')
     )
-    file_type = models.IntegerField(choices=type_file, default=1)
+    file_type = models.IntegerField(choices=type_file, default=0)
     teacher_comment = models.ForeignKey(TeacherComment, related_name='comment_media', on_delete=models.CASCADE,
                                         null=True)
     choice_question = models.ForeignKey(ChoiceQuestion, related_name='choice_media', on_delete=models.CASCADE,

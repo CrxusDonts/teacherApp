@@ -177,10 +177,17 @@ class ManagerView(viewsets.ModelViewSet):
         except Exception:
             return Response('delete_teacher failed.')
 
-
-class FrontAccountView(viewsets.ModelViewSet):
-    queryset = FrontAccount.objects.all()
-    serializer_class = FrontAccountSerializer
+    # @action(methods=['post'], detail=False)
+    # def determine_first_login(self, request):
+    #     try:
+    #         open_id = request.data.get('open_id')
+    #         if FrontAccount.objects.filter(open_id=open_id).count() != 1:
+    #             return Response('first login')
+    #         else:
+    #
+    #         return Response('first login')
+    #     except Exception as e:
+    #         return Response(str(e))
 
 
 class PeopleView(viewsets.ModelViewSet):
@@ -218,6 +225,13 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception:
             return Response('get_options failed.')
+    # TODO:待完善的获取媒体文件
+    # @action(methods=['get'], detail=True)
+    # def get_topic_media(self, request, pk):
+    #     try:
+    #         pass
+    #     except Exception as e:
+    #         return Response(str(e))
 
 
 class OptionsView(viewsets.ModelViewSet):
@@ -475,3 +489,11 @@ def get_question(pk, question_type):
             question_list.append(subjective_question)
     return question_list
 
+
+# 用于返回对应媒体对象的方法
+def get_media(pk):
+    try:
+        target_media = Media.objects.get(id=pk)
+        return target_media
+    except Exception as e:
+        raise e

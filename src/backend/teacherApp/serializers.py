@@ -20,12 +20,6 @@ class ManagerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class FrontAccountSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FrontAccount
-        fields = '__all__'
-
-
 class PeopleSerializer(serializers.ModelSerializer):
     class Meta:
         model = People

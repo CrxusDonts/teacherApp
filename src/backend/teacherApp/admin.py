@@ -4,7 +4,6 @@ from .models import *
 admin.site.register(BackendAccount)
 admin.site.register(Class)
 admin.site.register(Manager)
-admin.site.register(FrontAccount)
 admin.site.register(People)
 admin.site.register(ChoiceQuestion)
 admin.site.register(Options)
