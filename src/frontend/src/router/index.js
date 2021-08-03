@@ -41,7 +41,7 @@ const routes = [{
     component: Passwordmodify
 },
 {
-    path: '/edithomework',
+    path: '/edithomework/:homework_id',
     name: 'EditHomework',
     component: EditHomework
 },

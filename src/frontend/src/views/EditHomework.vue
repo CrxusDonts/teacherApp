@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header v-bind:userName="user_name"></Header>
+    <Header v-bind:user_name="user_name"></Header>
     <el-header class="title">
       {{ homework.title }}
       <el-button type="primary" class="go-back" @click=goBack>返回</el-button>
@@ -37,6 +37,8 @@ export default {
             order: 1,
             user_name: 'admin',
             homework: '',
+            homework_id: '',
+            class_id: '',
             choice_questionConst: 'choiceQuestion',
             completion_questionConst: 'completionQuestion',
             subjective_questionConst: 'subjectiveQuestion',
@@ -52,41 +54,47 @@ export default {
         SubjectiveQuestion
     },
     mounted: function() {
-        this.homework = this.$route.query.homework;
+        this.homework_id = this.$route.params.homework_id;
         this.user_name = this.$route.query.user_name;
-        this.$http.get('Homework/' + this.homework.id + '/get_choice_question/')
+        this.class_id = this.$route.query.class_id;
+        // 根据id得到homework对象
+        this.$http.get('Homework/' + this.homework_id)
+            .then(response => {
+                this.homework = response.data;
+            });
+        this.$http.get('Homework/' + this.homework_id + '/get_choice_question/')
             .then(response => {
                 this.choice_questions = response.data;
             });
-        this.$http.get('Homework/' + this.homework.id + '/get_completion_question/')
+        this.$http.get('Homework/' + this.homework_id + '/get_completion_question/')
             .then(response => {
                 this.completion_questions = response.data;
             });
-        this.$http.get('Homework/' + this.homework.id + '/get_subjective_question/')
+        this.$http.get('Homework/' + this.homework_id + '/get_subjective_question/')
             .then(response => {
                 this.subjective_questions = response.data;
             });
     },
     methods: {
         goBack() {
-            this.$router.push({ path: '/home/' + this.user_name });
+            this.$router.push({ path: '/home/' + this.user_name + '/homeworkManagement', query: { class_id: this.class_id }});
         },
         newChoiceQuestion() {
-            this.$http.post('Homework/' + this.homework.id + '/new_choice_question/', {
+            this.$http.post('Homework/' + this.homework_id + '/new_choice_question/', {
                 text_content: '请输入题目'
             }).then(response => {
                 this.choice_questions.push(response.data);
             });
         },
         newCompletionQuestion() {
-            this.$http.post('Homework/' + this.homework.id + '/new_completion_question/', {
+            this.$http.post('Homework/' + this.homework_id + '/new_completion_question/', {
                 text_content: '请输入题目'
             }).then(response => {
                 this.completion_questions.push(response.data);
             });
         },
         newSubjectiveQuestion() {
-            this.$http.post('Homework/' + this.homework.id + '/new_subjective_question/', {
+            this.$http.post('Homework/' + this.homework_id + '/new_subjective_question/', {
                 text_content: '请输入题目'
             }).then(response => {
                 this.subjective_questions.push(response.data);

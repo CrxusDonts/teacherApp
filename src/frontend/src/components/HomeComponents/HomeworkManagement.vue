@@ -120,8 +120,13 @@ export default {
                 }).then(response => {
                     if (response.data === 'New homework succeed.') {
                         alert('创建成功！');
-                        this.homeworks.push({ title: this.form.title, start_time: this.form.time_value,
-                            due_time: this.form.time_value[1], repeatable: this.form.repeatable });
+                        this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(response => {
+                            if (response.data !== 'Class not found.') {
+                                this.homeworks = response.data;
+                            } else {
+                                alert('获取班级失败！');
+                            }
+                        });
                     } else {
                         alert('创建失败！');
                     }
@@ -130,10 +135,10 @@ export default {
                 });
             }
         },
-        handleEdit(index, row) {
-            this.$router.push({ path: '/edithomework', query: {
-                homework: row,
-                user_name: this.user_name
+        handleEdit(index) {
+            this.$router.push({ path: '/edithomework/' + this.homeworks[index].id, query: {
+                user_name: this.user_name,
+                class_id: this.class_id
             }});
         },
         handleShare(index, row) {
