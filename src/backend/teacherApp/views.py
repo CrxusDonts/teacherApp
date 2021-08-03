@@ -35,6 +35,8 @@ class BackendAccountView(viewsets.ModelViewSet):
                 new_backend_account.save()
                 response_str = 'Add manager '
                 add_manager(True, new_backend_account, clazz)
+                response_str = 'set_people_info '
+                set_people_info(request, True, new_backend_account, clazz)
         except IntegrityError:
             return Response('User already existed.')
         except Exception:
@@ -61,11 +63,7 @@ class BackendAccountView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def login(self, request):
         try:
-            user_name = request.data.get('user_name')
-            password = request.data.get('password')
-            user = authenticate(username=user_name, password=password)
-            if user:
-                login(request, user)
+            if account_login(request):
                 return Response('Login succeed.')
             else:
                 return Response('Login failed.')
@@ -81,17 +79,46 @@ class BackendAccountView(viewsets.ModelViewSet):
         except Exception:
             return Response('logout failed.')
 
-    # @action(methods=['post'], detail=False)
-    # def determine_first_login(self, request):
-    #     try:
-    #         open_id = request.data.get('open_id')
-    #         if FrontAccount.objects.filter(open_id=open_id).count() != 1:
-    #             return Response('first login')
-    #         else:
-    #
-    #         return Response('first login')
-    #     except Exception as e:
-    #         return Response(str(e))
+    @action(methods=['post'], detail=False)
+    def determine_first_login(self, request):
+        try:
+            open_id = request.data.get('open_id')
+            is_teacher = request.data.get('is_teacher')
+            for account in BackendAccount.objects.filter(open_id=open_id).all():
+                if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
+                    # 不是第一次
+                    auto_login(request, account)
+                    return Response('login succeed.')
+            # 是老师第一次登录
+            if is_teacher:
+                return Response('teacher first login')
+            else:
+                new_account = auto_register_student_account(open_id)
+                serializer = BackendAccountSerializer(new_account)
+                return Response(serializer.data)
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def set_student_info(self, request):
+        try:
+            pass
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def miniapp_teacher_first_login(self, request):
+        try:
+            if account_login(request):
+                open_id = request.data.get('open_id')
+                target_account = BackendAccount.objects.get(user=request.user)
+                target_account.open_id = open_id
+                target_account.save()
+                return Response('test_login')
+            else:
+                return Response('login failed.')
+        except Exception as e:
+            return Response(str(e))
 
 
 class ClassView(viewsets.ModelViewSet):
@@ -446,6 +473,21 @@ class ManageInvitationView(viewsets.ModelViewSet):
             return Response('handle_invitation failed.')
 
 
+# 登录函数
+def account_login(request):
+    try:
+        user_name = request.data.get('user_name')
+        password = request.data.get('password')
+        user = authenticate(username=user_name, password=password)
+        if user:
+            login(request, user)
+            return True
+        else:
+            return False
+    except Exception:
+        raise Exception
+
+
 # 用于注册班级的方法
 def register_class(name):
     class_name = name
@@ -502,7 +544,7 @@ def get_media(pk):
 
 
 # 注册一个学生账户的方法
-def register_student_account(open_id):
+def auto_register_student_account(open_id):
     try:
         with transaction.atomic():
             ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
@@ -522,5 +564,28 @@ def auto_login(request, target_account):
         target_user = target_account.user
         target_user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, target_user)
+    except Exception:
+        raise Exception
+
+
+# 设置people信息
+def set_people_info(request, is_teacher, account, clazz):
+    try:
+        name = request.data.get('name')
+        is_male = request.data.get('is_male')
+        new_people = People.objects.create(name=name, is_male=is_male, is_teacher=is_teacher, account=account,
+                                           clazz=clazz)
+        new_people.save()
+    except Exception:
+        raise Exception
+
+
+# 通过openid获得账户信息
+def get_account_by_openid(open_id, is_teacher):
+    try:
+        accounts = BackendAccount.objects.filter(open_id=open_id).all()
+        for account in accounts:
+            if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
+                return account
     except Exception:
         raise Exception

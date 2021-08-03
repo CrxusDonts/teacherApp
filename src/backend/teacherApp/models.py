@@ -12,18 +12,18 @@ class Class(models.Model):
     class_name = models.CharField(max_length=20, default='undefined')
 
 
-class Manager(models.Model):
-    is_owner = models.BooleanField(default=False)
-    clazz = models.ForeignKey(Class, related_name='class_manager', on_delete=models.CASCADE)
-    account = models.ForeignKey(BackendAccount, related_name='account_manager', on_delete=models.CASCADE)
-
-
 class People(models.Model):
     name = models.CharField(default='', max_length=50)
     is_male = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     account = models.ForeignKey(BackendAccount, related_name='account_people', on_delete=models.CASCADE, null=True)
-    clazz = models.ForeignKey(Class, on_delete=models.CASCADE)
+    clazz = models.ForeignKey(Class, related_name='class_people', on_delete=models.CASCADE)
+
+
+class Manager(models.Model):
+    is_owner = models.BooleanField(default=False)
+    clazz = models.ForeignKey(Class, related_name='class_manager', on_delete=models.CASCADE)
+    account = models.ForeignKey(BackendAccount, related_name='account_manager', on_delete=models.CASCADE)
 
 
 class Homework(models.Model):
