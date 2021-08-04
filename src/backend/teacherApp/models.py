@@ -53,6 +53,7 @@ class ChoiceQuestionUserAnswer(models.Model):
     student = models.ForeignKey(People, related_name='ChoiceQuestionUser_answer', on_delete=models.CASCADE)
     is_correct = models.BooleanField(default=False)
 
+
 class CompletionQuestion(models.Model):
     text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
@@ -121,4 +122,3 @@ class Media(models.Model):
                                                         related_name='subjective_user_answer_media',
                                                         on_delete=models.CASCADE,
                                                         null=True)
-

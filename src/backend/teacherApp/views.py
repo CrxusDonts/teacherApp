@@ -509,8 +509,54 @@ class TeacherCommentView(viewsets.ModelViewSet):
 
 
 class JoinClassRequestView(viewsets.ModelViewSet):
-    queryset = TeacherComment.objects.all()
-    serializer_class = TeacherCommentSerializer
+    queryset = JoinClassRequest.objects.all()
+    serializer_class = JoinClassRequestSerializer
+
+    @action(methods=['post'], detail=False)
+    def create_join_class_request(self, request):
+        try:
+            target_class_id = request.data.get('class_id')
+            target_username = request.data.get('user_name')
+            target_user = User.objects.get(username=target_username)
+            target_account = BackendAccount.objects.get(user=target_user)
+            target_student = People.objects.get(account=target_account)
+            new_join_class_request = JoinClassRequest.objects.create(class_id=target_class_id, people=target_student)
+            new_join_class_request.save()
+            return Response('create_join_class_request succeed')
+        except Exception:
+            return Response('create_join_class_request failed.')
+
+    @action(methods=['post'], detail=False)
+    def get_join_class_request(self, request):
+        try:
+            cur_class_id = request.data.get('class_id')
+            join_class_request_list = []
+            for join_class_request in JoinClassRequest.objects.filter(class_id=cur_class_id).all():
+                data = json.dumps({
+                    'id': join_class_request.id,
+                    'user_name': join_class_request.people.account.user.username,
+                    'name': join_class_request.people.name
+                })
+                join_class_request_list.append(data)
+            return Response(join_class_request_list)
+        except Exception:
+            return Response('get join class request failed.')
+
+    @action(methods=['post'], detail=False)
+    def handle_join_class_request(self, request):
+        try:
+            if_accept = request.data.get('if_accept')
+            join_class_request_id = request.data.get('join_class_request_id')
+            join_class_request = JoinClassRequest.objects.get(id=join_class_request_id)
+            if if_accept:
+                clazz = Class.objects.get(id=join_class_request.class_id)
+                student = join_class_request.people
+                student.clazz = clazz
+                student.save()
+            join_class_request.delete()
+            return Response('handle_join_class_request succeed.')
+        except Exception as e:
+            return Response(str(e))
 
 
 class ManageInvitationView(viewsets.ModelViewSet):
@@ -667,8 +713,7 @@ def auto_login(request, target_account):
 def set_people_info(request, is_teacher, account, clazz):
     try:
         name = request.data.get('name')
-        is_male = request.data.get('is_male')
-        new_people = People.objects.create(name=name, is_male=is_male, is_teacher=is_teacher, account=account,
+        new_people = People.objects.create(name=name, is_teacher=is_teacher, account=account,
                                            clazz=clazz)
         new_people.save()
     except Exception:

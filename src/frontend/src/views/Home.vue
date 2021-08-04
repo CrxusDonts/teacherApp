@@ -10,7 +10,8 @@
                 <el-menu-item index="studentManagement" :route=
                     "{ path: 'studentManagement', query: { class_id: this.class_id} }">学生管理</el-menu-item>
                 <el-menu-item index="studentApply" :route=
-                    "{ path: 'studentApply', query: { class_id: this.class_id} }">学生申请 <el-badge :value="12" /></el-menu-item>
+                    "{ path: 'studentApply', query: { class_id: this.class_id} }">学生申请
+                    <el-badge v-if="num_of_join_class_request > 0" v-bind:value="num_of_join_class_request" /></el-menu-item>
                 <el-menu-item index="assistantManagement" :route=
                     "{ path: 'assistantManagement', query: { class_id: this.class_id} }">助教管理</el-menu-item>
                 <el-menu-item index="inviteMe" :route=
@@ -27,8 +28,9 @@
             <el-menu-item index="switchClass" :route=
                 "{ path: 'switchClass', query: { class_id: this.class_id} }">班级切换</el-menu-item>
         </el-menu>
-        <router-view class="router"
-            @classIdChanged="classIdChanged" @nums_of_invite_me_changed="nums_of_invite_me_changed"></router-view>
+        <router-view class="router" @classIdChanged="classIdChanged"
+                     @nums_of_invite_me_changed="nums_of_invite_me_changed"
+                     @nums_of_join_class_request_changed="nums_of_join_class_request_changed"></router-view>
     </div>
 </template>
 
@@ -42,7 +44,8 @@ export default {
             user_name: '',
             class_name: '',
             class_id: '',
-            num_of_invite_me: ''
+            num_of_invite_me: '',
+            num_of_join_class_request: ''
         };
     },
     components: { Header },
@@ -75,6 +78,9 @@ export default {
         },
         nums_of_invite_me_changed() {
             this.num_of_invite_me -= 1;
+        },
+        nums_of_join_class_request_changed() {
+            this.num_of_join_class_request -= 1;
         }
     }
 };
