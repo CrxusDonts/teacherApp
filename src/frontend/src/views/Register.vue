@@ -19,10 +19,7 @@
                           auto-complete="off" placeholder="姓名"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-radio v-model="is_male" :label="true">男</el-radio>
-                <el-radio v-model="is_male" :label="false">女</el-radio>
-            </el-form-item>
-            <el-form-item>
+                <el-button class="method-Button" type="primary" @click="goBack">返回</el-button>
                 <el-button class="method-Button" type="primary" @click="doRegister">注册</el-button>
             </el-form-item>
         </el-form>
@@ -37,11 +34,13 @@ export default {
             user_name: '',
             password: '',
             class_name: '',
-            name: '',
-            is_male: ''
+            name: ''
         };
     },
     methods: {
+        goBack() {
+            this.$router.push({ path: '/' });
+        },
         doRegister() {
             if (!this.user_name) {
                 this.$message.error('请输入账号！');
@@ -51,15 +50,12 @@ export default {
                 this.$message.error('请输入班级！');
             } else if (!this.name) {
                 this.$message.error('请输入姓名！');
-            } else if (!this.is_male) {
-                this.$message.error('请选择性别！');
             } else {
                 this.$http.post('BackendAccount/register_teacher/', {
                     user_name: this.user_name,
                     password: this.password,
                     class_name: this.class_name,
-                    name: this.name,
-                    is_male: this.is_male
+                    name: this.name
                 }).then(response => {
                     if (response.data === 'Register succeed.') {
                         this.$router.push({ path: '/' });

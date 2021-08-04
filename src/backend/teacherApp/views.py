@@ -217,7 +217,7 @@ class ManagerView(viewsets.ModelViewSet):
             for manager in cur_class.class_manager.all():
                 data = json.dumps({
                     'id': manager.account.id,
-                    'username': manager.account.student.username
+                    'username': manager.account.user.username
                 })
                 manager_list.append(data)
             return Response(manager_list)
@@ -533,7 +533,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
             for invitation in cur_account.account_invitee.all():
                 data = json.dumps({
                     'id': invitation.id,
-                    'inviter': invitation.inviter.student.username,
+                    'inviter': invitation.inviter.user.username,
                     'class_id': invitation.clazz.id,
                     'class_name': invitation.clazz.class_name
                 })
@@ -598,7 +598,7 @@ def add_manager(is_owner, account, class_name):
 def add_permission(backend_account):
     permission_list = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
     for permission in permission_list:
-        backend_account.student.user_permissions.add(permission)
+        backend_account.user.user_permissions.add(permission)
 
 
 # 用于返回作业的方法
@@ -647,7 +647,7 @@ def auto_register_student_account(open_id):
 # 自动登录方法
 def auto_login(request, target_account):
     try:
-        target_user = target_account.student
+        target_user = target_account.user
         target_user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, target_user)
     except Exception:

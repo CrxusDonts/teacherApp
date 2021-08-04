@@ -16,6 +16,7 @@
                           auto-complete="off" placeholder="再次输入新密码" v-on:keyup.enter.native="modify"></el-input>
             </el-form-item>
             <el-form-item>
+                <el-button class="method-Button" type="primary" @click="goBack">返回</el-button>
                 <el-button class="method-Button" type="primary" @click="modify">确定修改</el-button>
             </el-form-item>
         </el-form>
@@ -29,10 +30,17 @@ export default {
         return {
             old_password: '',
             new_password: '',
-            new_password_again: ''
+            new_password_again: '',
+            user_name: ''
         };
     },
+    mounted() {
+        this.user_name = this.$route.query.user_name;
+    },
     methods: {
+        goBack() {
+            this.$router.push({ path: '/home/' + this.user_name });
+        },
         modify() {
             if (!this.old_password) {
                 this.$message.error('请输入原密码！');// message组件弹出框

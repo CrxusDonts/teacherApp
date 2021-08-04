@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         passwordModify() {
-            this.$router.push({ path: '/passwordModify' });
+            this.$router.push({ path: '/passwordModify', query: { user_name: this.user_name }});
         },
         exit() {
             this.$http.post('BackendAccount/logout/');
