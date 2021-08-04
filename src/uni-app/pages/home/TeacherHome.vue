@@ -43,7 +43,7 @@ export default {
 	methods: {
 		toClassManagement(clazz) {
 			uni.navigateTo({
-				url: '../ClassManagement?clazz=' + JSON.stringify(clazz)
+				url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=1'
 			});
 		}
 	}

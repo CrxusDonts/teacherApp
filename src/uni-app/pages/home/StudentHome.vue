@@ -1,30 +1,57 @@
 <template>
 	<view>
-		<view class="cu-bar bg-white">
+		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-title text-blue"></text>{{ '目前的班级:' + clazz.class_name }}
+				<text class="cuIcon-title text-blue "></text>班级列表
 			</view>
+			<button class="cu-btn bg-grey margin-right" @click="toJoinClass()">加入班级</button>
 		</view>
-		<view class="padding flex flex-direction">
-			<button class="cu-btn bg-grey lg cuIcon-people">切换班级</button>
-			<button class="cu-btn bg-grey margin-tb-sm lg cuIcon-people">批改作业</button>
+		<view class="cu-list menu-avatar">
+			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="clazz in classes" @click="toClassManagement(clazz)">
+				<view class="cu-avatar round lg cuIcon-group"></view>
+				<view class="content">
+					<view class="text-grey">{{clazz.class_name}}</view>
+				</view>
+				<view class="action">
+					<view class="cu-tag round bg-grey sm">5</view>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
 export default {
-	props:['open_id'],
 	data() {
 	    return {
-			clazz: {
-				id: 1304,
-				class_name: '非人类研究中心',
-			}
+			open_id: '',
+			classes: [
+				{
+					id: 1304,
+					class_name: '非人类研究中心'
+				},
+				{
+					id: 1603,
+					class_name: '嘉心糖俱乐部'
+				}
+			]
 	    };
 	},
 	onLoad: function (option) {
 		this.open_id = option.open_id;
+		
+	},
+	methods: {
+		toClassManagement(clazz) {
+			uni.navigateTo({
+				url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0'
+			});
+		},
+		toJoinClass() {
+			uni.navigateTo({
+				url: '../JoinClass'
+			});
+		}
 	}
 };
 </script>

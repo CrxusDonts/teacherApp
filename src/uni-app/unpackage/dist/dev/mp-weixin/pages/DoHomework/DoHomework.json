@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "choice-question": "/pages/DoHomework/ChoiceQuestion",
+    "completion-question": "/pages/DoHomework/CompletionQuestion",
+    "subjective-question": "/pages/DoHomework/SubjectiveQuestion"
+  }
+}

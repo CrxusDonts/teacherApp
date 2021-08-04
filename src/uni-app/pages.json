@@ -19,7 +19,13 @@
 			"path":"pages/HomeworkManagement"
 		},
 		{
-			"path":"pages/homeworkChecking/HomeworkChecking"
+			"path":"pages/Checkhomework/CheckHomework"
+		},
+		{
+			"path":"pages/DoHomework/DoHomework"
+		},
+		{
+			"path":"pages/JoinClass"
 		}
 	],
 	"globalStyle": {

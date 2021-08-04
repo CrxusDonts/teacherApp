@@ -6,7 +6,8 @@
     "pages/TeacherLogin",
     "pages/ClassManagement",
     "pages/HomeworkManagement",
-    "pages/homeworkChecking/HomeworkChecking"
+    "pages/Checkhomework/CheckHomework",
+    "pages/DoHomework/DoHomework"
   ],
   "subPackages": [],
   "window": {
@@ -17,5 +18,6 @@
   },
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom"
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

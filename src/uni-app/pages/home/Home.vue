@@ -2,7 +2,7 @@
 	<view>
 		<view class="cu-bar bg-white">
 			<view class="action">
-				<text class="cuIcon-title text-blue"></text>请选择你的身份2452
+				<text class="cuIcon-title text-blue"></text>请选择你的身份
 			</view>
 		</view>
 		<view class="padding flex flex-direction">
