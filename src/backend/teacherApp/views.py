@@ -48,7 +48,7 @@ class BackendAccountView(viewsets.ModelViewSet):
     def change_password(self, request):
         old_password = request.data.get('old_password')
         new_password = request.data.get('new_password')
-        cur_user = request.student
+        cur_user = request.user
         if cur_user.check_password(old_password):
             try:
                 cur_user.set_password(new_password)
@@ -111,7 +111,7 @@ class BackendAccountView(viewsets.ModelViewSet):
         try:
             if account_login(request):
                 open_id = request.data.get('open_id')
-                target_account = BackendAccount.objects.get(user=request.student)
+                target_account = BackendAccount.objects.get(user=request.user)
                 target_account.open_id = open_id
                 target_account.save()
                 return Response('login succeeded.')
@@ -158,7 +158,7 @@ class ClassView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_my_class(self, request):
         try:
-            cur_user = request.student
+            cur_user = request.user
             cur_account = BackendAccount.objects.get(user=cur_user)
             clazz = cur_account.account_manager.get(is_owner=True).clazz
             serializer = ClassSerializer(clazz)
@@ -170,7 +170,7 @@ class ClassView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_manage_class_list(self, request):
         try:
-            cur_user = request.student
+            cur_user = request.user
             cur_account = BackendAccount.objects.get(user=cur_user)
             class_list = []
             for manager in cur_account.account_manager.all().filter(is_owner=False):
@@ -189,6 +189,7 @@ class ClassView(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e))
 
+    # 按班级返回学生
     @action(methods=['post'], detail=False)
     def get_students(self, request):
         try:
@@ -264,7 +265,7 @@ class PeopleView(viewsets.ModelViewSet):
             target_student = People.objects.filter(clazz=cur_class, is_teacher=False).all()
             serializer = PeopleSerializer(target_student, many=True)
             return Response(serializer.data)
-        except Exception as e:
+        except Exception:
             return Response('get_class_student failed.')
 
 
@@ -299,21 +300,6 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
         except Exception:
             return Response('get_options failed.')
 
-    # TODO：待完善的选择题作答方法
-    # @action(methods=['post'], detail=False)
-    # def add_user_answer(self, request):
-    #     try:
-    #         question_id = request.data.get('question_id')
-    #         target_question = ChoiceQuestion.objects.get(id=question_id)
-    #         order = request.data.get('order')
-    #         is_correct = request.data.get('is_correct')
-    #         student_id = request.data.get('student_id')
-    #         student = People.objects.get(id=student_id)
-    #         new_answer = ChoiceQuestionUserAnswer.objects.create(question=target_question,answer_order=order,student=student,is_correct=is_correct)
-    #         new_answer.save()
-    #     except Exception as e:
-    #         return Response(str(e))
-
     @action(methods=['get'], detail=True)
     def get_topic_media(self, request, pk):
         try:
@@ -335,11 +321,25 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = ChoiceQuestionUserAnswer.objects.all()
     serializer_class = ChoiceQuestionUserAnswerSerializer
 
+    # @action(methods=['post'], detail=False)
+    # def add_user_answer(self, request):
+    #     try:
+    #         question_id = request.data.get('question_id')
+    #         target_question = ChoiceQuestion.objects.get(id=question_id)
+    #         order = request.data.get('order')
+    #         is_correct = request.data.get('is_correct')
+    #         student_id = request.data.get('student_id')
+    #         student = People.objects.get(id=student_id)
+    #         new_answer = ChoiceQuestionUserAnswer.objects.create(question=target_question,answer_order=order,student=student,is_correct=is_correct)
+    #         new_answer.save()
+    #         return Response('add_user_answer succeed.')
+    #     except Exception as e:
+    #         return Response(str(e))
+
 
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
-
 
 
 class HomeworkView(viewsets.ModelViewSet):
@@ -511,7 +511,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def invite_assistant(self, request):
         try:
-            inviter = BackendAccount.objects.get(user=request.student)
+            inviter = BackendAccount.objects.get(user=request.user)
             invitee = BackendAccount.objects.get(user=User.objects.get(username=request.data.get('user_name')))
             clazz = Class.objects.get(id=request.data.get('class_id'))
             invitation = ManageInvitation.objects.filter(inviter=inviter, invitee=invitee, clazz=clazz).all()
@@ -528,7 +528,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_invitation(self, request):
         try:
-            cur_account = BackendAccount.objects.get(user=request.student)
+            cur_account = BackendAccount.objects.get(user=request.user)
             invitation_list = []
             for invitation in cur_account.account_invitee.all():
                 data = json.dumps({
