@@ -22,7 +22,7 @@
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="edit_subject_question_form_visible = false;" type="primary">确定</el-button>
+        <el-button @click="save" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -34,12 +34,6 @@ export default {
     props: ['subjectivequestion', 'order', 'index'],
     mounted() {
         this.subjective_question = this.subjectivequestion;
-    },
-    beforeDestroy() {
-        this.$http.put('SubjectiveQuestion/' + this.subjective_question.id + '/', {
-            text_content: this.subjective_question.text_content,
-            homework: this.subjective_question.homework
-        });
     },
     data() {
         return {
@@ -55,7 +49,7 @@ export default {
         deleteQuestion() {
             this.$http.delete('SubjectiveQuestion/' + this.subjective_question.id + '/');
             this.subjective_question = '';
-            this.$parent.deleteSubjectiveQuestion(this.index);
+            this.$parent.$parent.$parent.deleteSubjectiveQuestion(this.index);
         },
         change(file, fileList) {
             if (fileList.length > this.file_limit) {
@@ -96,6 +90,13 @@ export default {
                         }
                     });
             }
+        },
+        save() {
+            this.edit_subject_question_form_visible = false;
+            this.$http.put('SubjectiveQuestion/' + this.subjective_question.id + '/', {
+                text_content: this.subjective_question.text_content,
+                homework: this.subjective_question.homework
+            });
         }
     }
 };

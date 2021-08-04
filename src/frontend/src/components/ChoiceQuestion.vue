@@ -41,7 +41,7 @@
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click=newOption>新增选项</el-button>
-        <el-button @click="edit_choice_question_form_visible = false;" type="primary">确定</el-button>
+        <el-button @click="save" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -71,28 +71,12 @@ export default {
                 this.options = response.data;
             });
     },
-    beforeDestroy() {
-        if (this.choice_question !== '') {
-            this.$http.put('ChoiceQuestion/' + this.choice_question.id + '/', {
-                text_content: this.choice_question.text_content,
-                homework: this.choice_question.homework
-            });
-        }
-        for (let i = 0; i < this.options.length; i++) {
-            this.$http.put('Options/' + this.options[i].id + '/', {
-                text_content: this.options[i].text_content,
-                order: this.options[i].order,
-                if_correct: this.options[i].if_correct,
-                question: this.options[i].question
-            });
-        }
-    },
     methods: {
         deleteQuestion() {
             this.$http.delete('ChoiceQuestion/' + this.choice_question.id + '/');
             this.choice_question = '';
             this.options = [];
-            this.$parent.deleteChoiceQuestion(this.index);
+            this.$parent.$parent.$parent.deleteChoiceQuestion(this.index);
         },
         deleteOption(option) {
             this.$http.delete('Options/' + option.id + '/');
@@ -159,6 +143,23 @@ export default {
                             alert('上传失败');
                         }
                     });
+            }
+        },
+        save() {
+            this.edit_choice_question_form_visible = false;
+            if (this.choice_question !== '') {
+                this.$http.put('ChoiceQuestion/' + this.choice_question.id + '/', {
+                    text_content: this.choice_question.text_content,
+                    homework: this.choice_question.homework
+                });
+            }
+            for (let i = 0; i < this.options.length; i++) {
+                this.$http.put('Options/' + this.options[i].id + '/', {
+                    text_content: this.options[i].text_content,
+                    order: this.options[i].order,
+                    if_correct: this.options[i].if_correct,
+                    question: this.options[i].question
+                });
             }
         }
     }

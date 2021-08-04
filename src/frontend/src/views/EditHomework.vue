@@ -138,7 +138,7 @@ export default {
     margin-top: 0;
     font-size: 30px;
     text-align: center;
-    background-color: yellow;
+    background-color: #f9f0fb;
 }
 
 .go-back {

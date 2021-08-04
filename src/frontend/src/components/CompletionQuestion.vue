@@ -31,7 +31,7 @@
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click=newAnswer>新增答案</el-button>
-        <el-button @click="edit_completion_question_form_visible = false;" type="primary">确定</el-button>
+        <el-button @click="save" type="primary">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -60,24 +60,12 @@ export default {
                 this.answers = response.data;
             });
     },
-    beforeDestroy() {
-        this.$http.put('CompletionQuestion/' + this.completion_question.id + '/', {
-            text_content: this.completion_question.text_content,
-            homework: this.completion_question.homework
-        });
-        for (let i = 0; i < this.answers.length; i++) {
-            this.$http.put('CompletionQuestionAnswer/' + this.answers[i].id + '/', {
-                answer: this.answers[i].answer,
-                question: this.answers[i].question
-            });
-        }
-    },
     methods: {
         deleteQuestion() {
             this.$http.delete('CompletionQuestion/' + this.completion_question.id + '/');
             this.completion_question = '';
             this.answers = [];
-            this.$parent.deleteCompletionQuestion(this.index);
+            this.$parent.$parent.$parent.deleteCompletionQuestion(this.index);
         },
         deleteAnswer(answer) {
             this.$http.delete('CompletionQuestionAnswer/' + answer.id + '/');
@@ -138,6 +126,19 @@ export default {
                             alert('上传失败');
                         }
                     });
+            }
+        },
+        save() {
+            this.edit_completion_question_form_visible = false;
+            this.$http.put('CompletionQuestion/' + this.completion_question.id + '/', {
+                text_content: this.completion_question.text_content,
+                homework: this.completion_question.homework
+            });
+            for (let i = 0; i < this.answers.length; i++) {
+                this.$http.put('CompletionQuestionAnswer/' + this.answers[i].id + '/', {
+                    answer: this.answers[i].answer,
+                    question: this.answers[i].question
+                });
             }
         }
     }
