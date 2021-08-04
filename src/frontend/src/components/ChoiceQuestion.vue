@@ -35,9 +35,8 @@
       </el-form>
       <!--图片上传框-->
       <el-upload action="#" list-type="picture-card" :file-list="file_list"
-                 :class = "{disabled:is_max}" :limit = 3 :on-change = "change"
-                 :on-remove = "remove" :before-upload = "beforeAvatarUpload">
-        <em class="el-icon-picture-outline"></em>
+                 :on-change = "change" :on-remove = "remove" :before-upload = "beforeAvatarUpload">
+        <em class="el-icon-upload"></em>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
@@ -56,12 +55,8 @@ export default {
     data() {
         return {
             options: [],
-            file_list: [
-                {
-                    id: 2,
-                    url: 'http://localhost:8002/media/2021/08/03/1.jpg'
-                }
-            ],
+            file_limit: 3,
+            file_list: [],
             edit_choice_question_form_visible: false,
             form_label_width: '140px',
             option_constant: '选项',
@@ -127,37 +122,44 @@ export default {
             });
         },
         change(file, fileList) {
-            if (fileList.length >= 3) {
+            if (fileList.length > this.file_limit) {
                 this.is_max = true;
             }
         },
         remove(file, fileList) {
-            if (fileList.length < 3) {
+            this.$http.delete('Media/' + file.id + '/');
+            this.file_list = fileList;
+            if (fileList.length < this.file_limit) {
                 this.is_max = false;
             }
         },
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpg' || file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
+            if (this.is_max) {
+                this.$message.error('最多上传3个文件');
+            } else {
+                const isImage = file.type === 'image/jpeg' || file.type === 'image/png';
+                const isVideo = file.type === 'video/mp4';
+                if (!isImage && !isVideo) {
+                    this.$message.error('只能上传图片或视频');
+                    return;
+                }
+                const formData = new FormData();
+                formData.append('url', file);
+                if (isImage) {
+                    formData.append('file_type', 0);
+                } else if (isVideo) {
+                    formData.append('file_type', 1);
+                }
+                formData.append('choice_question', this.choice_question.id);
+                this.$http.post('Media/', formData)
+                    .then(response => {
+                        if (response.status === 201) {
+                            this.file_list.push(response.data);
+                        } else {
+                            alert('上传失败');
+                        }
+                    });
             }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            const formData = new FormData();
-            formData.append('url', file);
-            formData.append('file_type', 1);
-            this.$http.post('Media/', formData)
-                .then(response => {
-                    if (response.status === 201) {
-                        console.log(response.data);
-                        this.file_list.push(response.data);
-                        console.log(this.file_list);
-                    } else {
-                        alert('上传失败');
-                    }
-                });
         }
     }
 };
@@ -202,9 +204,5 @@ p + p {
 .delete-button {
     float: right;
     margin-top: 5px;
-}
-
-.disabled {
-    display: none;
 }
 </style>
