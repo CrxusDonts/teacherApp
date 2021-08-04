@@ -76,7 +76,7 @@ export default {
                 if_accept: 1,
                 invitation_id: this.invite_me[index].invitation_id
             }).then(() => {
-                this.invite_me.splice(index, index + 1);
+                this.invite_me.splice(index, 1);
                 this.$emit('nums_of_invite_me_changed');
             });
         },
@@ -85,7 +85,7 @@ export default {
                 if_accept: 0,
                 invitation_id: this.invite_me[index].invitation_id
             }).then(() => {
-                this.invite_me.splice(index, index + 1);
+                this.invite_me.splice(index, 1);
                 this.$emit('nums_of_invite_me_changed');
             });
         },

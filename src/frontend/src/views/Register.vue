@@ -54,11 +54,6 @@ export default {
             } else if (!this.is_male) {
                 this.$message.error('请选择性别！');
             } else {
-                console.log(this.user_name);
-                console.log(this.password);
-                console.log(this.class_name);
-                console.log(this.name);
-                console.log(this.is_male);
                 this.$http.post('BackendAccount/register_teacher/', {
                     user_name: this.user_name,
                     password: this.password,

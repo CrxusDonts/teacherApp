@@ -48,7 +48,6 @@ export default {
         this.user_name = this.$route.params.user_name;
         this.$http.get('Class/get_my_class/').then(response => {
             if (response.data !== 'Get my own class failed.') {
-                this.data = response.data;
                 this.classes[0].id = response.data.id;
                 this.classes[0].class_name = response.data.class_name;
             } else {

@@ -251,10 +251,21 @@ class PeopleView(viewsets.ModelViewSet):
             user_name = request.data.get('user_name')
             target_user = User.objects.get(username=user_name)
             target_account = BackendAccount.objects.get(user=target_user)
-            target_people = People.objects.get(account=target_account,is_teacher=True)
+            target_people = People.objects.get(account=target_account, is_teacher=True)
             return Response(target_people.name)
         except Exception as e:
             return Response('get_name failed.')
+
+    @action(methods=['post'], detail=False)
+    def get_class_student(self, request):
+        try:
+            cur_class_id = request.data.get('class_id')
+            cur_class = Class.objects.get(id=cur_class_id)
+            target_student = People.objects.filter(clazz=cur_class, is_teacher=False).all()
+            serializer = PeopleSerializer(target_student, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response('get_class_student failed.')
 
 
 class ChoiceQuestionView(viewsets.ModelViewSet):

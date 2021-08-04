@@ -40,7 +40,11 @@ export default {
         this.$http.post('People/get_name/', {
             user_name: this.user_name
         }).then(response => {
-            this.name = response.data;
+            if (response.data !== 'get_name failed.') {
+                this.name = response.data;
+            } else {
+                this.name = '无名少侠';
+            }
         });
     },
     methods: {

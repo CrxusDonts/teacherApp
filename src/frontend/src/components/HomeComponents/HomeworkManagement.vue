@@ -147,7 +147,7 @@ export default {
         },
         handleDelete(index) {
             this.$http.delete('Homework/' + this.homeworks[index].id + '/');
-            this.homeworks.splice(index, index + 1);
+            this.homeworks.splice(index, 1);
         },
         handleTime(time) {
             return time.substr(0, 19).replace('T', ' ');

@@ -82,7 +82,7 @@ export default {
             }).then(response => {
                 if (response.data !== 'delete_teacher failed.') {
                     alert('移除成功！');
-                    this.assistant.splice(index, index + 1);
+                    this.assistant.splice(index, 1);
                 } else {
                     alert('移除失败！不能移除该班的拥有者');
                 }

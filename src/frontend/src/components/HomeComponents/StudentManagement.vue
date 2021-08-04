@@ -9,18 +9,9 @@
                          :width="100">
         </el-table-column>
         <el-table-column
-            prop="id"
-            label="学号"
-            width="180">
-        </el-table-column>
-        <el-table-column
             prop="name"
             label="姓名"
             width="180">
-        </el-table-column>
-        <el-table-column
-            prop="gender"
-            label="性别">
         </el-table-column>
         <el-table-column
             align="right"
@@ -38,15 +29,7 @@ export default {
     name: 'StudentManagement',
     data() {
         return {
-            students: [{
-                id: '12',
-                name: '果果果',
-                gender: '男'
-            }, {
-                id: '19',
-                name: '王小虎',
-                gender: '男'
-            }],
+            students: [],
             class_id: '',
             user_name: ''
         };
@@ -54,13 +37,23 @@ export default {
     mounted() {
         this.class_id = this.$route.query.class_id;
         this.user_name = this.$route.params.user_name;
+        this.$http.post('People/get_class_student/', {
+            class_id: this.class_id
+        }).then(response => {
+            if (response.data !== 'get_class_student failed.') {
+                this.students = response.data;
+            } else {
+                alert('失败！');
+            }
+        });
     },
     methods: {
         handleEdit(index, row) {
             // TODO 与后端交互
         },
-        handleRemove(index, row) {
-            // TODO 与后端交互
+        handleRemove(index) {
+            this.$http.delete('People/' + this.students[index].id + '/');
+            this.students.splice(index, 1);
         }
     }
 };
