@@ -12,7 +12,15 @@
             </el-form-item>
             <el-form-item>
                 <el-input type="text" v-model="class_name" prefix-icon="el-icon-menu"
-                          auto-complete="off" placeholder="班级" v-on:keyup.enter.native="doRegister"></el-input>
+                          auto-complete="off" placeholder="班级"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-input type="text" v-model="name" prefix-icon="el-icon-s-custom"
+                          auto-complete="off" placeholder="姓名"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-radio v-model="is_male" :label="true">男</el-radio>
+                <el-radio v-model="is_male" :label="false">女</el-radio>
             </el-form-item>
             <el-form-item>
                 <el-button class="method-Button" type="primary" @click="doRegister">注册</el-button>
@@ -28,7 +36,9 @@ export default {
         return {
             user_name: '',
             password: '',
-            class_name: ''
+            class_name: '',
+            name: '',
+            is_male: ''
         };
     },
     methods: {
@@ -39,11 +49,22 @@ export default {
                 this.$message.error('请输入密码！');
             } else if (!this.class_name) {
                 this.$message.error('请输入班级！');
+            } else if (!this.name) {
+                this.$message.error('请输入姓名！');
+            } else if (!this.is_male) {
+                this.$message.error('请选择性别！');
             } else {
+                console.log(this.user_name);
+                console.log(this.password);
+                console.log(this.class_name);
+                console.log(this.name);
+                console.log(this.is_male);
                 this.$http.post('BackendAccount/register_teacher/', {
                     user_name: this.user_name,
                     password: this.password,
-                    class_name: this.class_name
+                    class_name: this.class_name,
+                    name: this.name,
+                    is_male: this.is_male
                 }).then(response => {
                     if (response.data === 'Register succeed.') {
                         this.$router.push({ path: '/' });
@@ -71,7 +92,7 @@ export default {
 .Register-container {
     width: 350px;
     padding: 35px 35px 15px;
-    margin: 180px auto 90px;
+    margin: 120px auto 90px;
     border: 1px solid #eaeaea;
     border-radius: 15px;
     background-clip: padding-box;

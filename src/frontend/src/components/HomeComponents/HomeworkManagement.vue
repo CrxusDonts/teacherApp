@@ -36,9 +36,6 @@
                     <el-button type="success" plain icon="el-icon-share" size="mini"
                                @click="handleShare(scope.$index, scope.row)">分享
                     </el-button>
-                    <el-button type="warning" plain icon="el-icon-edit" size="mini"
-                               @click="handleCancel(scope.$index, scope.row)">取消发布
-                    </el-button>
                     <el-button type="danger" plain icon="el-icon-delete" size="mini"
                                @click="handleDelete(scope.$index, scope.row)">删除
                     </el-button>
@@ -103,6 +100,10 @@ export default {
             } else {
                 alert('获取班级失败！');
             }
+            for (let i = 0;i < this.homeworks.length;i++) {
+                this.homeworks[i].start_time = this.handleTime(this.homeworks[i].start_time);
+                this.homeworks[i].due_time = this.handleTime(this.homeworks[i].due_time);
+            }
         });
     },
     methods: {
@@ -144,12 +145,12 @@ export default {
         handleShare(index, row) {
             // TODO Share
         },
-        handleCancel(index, row) {
-            // TODO Cancel
-        },
         handleDelete(index) {
-            this.$http.delete('Homework/' + this.homeworks[index].id);
+            this.$http.delete('Homework/' + this.homeworks[index].id + '/');
             this.homeworks.splice(index, index + 1);
+        },
+        handleTime(time) {
+            return time.substr(0, 19).replace('T', ' ');
         }
     }
 };

@@ -77,7 +77,7 @@ export default {
         // 移除助教
         handleRemove(index) {
             this.$http.post('Manager/delete_teacher/', {
-                user_name: this.assistant[index].userName,
+                user_name: this.assistant[index].user_name,
                 class_id: this.class_id
             }).then(response => {
                 if (response.data !== 'delete_teacher failed.') {

@@ -27,7 +27,8 @@
             <el-menu-item index="switchClass" :route=
                 "{ path: 'switchClass', query: { class_id: this.class_id} }">班级切换</el-menu-item>
         </el-menu>
-        <router-view @classIdChanged="classIdChanged" @nums_of_invite_me_changed="nums_of_invite_me_changed"></router-view>
+        <router-view class="router"
+            @classIdChanged="classIdChanged" @nums_of_invite_me_changed="nums_of_invite_me_changed"></router-view>
     </div>
 </template>
 
@@ -52,7 +53,7 @@ export default {
             if (response.data !== 'get_invitation failed.') {
                 this.num_of_invite_me = response.data.length;
             } else {
-                alert('获取邀请列表，请重试！');
+                alert('获取邀请列表失败，请重试！');
             }
         });
         this.$http.get('Class/get_my_class/').then(response => {
@@ -87,4 +88,7 @@ export default {
     margin-left: 5px;
 }
 
+.router {
+    margin-bottom: 10px;
+}
 </style>

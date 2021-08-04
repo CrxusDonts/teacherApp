@@ -59,7 +59,7 @@ export default {
             file_list: [
                 {
                     id: 2,
-                    url: 'http://localhost:8002/static/media/2021/7/30/Diana.jpg'
+                    url: 'http://localhost:8002/media/2021/08/03/1.jpg'
                 }
             ],
             edit_choice_question_form_visible: false,
@@ -176,6 +176,7 @@ export default {
 .choice-question {
     padding-bottom: 10px;
     margin-top: -20px;
+    border-radius: 10px;
     background-color: white;
 }
 

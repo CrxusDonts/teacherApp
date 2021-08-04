@@ -245,6 +245,17 @@ class PeopleView(viewsets.ModelViewSet):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
 
+    @action(methods=['post'], detail=False)
+    def get_name(self, request):
+        try:
+            user_name = request.data.get('user_name')
+            target_user = User.objects.get(username=user_name)
+            target_account = BackendAccount.objects.get(user=target_user)
+            target_people = People.objects.get(account=target_account,is_teacher=True)
+            return Response(target_people.name)
+        except Exception as e:
+            return Response(str(e))
+
 
 class ChoiceQuestionView(viewsets.ModelViewSet):
     queryset = ChoiceQuestion.objects.all()

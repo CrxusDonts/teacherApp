@@ -49,7 +49,7 @@ export default {
 .common-header {
     height: 80px;
     line-height: 40px;
-    opacity: .85;
+    background-color: white;
 }
 
 .el-dropdown-link {
