@@ -37,24 +37,26 @@ class Homework(models.Model):
 class ChoiceQuestion(models.Model):
     text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE)
+    is_contain_media = models.BooleanField(default=False)
 
 
 class Options(models.Model):
     question = models.ForeignKey(ChoiceQuestion, related_name='ChoiceQuestion_option', on_delete=models.CASCADE)
     text_content = models.TextField(default='null')
     order = models.IntegerField(default=0)
-    if_correct = models.BooleanField(default=False)
+    is_correct = models.BooleanField(default=False)
 
 
 class ChoiceQuestionUserAnswer(models.Model):
     question = models.ForeignKey(ChoiceQuestion, related_name='ChoiceQuestion_answer', on_delete=models.CASCADE)
     answer_order = models.IntegerField(default=0)
-    user = models.ForeignKey(People, related_name='ChoiceQuestionUser_answer', on_delete=models.CASCADE)
-
+    student = models.ForeignKey(People, related_name='ChoiceQuestionUser_answer', on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=False)
 
 class CompletionQuestion(models.Model):
     text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
+    is_contain_media = models.BooleanField(default=False)
 
 
 class CompletionQuestionAnswer(models.Model):
@@ -68,12 +70,13 @@ class CompletionQuestionUserAnswer(models.Model):
     answer_order = models.IntegerField(default=0)
     question = models.ForeignKey(CompletionQuestion, related_name='CompletionQuestionUser_answer',
                                  on_delete=models.CASCADE)
-    user = models.ForeignKey(People, related_name='CompletionUser_answer', on_delete=models.CASCADE)
+    student = models.ForeignKey(People, related_name='CompletionUser_answer', on_delete=models.CASCADE)
 
 
 class SubjectiveQuestion(models.Model):
     text_content = models.TextField(default='null')
     homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
+    is_contain_media = models.BooleanField(default=False)
 
 
 class SubjectiveQuestionUserAnswer(models.Model):
@@ -118,3 +121,4 @@ class Media(models.Model):
                                                         related_name='subjective_user_answer_media',
                                                         on_delete=models.CASCADE,
                                                         null=True)
+

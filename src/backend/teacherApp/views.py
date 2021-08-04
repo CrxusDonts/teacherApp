@@ -48,7 +48,7 @@ class BackendAccountView(viewsets.ModelViewSet):
     def change_password(self, request):
         old_password = request.data.get('old_password')
         new_password = request.data.get('new_password')
-        cur_user = request.user
+        cur_user = request.student
         if cur_user.check_password(old_password):
             try:
                 cur_user.set_password(new_password)
@@ -111,10 +111,10 @@ class BackendAccountView(viewsets.ModelViewSet):
         try:
             if account_login(request):
                 open_id = request.data.get('open_id')
-                target_account = BackendAccount.objects.get(user=request.user)
+                target_account = BackendAccount.objects.get(user=request.student)
                 target_account.open_id = open_id
                 target_account.save()
-                return Response('test_login')
+                return Response('login succeeded.')
             else:
                 return Response('login failed.')
         except Exception as e:
@@ -158,7 +158,7 @@ class ClassView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_my_class(self, request):
         try:
-            cur_user = request.user
+            cur_user = request.student
             cur_account = BackendAccount.objects.get(user=cur_user)
             clazz = cur_account.account_manager.get(is_owner=True).clazz
             serializer = ClassSerializer(clazz)
@@ -170,7 +170,7 @@ class ClassView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_manage_class_list(self, request):
         try:
-            cur_user = request.user
+            cur_user = request.student
             cur_account = BackendAccount.objects.get(user=cur_user)
             class_list = []
             for manager in cur_account.account_manager.all().filter(is_owner=False):
@@ -216,7 +216,7 @@ class ManagerView(viewsets.ModelViewSet):
             for manager in cur_class.class_manager.all():
                 data = json.dumps({
                     'id': manager.account.id,
-                    'username': manager.account.user.username
+                    'username': manager.account.student.username
                 })
                 manager_list.append(data)
             return Response(manager_list)
@@ -278,9 +278,9 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
             question = ChoiceQuestion.objects.get(id=pk)
             text_content = request.data.get('text_content')
             order = request.data.get('order')
-            if_correct = request.data.get('if_correct')
+            is_correct = request.data.get('is_correct')
             new_options = Options.objects.create \
-                (question=question, text_content=text_content, order=order, if_correct=if_correct)
+                (question=question, text_content=text_content, order=order, is_correct=is_correct)
             new_options.save()
             serializer = OptionsSerializer(new_options)
             return Response(serializer.data)
@@ -298,13 +298,32 @@ class ChoiceQuestionView(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception:
             return Response('get_options failed.')
-    # TODO:待完善的获取媒体文件
-    # @action(methods=['get'], detail=True)
-    # def get_topic_media(self, request, pk):
+
+    # TODO：待完善的选择题作答方法
+    # @action(methods=['post'], detail=False)
+    # def add_user_answer(self, request):
     #     try:
-    #         pass
+    #         question_id = request.data.get('question_id')
+    #         target_question = ChoiceQuestion.objects.get(id=question_id)
+    #         order = request.data.get('order')
+    #         is_correct = request.data.get('is_correct')
+    #         student_id = request.data.get('student_id')
+    #         student = People.objects.get(id=student_id)
+    #         new_answer = ChoiceQuestionUserAnswer.objects.create(question=target_question,answer_order=order,student=student,is_correct=is_correct)
+    #         new_answer.save()
     #     except Exception as e:
     #         return Response(str(e))
+
+    @action(methods=['get'], detail=True)
+    def get_topic_media(self, request, pk):
+        try:
+            target_question = ChoiceQuestion.objects.get(id=pk)
+            medias = []
+            for media in target_question.choice_media.all():
+                medias.append(media)
+            return Response(MediaSerializer(medias, many=True).data)
+        except Exception as e:
+            return Response(str(e))
 
 
 class OptionsView(viewsets.ModelViewSet):
@@ -320,6 +339,7 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
 class MediaView(viewsets.ModelViewSet):
     queryset = Media.objects.all()
     serializer_class = MediaSerializer
+
 
 
 class HomeworkView(viewsets.ModelViewSet):
@@ -424,6 +444,17 @@ class CompletionQuestionView(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e))
 
+    @action(methods=['get'], detail=True)
+    def get_completion_media(self, request, pk):
+        try:
+            target_question = CompletionQuestion.objects.get(id=pk)
+            medias = []
+            for media in target_question.completion_media.all():
+                medias.append(media)
+            return Response(MediaSerializer(medias, many=True).data)
+        except Exception as e:
+            return Response(str(e))
+
 
 class CompletionQuestionAnswerView(viewsets.ModelViewSet):
     queryset = CompletionQuestionAnswer.objects.all()
@@ -445,6 +476,17 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
 class SubjectiveQuestionView(viewsets.ModelViewSet):
     queryset = SubjectiveQuestion.objects.all()
     serializer_class = SubjectiveQuestionSerializer
+
+    @action(methods=['get'], detail=True)
+    def get_subjective_question_media(self, request, pk):
+        try:
+            target_question = SubjectiveQuestion.objects.get(id=pk)
+            medias = []
+            for media in target_question.subjective_media.all():
+                medias.append(media)
+            return Response(MediaSerializer(medias, many=True).data)
+        except Exception as e:
+            return Response(str(e))
 
 
 class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
@@ -469,7 +511,7 @@ class ManageInvitationView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def invite_assistant(self, request):
         try:
-            inviter = BackendAccount.objects.get(user=request.user)
+            inviter = BackendAccount.objects.get(user=request.student)
             invitee = BackendAccount.objects.get(user=User.objects.get(username=request.data.get('user_name')))
             clazz = Class.objects.get(id=request.data.get('class_id'))
             invitation = ManageInvitation.objects.filter(inviter=inviter, invitee=invitee, clazz=clazz).all()
@@ -486,12 +528,12 @@ class ManageInvitationView(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_invitation(self, request):
         try:
-            cur_account = BackendAccount.objects.get(user=request.user)
+            cur_account = BackendAccount.objects.get(user=request.student)
             invitation_list = []
             for invitation in cur_account.account_invitee.all():
                 data = json.dumps({
                     'id': invitation.id,
-                    'inviter': invitation.inviter.user.username,
+                    'inviter': invitation.inviter.student.username,
                     'class_id': invitation.clazz.id,
                     'class_name': invitation.clazz.class_name
                 })
@@ -556,7 +598,7 @@ def add_manager(is_owner, account, class_name):
 def add_permission(backend_account):
     permission_list = Permission.objects.filter(id__gt=24).all()  # 24及24以前均为后台admin管理权限
     for permission in permission_list:
-        backend_account.user.user_permissions.add(permission)
+        backend_account.student.user_permissions.add(permission)
 
 
 # 用于返回作业的方法
@@ -605,7 +647,7 @@ def auto_register_student_account(open_id):
 # 自动登录方法
 def auto_login(request, target_account):
     try:
-        target_user = target_account.user
+        target_user = target_account.student
         target_user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, target_user)
     except Exception:

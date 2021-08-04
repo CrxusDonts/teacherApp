@@ -1,7 +1,5 @@
-from django.conf.urls.static import static
 from django.urls import path, include
 
-from api import settings
 from . import views
 from rest_framework import routers
 
