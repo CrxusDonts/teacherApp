@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header v-bind:user_name="user_name"></Header>
+        <Header></Header>
         <el-menu class="el-Menu" default-active="homeworkManagement" mode="horizontal" @select="handleSelect"
                  :router="true">
             <el-menu-item index="homeworkManagement" :route=

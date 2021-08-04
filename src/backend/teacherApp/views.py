@@ -254,7 +254,7 @@ class PeopleView(viewsets.ModelViewSet):
             target_people = People.objects.get(account=target_account,is_teacher=True)
             return Response(target_people.name)
         except Exception as e:
-            return Response(str(e))
+            return Response('get_name failed.')
 
 
 class ChoiceQuestionView(viewsets.ModelViewSet):

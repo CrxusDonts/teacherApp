@@ -11,7 +11,7 @@
     <el-dropdown :show-timeout=10 :hide-timeout=50 style="float: right;
     padding-right: 10px;">
       <div class="el-dropdown-link">
-        <span>你好,{{user_name}}</span>
+        <span>你好,{{name}}</span>
         <span style="float: right;
                     margin-left: 10px;">
           <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png" :size=40></el-avatar>
@@ -29,9 +29,19 @@
 <script>
 export default {
     name: 'Header',
-    props: ['user_name'],
     data: function() {
-        return {};
+        return {
+            user_name: '',
+            name: ''
+        };
+    },
+    mounted() {
+        this.user_name = this.$route.params.user_name;
+        this.$http.post('People/get_name/', {
+            user_name: this.user_name
+        }).then(response => {
+            this.name = response.data;
+        });
     },
     methods: {
         passwordModify() {
