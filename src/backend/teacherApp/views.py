@@ -11,7 +11,6 @@ from rest_framework.utils import json
 from .serializers import *
 
 
-# status 请参考https://www.runoob.com/http/http-status-codes.html
 
 class BackendAccountView(viewsets.ModelViewSet):
     queryset = BackendAccount.objects.all()
@@ -85,7 +84,7 @@ class BackendAccountView(viewsets.ModelViewSet):
             open_id = request.data.get('open_id')
             is_teacher = request.data.get('is_teacher')
             for account in BackendAccount.objects.filter(open_id=open_id).all():
-                if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
+                if People.objects.filter(account=account, is_teacher=is_teacher).all().count() != 0:
                     # 不是第一次
                     auto_login(request, account)
                     return Response('login succeed.')
@@ -321,20 +320,21 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = ChoiceQuestionUserAnswer.objects.all()
     serializer_class = ChoiceQuestionUserAnswerSerializer
 
-    # @action(methods=['post'], detail=False)
-    # def add_user_answer(self, request):
-    #     try:
-    #         question_id = request.data.get('question_id')
-    #         target_question = ChoiceQuestion.objects.get(id=question_id)
-    #         order = request.data.get('order')
-    #         is_correct = request.data.get('is_correct')
-    #         student_id = request.data.get('student_id')
-    #         student = People.objects.get(id=student_id)
-    #         new_answer = ChoiceQuestionUserAnswer.objects.create(question=target_question,answer_order=order,student=student,is_correct=is_correct)
-    #         new_answer.save()
-    #         return Response('add_user_answer succeed.')
-    #     except Exception as e:
-    #         return Response(str(e))
+    @action(methods=['post'], detail=False)
+    def add_user_answer(self, request):
+        try:
+            question_id = request.data.get('question_id')
+            target_question = ChoiceQuestion.objects.get(id=question_id)
+            answer_order = request.data.get('answer_order')
+            is_correct = request.data.get('is_correct')
+            student_id = request.data.get('student_id')
+            student = People.objects.get(id=student_id)
+            new_answer = ChoiceQuestionUserAnswer.objects. \
+                create(question=target_question, answer_order=answer_order, student=student, is_correct=is_correct)
+            new_answer.save()
+            return Response('add_user_answer succeed.')
+        except Exception as e:
+            return Response(str(e))
 
 
 class MediaView(viewsets.ModelViewSet):
@@ -465,10 +465,19 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = CompletionQuestionUserAnswer.objects.all()
     serializer_class = CompletionQuestionUserAnswerSerializer
 
-    @action(methods=['post'], detail=True)
-    def add_user_answer(self, request, pk):
+    @action(methods=['post'], detail=False)
+    def add_user_answer(self, request):
         try:
-            pass  # TODO:作答函数
+            question_id = request.data.get('question_id')
+            target_question = CompletionQuestion.objects.get(id=question_id)
+            answer = request.data.get('answer')
+            answer_order = request.data.get('answer_order')
+            student_id = request.data.get('student_id')
+            student = People.objects.get(id=student_id)
+            new_answer = CompletionQuestionUserAnswer.objects. \
+                create(question=target_question, answer=answer, answer_order=answer_order, student=student)
+            new_answer.save()
+            return Response('add_user_answer succeed.')
         except Exception as e:
             return Response(str(e))
 
