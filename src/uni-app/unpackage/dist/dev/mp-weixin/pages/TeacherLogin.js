@@ -154,11 +154,18 @@ var _default =
   data: function data() {
     return {
       user: {
-        user_name: 'stupid之人' } };
+        user_name: '',
+        password: '' } };
 
 
   },
   methods: {
+    inputUsername: function inputUsername(e) {
+      this.user.user_name = e.target.value;
+    },
+    inputPasswork: function inputPasswork(e) {
+      this.user.password = e.target.value;
+    },
     login: function login() {
       uni.navigateTo({
         url: 'home/TeacherHome?user=' + JSON.stringify(this.user) });

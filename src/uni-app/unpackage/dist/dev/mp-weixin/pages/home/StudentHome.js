@@ -176,6 +176,11 @@ var _default =
       uni.navigateTo({
         url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0' });
 
+    },
+    toJoinClass: function toJoinClass() {
+      uni.navigateTo({
+        url: '../JoinClass' });
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

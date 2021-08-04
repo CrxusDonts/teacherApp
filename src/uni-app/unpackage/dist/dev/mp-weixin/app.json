@@ -7,7 +7,8 @@
     "pages/ClassManagement",
     "pages/HomeworkManagement",
     "pages/Checkhomework/CheckHomework",
-    "pages/DoHomework/DoHomework"
+    "pages/DoHomework/DoHomework",
+    "pages/JoinClass"
   ],
   "subPackages": [],
   "window": {

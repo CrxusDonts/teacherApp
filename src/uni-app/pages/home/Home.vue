@@ -41,9 +41,21 @@ export default {
 	},
     methods: {
 		toTeacherHome() {
-			uni.navigateTo({
-				url: '../TeacherLogin'
-			});
+			uni.request({
+					url: 'http://localhost:8002/teacherApp/BackendAccount/determine_first_login/',
+					data: {
+						'open_id': this.open_id,
+						'is_teacher': true
+					},
+					method:'post',
+					success: res => {
+						if (res.data === 'teacher first login') {
+							uni.navigateTo({
+								url: '../TeacherLogin'
+							});
+						}
+					}
+				});
 		},
 		toStudentHome() {
 			uni.navigateTo({
