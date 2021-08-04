@@ -3,8 +3,13 @@
     <p class="text-content">
         {{ order }}.{{ completion_question.text_content }}
     </p>
-    <el-image class="image" v-for="file in file_list" :key="file.url" :src="file.url" :preview-src-list="file_list">
-    </el-image><br>
+    <div v-for="file in files" :key="file.url">
+      <el-image v-if="file.file_type === 0" class="image" :src="file.url" :preview-src-list="[file.url]">
+      </el-image>
+      <video-player v-if="file.file_type === 1" class="video-player vjs-custom-skin video"
+                    ref="videoPlayer" :playsinline="true" :options="playerOptions">
+      </video-player>
+    </div><br>
     <span>答案：</span><span class="answer" v-for="answer in answers" :key="answer.id">{{answer.answer}}</span><br>
     <el-button type="primary" icon="el-icon-edit" circle
                @click="edit_completion_question_form_visible = true" style="margin-top: 8px;"></el-button>
@@ -24,7 +29,7 @@
         </el-form-item>
       </el-form>
       <!--图片上传框-->
-      <el-upload action="#" list-type="picture-card" :file-list="file_list"
+      <el-upload action="#" list-type="picture-card" :file-list="files"
                  :on-change = "change" :on-remove = "remove" :before-upload = "beforeAvatarUpload">
         <em class="el-icon-upload"></em>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
@@ -43,9 +48,26 @@ export default {
     props: ['completionquestion', 'order', 'index'],
     data() {
         return {
+            playerOptions: {
+                autoplay: false,
+                muted: false,
+                loop: false,
+                preload: 'auto',
+                language: 'zh-CN',
+                aspectRatio: '16:9',
+                fluid: true,
+                sources: [],
+                notSupportedMessage: '此视频暂无法播放，请稍后再试',
+                controlBar: {
+                    timeDivider: true,
+                    durationDisplay: true,
+                    remainingTimeDisplay: false,
+                    fullscreenToggle: true
+                }
+            },
             answers: [],
             file_limit: 3,
-            file_list: [],
+            files: [],
             edit_completion_question_form_visible: false,
             form_label_width: '140px',
             answer_constant: '答案',
@@ -58,6 +80,17 @@ export default {
         this.$http.get('CompletionQuestion/' + this.completion_question.id + '/get_answers/')
             .then(response => {
                 this.answers = response.data;
+            });
+        this.$http.get('CompletionQuestion/' + this.completion_question.id + '/get_completion_media/')
+            .then(response => {
+                this.files = response.data;
+            }).then(() => {
+                for (let i = 0; i < this.files.length; i++) {
+                    this.files[i].url = 'http://localhost:8002/' + this.files[i].url.substring(6);
+                    if (this.files[i].file_type === 1) {
+                        this.playerOptions.sources.push(this.files[i].url);
+                    }
+                }
             });
     },
     methods: {
@@ -95,7 +128,7 @@ export default {
         },
         remove(file, fileList) {
             this.$http.delete('Media/' + file.id + '/');
-            this.file_list = fileList;
+            this.files = fileList;
             if (fileList.length < this.file_limit) {
                 this.is_max = false;
             }
@@ -110,6 +143,10 @@ export default {
                     this.$message.error('只能上传图片或视频');
                     return;
                 }
+                if (isVideo && this.playerOptions.sources.length === 1) {
+                    this.$message.error('只能上传一个视频');
+                    return;
+                }
                 const formData = new FormData();
                 formData.append('url', file);
                 if (isImage) {
@@ -121,7 +158,12 @@ export default {
                 this.$http.post('Media/', formData)
                     .then(response => {
                         if (response.status === 201) {
-                            this.file_list.push(response.data);
+                            this.files.push(response.data);
+                            this.files[this.files.length - 1].url = 'http://localhost:8002/' +
+                              this.files[this.files.length - 1].url.substring(46);
+                            if (this.files[this.files.length - 1].file_type === 1) {
+                                this.playerOptions.sources.push(this.files[this.files.length - 1].url);
+                            }
                         } else {
                             alert('上传失败');
                         }
@@ -180,5 +222,20 @@ span {
 .delete-button {
     float: right;
     margin-top: 5px;
+}
+
+.video {
+    position: relative;
+    display: inline-block;
+    width: 600px;
+    height: 338px;
+    margin-right: 4px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow: hidden;
+    line-height: 100px;
+    text-align: center;
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2);
 }
 </style>
