@@ -24,34 +24,34 @@
 
 <script>
 export default {
-	props: ['completionQuestion', 'order', 'index'],
-	name: 'CompletionQuestion',
-	data() {
-	    return {
-			options: [
-				{
-					order: 1,
-					text_content: '是',
-					if_correct: true
-				},
-				{
-					order: 2,
-					text_content: '不是',
-					if_correct: false
-				}
-			],
-			answers: [
-				{
-					answer: '将登太行雪满山',
-				}
-			],
-			student_answers: [
-				{
-					answer: '将登太行雪满山',
-				}
-			]
-	    };
-	},
+    props: ['completionQuestion', 'order', 'index'],
+    name: 'CompletionQuestion',
+    data() {
+        return {
+            options: [
+                {
+                    order: 1,
+                    text_content: '是',
+                    if_correct: true
+                },
+                {
+                    order: 2,
+                    text_content: '不是',
+                    if_correct: false
+                }
+            ],
+            answers: [
+                {
+                    answer: '将登太行雪满山'
+                }
+            ],
+            student_answers: [
+                {
+                    answer: '将登太行雪满山'
+                }
+            ]
+        };
+    }
 };
 </script>
 

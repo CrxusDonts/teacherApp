@@ -16,35 +16,35 @@
 
 <script>
 export default {
-	props: ['completionQuestion', 'order', 'index'],
-	name: 'CompletionQuestion',
-	data() {
-	    return {
-			number: 3,
-			options: [
-				{
-					order: 1,
-					text_content: '是',
-					if_correct: true
-				},
-				{
-					order: 2,
-					text_content: '不是',
-					if_correct: false
-				}
-			],
-			student_answers: []
-	    };
-	},
-	mounted() {
-		for (var i = 1; i <= this.number; i++){
-			var student_answer = {
-				order: i,
-				answer: '',
-			};
-			this.student_answers.push(student_answer);
-		};
-	}
+    props: ['completionQuestion', 'order', 'index'],
+    name: 'CompletionQuestion',
+    data() {
+        return {
+            number: 3,
+            options: [
+                {
+                    order: 1,
+                    text_content: '是',
+                    if_correct: true
+                },
+                {
+                    order: 2,
+                    text_content: '不是',
+                    if_correct: false
+                }
+            ],
+            student_answers: []
+        };
+    },
+    mounted() {
+        for (var i = 1; i <= this.number; i++) {
+            var student_answer = {
+                order: i,
+                answer: ''
+            };
+            this.student_answers.push(student_answer);
+        }
+    }
 };
 </script>
 

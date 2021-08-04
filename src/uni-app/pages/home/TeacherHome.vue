@@ -25,20 +25,14 @@ export default {
 	data() {
 	    return {
 			user: '',
-			classes: [
-				{
-					id: 1304,
-					class_name: '非人类研究中心'
-				},
-				{
-					id: 1603,
-					class_name: '嘉心糖俱乐部'
-				}
-			]
+			classes: []
 	    };
 	},
 	onLoad: function (option) {
 		this.user = JSON.parse(option.user);
+	},
+	mounted() {
+
 	},
 	methods: {
 		toClassManagement(clazz) {

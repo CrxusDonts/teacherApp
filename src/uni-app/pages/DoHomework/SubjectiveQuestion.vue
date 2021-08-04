@@ -16,8 +16,8 @@
 
 <script>
 export default {
-	props: ['subjectiveQuestion', 'order', 'index'],
-	name: 'SubjectiveQuestion'
+    props: ['subjectiveQuestion', 'order', 'index'],
+    name: 'SubjectiveQuestion'
 };
 </script>
 

@@ -21,27 +21,45 @@
 
 <script>
 export default {
-	data() {
-	    return {
-			user: {
-				user_name: '',
-				password: ''
-			}
-	    };
-	},
+    data() {
+        return {
+            open_id: '',
+            user: {
+                id: 3,
+                user_name: '',
+                password: ''
+            }
+        };
+    },
+    onLoad: function(option) {
+        this.open_id = option.open_id;
+    },
     methods: {
-		inputUsername(e) {
-			this.user.user_name = e.target.value;
-		},
-		inputPasswork(e) {
-			this.user.password = e.target.value;
-		},
-		login() {
-			uni.navigateTo({
-				url: 'home/TeacherHome?user=' + JSON.stringify(this.user) 
-			});
-		}
-	}
+        inputUsername(e) {
+            this.user.user_name = e.target.value;
+        },
+        inputPasswork(e) {
+            this.user.password = e.target.value;
+        },
+        login() {
+            uni.request({
+                url: 'http://localhost:8002/teacherApp/BackendAccount/miniapp_teacher_first_login/',
+                data: {
+                    'open_id': this.open_id,
+                    'user_name': this.user.user_name,
+                    'password': this.user.password
+                },
+                method: 'post',
+                success: res => {
+                    if (res.data === 'login succeeded.') {
+                        uni.navigateTo({
+                            url: 'home/TeacherHome?user=' + JSON.stringify(this.user)
+                        });
+                    }
+                }
+            });
+        }
+    }
 };
 </script>
 

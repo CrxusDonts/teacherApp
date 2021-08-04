@@ -23,29 +23,29 @@
 
 <script>
 export default {
-	props: ['choiceQuestion', 'order', 'index'],
-	name: 'ChoiceQuestion',
-	data() {
-	    return {
-			options: [
-				{
-					order: 1,
-					text_content: '是',
-					if_correct: true
-				},
-				{
-					order: 2,
-					text_content: '不是',
-					if_correct: false
-				}
-			],
-			student_answers: [
-				{
-					order: 1,
-				}
-			]
-	    };
-	},
+    props: ['choiceQuestion', 'order', 'index'],
+    name: 'ChoiceQuestion',
+    data() {
+        return {
+            options: [
+                {
+                    order: 1,
+                    text_content: '是',
+                    if_correct: true
+                },
+                {
+                    order: 2,
+                    text_content: '不是',
+                    if_correct: false
+                }
+            ],
+            student_answers: [
+                {
+                    order: 1
+                }
+            ]
+        };
+    }
 };
 </script>
 

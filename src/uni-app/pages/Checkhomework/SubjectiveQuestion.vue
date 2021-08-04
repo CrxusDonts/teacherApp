@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-card case">
-		<view class="cu-item shadow">
+    <view class="cu-item shadow">
 				<view class="cu-item">
 					<view class="content flex-sub padding">
 						<view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
@@ -17,8 +17,8 @@
 
 <script>
 export default {
-	props: ['subjectiveQuestion', 'order', 'index'],
-	name: 'SubjectiveQuestion'
+    props: ['subjectiveQuestion', 'order', 'index'],
+    name: 'SubjectiveQuestion'
 };
 </script>
 

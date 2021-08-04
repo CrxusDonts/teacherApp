@@ -25,15 +25,15 @@
 
 <script>
 export default {
-	data() {
-	    return {
-			user: {
-				user_name: 'stupid之人',
-			}
-	    };
-	},
+    data() {
+        return {
+            user: {
+                user_name: 'stupid之人'
+            }
+        };
+    },
     methods: {
-	}
+    }
 };
 </script>
 

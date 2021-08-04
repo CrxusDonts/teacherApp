@@ -18,40 +18,40 @@
 
 <script>
 export default {
-	data() {
-	    return {
-			clazz: '',
-			is_teacher: '',
-			student: {
-				name: 'asdsa',
-			},
-			homeworks: [
-				{
-					'title': '第一次作业'
-				},
-				{
-					'title': '第二次作业'
-				}
-			]
-	    };
-	},
-	onLoad: function (option) {
-		this.clazz = JSON.parse(option.clazz);
-		this.is_teacher = JSON.parse(option.is_teacher);
-	},
-	methods: {
-		toHomeworkManagement(homework) {
-			if (this.is_teacher) {
-				uni.navigateTo({
-					url: 'HomeworkManagement?homework=' + JSON.stringify(homework) 
-				});
-			} else {
-				uni.navigateTo({
-					url: 'DoHomework/DoHomework?homework=' + JSON.stringify(homework) + '&student=' + JSON.stringify(this.student)
-				});
-			}
-		}
-	}
+    data() {
+        return {
+            clazz: '',
+            is_teacher: '',
+            student: {
+                name: 'asdsa'
+            },
+            homeworks: [
+                {
+                    'title': '第一次作业'
+                },
+                {
+                    'title': '第二次作业'
+                }
+            ]
+        };
+    },
+    onLoad: function(option) {
+        this.clazz = JSON.parse(option.clazz);
+        this.is_teacher = JSON.parse(option.is_teacher);
+    },
+    methods: {
+        toHomeworkManagement(homework) {
+            if (this.is_teacher) {
+                uni.navigateTo({
+                    url: 'HomeworkManagement?homework=' + JSON.stringify(homework)
+                });
+            } else {
+                uni.navigateTo({
+                    url: 'DoHomework/DoHomework?homework=' + JSON.stringify(homework) + '&student=' + JSON.stringify(this.student)
+                });
+            }
+        }
+    }
 };
 </script>
 
