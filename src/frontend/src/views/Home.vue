@@ -20,8 +20,8 @@
             </el-submenu>
             <el-submenu index="grade">
                 <template slot="title">成绩统计</template>
-                <el-menu-item index="gradeByClass" :route=
-                    "{ path: 'gradeByClass', query: { class_id: this.class_id} }">按班级统计</el-menu-item>
+                <el-menu-item index="gradeByHomework" :route=
+                    "{ path: 'gradeByHomework', query: { class_id: this.class_id} }">按作业统计</el-menu-item>
                 <el-menu-item index="gradeByStudent" :route=
                     "{ path: 'gradeByStudent', query: { class_id: this.class_id} }">按学生统计</el-menu-item>
             </el-submenu>
@@ -51,14 +51,7 @@ export default {
     components: { Header },
     mounted: function() {
         this.user_name = this.$route.params.user_name;
-        // 获取气泡数量
-        this.$http.get('ManageInvitation/get_invitation/').then(response => {
-            if (response.data !== 'get_invitation failed.') {
-                this.num_of_invite_me = response.data.length;
-            } else {
-                alert('获取邀请列表失败，请重试！');
-            }
-        });
+        // 获取班级
         this.$http.get('Class/get_my_class/').then(response => {
             if (response.data !== 'Get my own class failed.') {
                 this.class_name = response.data.class_name;
@@ -67,6 +60,19 @@ export default {
             } else {
                 alert('获取班级失败！');
             }
+            // 获取气泡数量
+            this.$http.get('ManageInvitation/get_invitation/').then(response => {
+                if (response.data !== 'get_invitation failed.') {
+                    this.num_of_invite_me = response.data.length;
+                } else {
+                    alert('获取邀请列表失败，请重试！');
+                }
+            });
+            this.$http.post('JoinClassRequest/get_join_class_request/', {
+                class_id: this.class_id
+            }).then(response => {
+                this.num_of_join_class_request = response.data.length;
+            });
         });
     },
     methods: {

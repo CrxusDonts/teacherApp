@@ -9,7 +9,7 @@ import StudentManagement from '../components/HomeComponents/StudentManagement';
 import StudentApply from '../components/HomeComponents/StudentApply';
 import AssistantManagement from '../components/HomeComponents/AssistantManagement';
 import InviteMe from '../components/HomeComponents/InviteMe';
-import GradeByClass from '../components/HomeComponents/GradeByClass';
+import GradeByHomework from '../components/HomeComponents/GradeByHomework';
 import GradeByStudent from '../components/HomeComponents/GradeByStudent';
 import SwitchClass from '../components/HomeComponents/SwitchClass';
 import EditHomework from '../views/EditHomework';
@@ -77,9 +77,9 @@ const routes = [{
             component: InviteMe
         },
         {
-            path: 'gradeByClass',
-            name: 'GradeByClass',
-            component: GradeByClass
+            path: 'gradeByHomework',
+            name: 'gradeByHomework',
+            component: GradeByHomework
         },
         {
             path: 'gradeByStudent',

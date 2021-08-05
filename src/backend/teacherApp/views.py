@@ -107,12 +107,12 @@ class BackendAccountView(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def set_student_info(self, request):
-        try:
-            name = request.data.get('name')
-            pass
-            # TODO:等待前端提需求
-        except Exception as e:
-            return Response(str(e))
+           try:
+               name = request.data.get('name')
+               pass
+               # TODO:等待前端提需求
+           except Exception as e:
+               return Response(str(e))
 
     @action(methods=['post'], detail=False)
     def miniapp_teacher_first_login(self, request):
@@ -275,6 +275,30 @@ class PeopleView(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception:
             return Response('get_class_student failed.')
+
+
+    @action(methods=['post'], detail=False)
+    def get_student_homework(self, request):
+        try:
+            cur_people_id = request.data.get('people_id')
+            target_student = People.objects.get(id=cur_people_id, is_teacher=False)
+            # 得到班级的作业列表
+            cur_class_id = request.data.get('class_id')
+            cur_class = Class.objects.get(id=cur_class_id)
+            homework_list = []
+            for homework in Homework.objects.filter(clazz=cur_class):
+                homework_list.append(homework)
+            # 得到每个作业该学生的完成情况
+            homework_detail = []
+            for homework in homework_list:
+                data = {
+                    'homework_title': homework.title,
+                    'if_finish': if_student_finish_homework(target_student, homework)
+                }
+                homework_detail.append(data)
+            return Response(homework_detail)
+        except Exception:
+            return Response('get_student_homework failed.')
 
 
 class ChoiceQuestionView(viewsets.ModelViewSet):
@@ -780,3 +804,25 @@ def get_account_by_openid(open_id, is_teacher):
                 return account
     except Exception as e:
         raise e
+
+
+# 通过作业id与people_id获得该学生是否完成该作业
+def if_student_finish_homework(this_student, this_homework):
+    try:
+        choice_questions = ChoiceQuestion.objects.filter(homework=this_homework).all()
+        for choice_question in choice_questions:
+            if ChoiceQuestionUserAnswer.objects.filter(question=choice_question, student=this_student).count() == 0:
+                return False
+        completion_questions = CompletionQuestion.objects.filter(homework=this_homework).all()
+        for completion_question in completion_questions:
+            if CompletionQuestionUserAnswer.objects.filter(question=completion_question,
+                                                           student=this_student).count() == 0:
+                return False
+        subjective_questions = SubjectiveQuestion.objects.filter(homework=this_homework).all()
+        for subjective_question in subjective_questions:
+            if SubjectiveQuestionUserAnswer.objects.filter(question=subjective_question,
+                                                           student=this_student).count() == 0:
+                return False
+        return True
+    except Exception:
+        raise Exception

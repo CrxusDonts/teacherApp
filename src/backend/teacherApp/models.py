@@ -82,6 +82,7 @@ class SubjectiveQuestion(models.Model):
 class SubjectiveQuestionUserAnswer(models.Model):
     answer = models.CharField(max_length=50, default='undefined')
     question = models.ForeignKey(SubjectiveQuestion, on_delete=models.CASCADE)
+    student = models.ForeignKey(People, related_name='SubjectiveUser_answer', on_delete=models.CASCADE)
 
 
 class TeacherComment(models.Model):

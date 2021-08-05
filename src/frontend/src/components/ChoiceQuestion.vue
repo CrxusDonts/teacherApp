@@ -132,9 +132,10 @@ export default {
             this.$http.post('ChoiceQuestion/' + this.choice_question.id + '/add_option/', {
                 text_content: '请输入选项内容',
                 order: this.options.length > 0 ? this.options[this.options.length - 1].order + 1 : 1,
-                if_correct: 1,
+                is_correct: 1,
                 question: this.choice_question
             }).then(response => {
+                console.log(response.data);
                 this.options.push(response.data);
             });
         },
