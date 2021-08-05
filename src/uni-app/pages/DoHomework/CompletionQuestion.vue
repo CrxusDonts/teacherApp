@@ -37,8 +37,8 @@ export default {
         };
     },
     mounted() {
-        for (var i = 1; i <= this.number; i++) {
-            var student_answer = {
+        for (let i = 1; i <= this.number; i++) {
+            const student_answer = {
                 order: i,
                 answer: ''
             };

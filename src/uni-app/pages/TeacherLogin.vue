@@ -53,11 +53,11 @@ export default {
                             url: 'home/TeacherHome?user_name=' + this.user_name
                         });
                     } else {
-						uni.showToast({
-						    title: '登陆失败',
-							icon: "none"
-						});
-					}
+                        uni.showToast({
+                            title: '登陆失败',
+                            icon: 'none'
+                        });
+                    }
                 }
             });
         }

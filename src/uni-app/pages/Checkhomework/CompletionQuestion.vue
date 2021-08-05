@@ -6,7 +6,7 @@
 						<view class="text-lg margin-left">{{order + '.' + completionQuestion.text_content}}</view>
 						<view class="flex margin-top margin-left">
 							正确答案：
-							<view v-for="answer in answers">
+							<view v-for="answer in answers" class="answer">
 							{{answer.answer}}
 							</view>
 						</view>
@@ -28,32 +28,24 @@ export default {
     name: 'CompletionQuestion',
     data() {
         return {
-            options: [
-                {
-                    order: 1,
-                    text_content: '是',
-                    if_correct: true
-                },
-                {
-                    order: 2,
-                    text_content: '不是',
-                    if_correct: false
-                }
-            ],
-            answers: [
-                {
-                    answer: '将登太行雪满山'
-                }
-            ],
-            student_answers: [
-                {
-                    answer: '将登太行雪满山'
-                }
-            ]
+            answers: [],
+            student_answers: []
         };
+    },
+    mounted() {
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/CompletionQuestion/' + this.completionQuestion.id + '/get_answers/',
+            method: 'GET',
+            success: res => {
+                this.answers = res.data;
+            }
+        });
     }
 };
 </script>
 
 <style>
+.answer + .answer {
+    margin-left: 50rpx;
+}
 </style>

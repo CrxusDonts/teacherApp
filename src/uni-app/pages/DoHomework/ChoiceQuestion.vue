@@ -44,17 +44,19 @@ export default {
         };
     },
     created() {
-        for (var i = 0; i < this.options.length; i++) {
+        for (let i = 0; i < this.options.length; i++) {
             this.options[i].checked = false;
         }
     },
     methods: {
         CheckboxChange(e) {
-            var items = this.options;
-            var values = e.detail.value;
-            for (var i = 0, lenI = items.length; i < lenI; ++i) {
+            const items = this.options;
+            const values = e.detail.value;
+            let i = 0; const lenI = items.length;
+            for (; i < lenI; ++i) {
                 items[i].checked = false;
-                for (var j = 0, lenJ = values.length; j < lenJ; ++j) {
+                let j = 0; const lenJ = values.length;
+                for (; j < lenJ; ++j) {
                     if (items[i].order === values[j]) {
                         items[i].checked = true;
                         break;

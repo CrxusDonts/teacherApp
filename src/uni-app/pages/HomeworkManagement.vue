@@ -6,7 +6,7 @@
 			</view>
 		</view>
 		<view class="cu-list menu-avatar">
-			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="student in students" @click="checkHome(student)">
+			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="student in students" @click="checkHomework(student)">
 				<view class="cu-avatar round lg cuIcon-people"></view>
 				<view class="content">
 					<view class="text-grey">{{student.name}}</view>
@@ -23,10 +23,7 @@ export default {
             homework: '',
             students: [
                 {
-                    'name': '嘉然'
-                },
-                {
-                    'name': '乃琳'
+                    'name': '圣嘉然'
                 }
             ]
         };
@@ -34,8 +31,10 @@ export default {
     onLoad: function(option) {
         this.homework = JSON.parse(option.homework);
     },
+    mounted() {
+    },
     methods: {
-        checkHome(student) {
+        checkHomework(student) {
             uni.navigateTo({
                 url: 'Checkhomework/CheckHomework?student=' + JSON.stringify(student) + '&homework=' + JSON.stringify(this.homework)
             });

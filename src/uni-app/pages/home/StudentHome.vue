@@ -22,28 +22,27 @@
 
 <script>
 export default {
-	data() {
-	    return {
-			open_id: '',
-			classes: []
-	    };
-	},
-	onLoad: function (option) {
-		this.open_id = option.open_id;
-		
-	},
-	methods: {
-		toClassManagement(clazz) {
-			uni.navigateTo({
-				url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0'
-			});
-		},
-		toJoinClass() {
-			uni.navigateTo({
-				url: '../JoinClass?open_id=' + this.open_id
-			});
-		}
-	}
+    data() {
+        return {
+            open_id: '',
+            classes: []
+        };
+    },
+    onLoad: function(option) {
+        this.open_id = option.open_id;
+    },
+    methods: {
+        toClassManagement(clazz) {
+            uni.navigateTo({
+                url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0'
+            });
+        },
+        toJoinClass() {
+            uni.navigateTo({
+                url: '../JoinClass?open_id=' + this.open_id
+            });
+        }
+    }
 };
 </script>
 

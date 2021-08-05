@@ -24,43 +24,42 @@ export default {
     data() {
         return {
             open_id: '',
-			class_id: '',
-			name: ''
+            class_id: '',
+            name: ''
         };
     },
     methods: {
-		inputClassId(e) {
-		    this.class_id = e.target.value;
-		},
-		inputName(e) {
-		    this.name = e.target.value;
-		},
-		joinClass() {
-			uni.request({
-				url: 'http://localhost:8002/teacherApp/JoinClassRequest/create_join_class_request/',
-				data: {
-					'open_id': this.open_id,
-					'class_id': this.class_id,
-					'user_name': this.name
-				},
-				method:'post',
-				success: res => {
-					if (res.data === 'create_join_class_request succeed') {
-						uni.showToast({
-						    title: '申请成功',
-							icon: "none"
-						});
-						uni.navigateBack();
-					}
-					else {
-						uni.showToast({
-						    title: '申请失败',
-							icon: "none"
-						});
-					}
-				}
-			});
-		}
+        inputClassId(e) {
+            this.class_id = e.target.value;
+        },
+        inputName(e) {
+            this.name = e.target.value;
+        },
+        joinClass() {
+            uni.request({
+                url: 'http://localhost:8002/teacherApp/JoinClassRequest/create_join_class_request/',
+                data: {
+                    'open_id': this.open_id,
+                    'class_id': this.class_id,
+                    'user_name': this.name
+                },
+                method: 'post',
+                success: res => {
+                    if (res.data === 'create_join_class_request succeed') {
+                        uni.showToast({
+                            title: '申请成功',
+                            icon: 'none'
+                        });
+                        uni.navigateBack();
+                    } else {
+                        uni.showToast({
+                            title: '申请失败',
+                            icon: 'none'
+                        });
+                    }
+                }
+            });
+        }
     }
 };
 </script>

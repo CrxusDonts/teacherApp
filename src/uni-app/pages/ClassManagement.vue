@@ -22,22 +22,29 @@ export default {
         return {
             clazz: '',
             is_teacher: '',
-            student: {
-                name: 'asdsa'
-            },
-            homeworks: [
-                {
-                    'title': '第一次作业'
-                },
-                {
-                    'title': '第二次作业'
-                }
-            ]
+            student: [],
+            homeworks: []
         };
     },
     onLoad: function(option) {
         this.clazz = JSON.parse(option.clazz);
         this.is_teacher = JSON.parse(option.is_teacher);
+    },
+    mounted() {
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/Class/' + this.clazz.id + '/get_homeworks/',
+            method: 'get',
+            success: res => {
+                if (res.data !== 'Class not found.') {
+                    this.homeworks = res.data;
+                } else {
+                    uni.showToast({
+                        title: '获取作业列表失败',
+                        icon: 'none'
+                    });
+                }
+            }
+        });
     },
     methods: {
         toHomeworkManagement(homework) {

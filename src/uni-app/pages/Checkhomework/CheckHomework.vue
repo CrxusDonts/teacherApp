@@ -27,21 +27,9 @@ export default {
             order: 1,
             student: '',
             homework: '',
-            choice_questions: [
-                {
-                    text_content: '请问你是嘉心糖吗？'
-                }
-            ],
-            completion_questions: [
-                {
-                    text_content: '欲渡黄河冰塞川，____________。'
-                }
-            ],
-            subjective_questions: [
-                {
-                    text_content: '请问你是嘉心糖吗？'
-                }
-            ]
+            choice_questions: [],
+            completion_questions: [],
+            subjective_questions: []
         };
     },
     components: {
@@ -52,6 +40,29 @@ export default {
     onLoad: function(option) {
         this.student = JSON.parse(option.student);
         this.homework = JSON.parse(option.homework);
+    },
+    mounted() {
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_choice_question/',
+            method: 'GET',
+            success: res => {
+                this.choice_questions = res.data;
+            }
+        });
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_completion_question/',
+            method: 'GET',
+            success: res => {
+                this.completion_questions = res.data;
+            }
+        });
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_subjective_question/',
+            method: 'GET',
+            success: res => {
+                this.subjective_questions = res.data;
+            }
+        });
     },
     methods: {
     }
