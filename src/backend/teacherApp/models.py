@@ -14,7 +14,6 @@ class Class(models.Model):
 
 class People(models.Model):
     name = models.CharField(default='', max_length=50)
-    is_male = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
     account = models.ForeignKey(BackendAccount, related_name='account_people', on_delete=models.CASCADE, null=True)
     clazz = models.ForeignKey(Class, related_name='class_people', on_delete=models.CASCADE)

@@ -3,13 +3,13 @@ import random
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.utils import json
 
 from .serializers import *
-
 
 
 class BackendAccountView(viewsets.ModelViewSet):
@@ -83,16 +83,24 @@ class BackendAccountView(viewsets.ModelViewSet):
         try:
             open_id = request.data.get('open_id')
             is_teacher = request.data.get('is_teacher')
-            for account in BackendAccount.objects.filter(open_id=open_id).all():
-                if People.objects.filter(account=account, is_teacher=is_teacher).all().count() != 0:
-                    # 不是第一次
-                    auto_login(request, account)
-                    return Response('login succeed.')
+            if is_teacher:
+                for account in BackendAccount.objects.filter(open_id=open_id).all():
+                    if People.objects.filter(account=account, is_teacher=is_teacher).all().count() != 0:
+                        # 不是第一次
+                        auto_login(request, account)
+                        return Response('login succeed.')  # TODO:user_name
+            else:
+                for account in BackendAccount.objects.filter(open_id=open_id).all():
+                    if account.user.username.contains('student'):
+                        # 不是第一次
+                        auto_login(request, account)
+                        return Response('login succeed.')  # TODO:按学生返回班级列表
             # 是老师第一次登录
             if is_teacher:
                 return Response('teacher first login')
             else:
                 new_account = auto_register_student_account(open_id)
+                auto_login(request, new_account)
                 serializer = BackendAccountSerializer(new_account)
                 return Response(serializer.data)
         except Exception as e:
@@ -101,7 +109,9 @@ class BackendAccountView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def set_student_info(self, request):
         try:
+            name = request.data.get('name')
             pass
+            # TODO:等待前端提需求
         except Exception as e:
             return Response(str(e))
 
@@ -113,7 +123,7 @@ class BackendAccountView(viewsets.ModelViewSet):
                 target_account = BackendAccount.objects.get(user=request.user)
                 target_account.open_id = open_id
                 target_account.save()
-                return Response('login succeeded.')
+                return Response(target_account.user.username)
             else:
                 return Response('login failed.')
         except Exception as e:
@@ -323,16 +333,35 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def add_user_answer(self, request):
         try:
+            answer_orders = request.data.get('answer_order').split(' ')
             question_id = request.data.get('question_id')
             target_question = ChoiceQuestion.objects.get(id=question_id)
-            answer_order = request.data.get('answer_order')
-            is_correct = request.data.get('is_correct')
             student_id = request.data.get('student_id')
             student = People.objects.get(id=student_id)
-            new_answer = ChoiceQuestionUserAnswer.objects. \
-                create(question=target_question, answer_order=answer_order, student=student, is_correct=is_correct)
-            new_answer.save()
+            historical_answers = student.ChoiceQuestionUser_answer.filter(question=target_question).all()
+            if historical_answers.count() != 0:
+                for history in historical_answers:
+                    history.delete()
+            for order in answer_orders:
+                is_correct = Options.objects.get(question=target_question, order=order).is_correct
+                new_answer = ChoiceQuestionUserAnswer.objects. \
+                    create(question=target_question, answer_order=order, student=student, is_correct=is_correct)
+                new_answer.save()
             return Response('add_user_answer succeed.')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def get_user_answer(self, request):
+        try:
+            question_id = request.data.get('question_id')
+            target_question = ChoiceQuestion.objects.get(id=question_id)
+            student_id = request.data.get('student_id')
+            student = People.objects.get(id=student_id)
+            user_answers = []
+            for user_answer in student.ChoiceQuestionUser_answer.filter(question=target_question).all():
+                user_answers.append(user_answer)
+            return Response(ChoiceQuestionUserAnswerSerializer(user_answers, many=True).data)
         except Exception as e:
             return Response(str(e))
 
@@ -470,14 +499,32 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
         try:
             question_id = request.data.get('question_id')
             target_question = CompletionQuestion.objects.get(id=question_id)
-            answer = request.data.get('answer')
-            answer_order = request.data.get('answer_order')
+            answers = request.data.get('answers').split(' ')  # 如果是空的，需要一个标识符
             student_id = request.data.get('student_id')
             student = People.objects.get(id=student_id)
-            new_answer = CompletionQuestionUserAnswer.objects. \
-                create(question=target_question, answer=answer, answer_order=answer_order, student=student)
-            new_answer.save()
+            historical_answers = student.CompletionUser_answer.filter(question=target_question).all()
+            if historical_answers.count() != 0:
+                for history in historical_answers:
+                    history.delete()
+            for order, answer in enumerate(answers):
+                new_answer = CompletionQuestionUserAnswer.objects. \
+                    create(question=target_question, answer=answer, answer_order=order, student=student)
+                new_answer.save()
             return Response('add_user_answer succeed.')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def get_user_answer(self, request):
+        try:
+            question_id = request.data.get('question_id')
+            target_question = CompletionQuestion.objects.get(id=question_id)
+            student_id = request.data.get('student_id')
+            student = People.objects.get(id=student_id)
+            user_answers = []
+            for user_answer in student.CompletionUser_answer.filter(question=target_question).all():
+                user_answers.append(user_answer)
+            return Response(CompletionQuestionUserAnswerSerializer(user_answers, many=True).data)
         except Exception as e:
             return Response(str(e))
 
@@ -693,6 +740,7 @@ def auto_register_student_account(open_id):
             password = ''.join(random.sample(string.ascii_letters + string.digits, 8))
             new_user = User.objects.create_user(username=user_name, password=password)
             new_account = BackendAccount.objects.create(user=new_user, open_id=open_id)
+            add_permission(new_account)
             new_account.save()
             return new_account
     except Exception:
