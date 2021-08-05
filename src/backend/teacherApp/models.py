@@ -16,7 +16,7 @@ class People(models.Model):
     name = models.CharField(default='', max_length=50)
     is_teacher = models.BooleanField(default=False)
     account = models.ForeignKey(BackendAccount, related_name='account_people', on_delete=models.CASCADE, null=True)
-    clazz = models.ForeignKey(Class, related_name='class_people', on_delete=models.CASCADE)
+    clazz = models.ForeignKey(Class, related_name='class_people', on_delete=models.CASCADE, null=True)
 
 
 class Manager(models.Model):
@@ -89,8 +89,8 @@ class TeacherComment(models.Model):
 
 
 class JoinClassRequest(models.Model):
-    class_id = models.IntegerField(default=0)
-    people = models.ForeignKey(People, on_delete=models.CASCADE)
+    class_id = models.ForeignKey(Class, related_name='class_JoinClassRequest', on_delete=models.CASCADE, null=True)
+    student = models.ForeignKey(People, related_name='student_JoinClassRequest', on_delete=models.CASCADE, null=True)
 
 
 class ManageInvitation(models.Model):

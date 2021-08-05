@@ -3,7 +3,6 @@ import random
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -88,10 +87,10 @@ class BackendAccountView(viewsets.ModelViewSet):
                     if People.objects.filter(account=account, is_teacher=is_teacher).all().count() != 0:
                         # 不是第一次
                         auto_login(request, account)
-                        return Response('login succeed.')  # TODO:user_name
+                        return Response(request.user.username)
             else:
                 for account in BackendAccount.objects.filter(open_id=open_id).all():
-                    if account.user.username.contains('student'):
+                    if account.user.username.find('student') != -1:
                         # 不是第一次
                         auto_login(request, account)
                         return Response('login succeed.')  # TODO:按学生返回班级列表
@@ -103,7 +102,7 @@ class BackendAccountView(viewsets.ModelViewSet):
                 auto_login(request, new_account)
                 serializer = BackendAccountSerializer(new_account)
                 return Response(serializer.data)
-        except Exception as e:
+        except Exception:
             return Response('login failed.')
 
     @action(methods=['post'], detail=False)
@@ -562,32 +561,34 @@ class JoinClassRequestView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def create_join_class_request(self, request):
         try:
-            target_class_id = request.data.get('class_id')
-            target_username = request.data.get('user_name')
-            target_user = User.objects.get(username=target_username)
-            target_account = BackendAccount.objects.get(user=target_user)
-            target_student = People.objects.get(account=target_account)
-            new_join_class_request = JoinClassRequest.objects.create(class_id=target_class_id, people=target_student)
-            new_join_class_request.save()
-            return Response('create_join_class_request succeed')
-        except Exception:
-            return Response('create_join_class_request failed.')
+            with transaction.atomic():
+                target_class = Class.objects.get(id=request.data.get('class_id'))
+                open_id = request.data.get('open_id')
+                for account in BackendAccount.objects.filter(open_id=open_id):
+                    if account.user.username.find('student') != -1:
+                        target_student = set_people_info(request, False, account, None)
+                        new_join_class_request = JoinClassRequest.objects.create(class_id=target_class,
+                                                                                 student=target_student)
+                        new_join_class_request.save()
+                        return Response('create_join_class_request succeed')
+                return Response('create_join_class_request failed.')
+        except Exception as e:
+            return Response(str(e) + 'sb')
 
     @action(methods=['post'], detail=False)
     def get_join_class_request(self, request):
         try:
-            cur_class_id = request.data.get('class_id')
-            join_class_request_list = []
-            for join_class_request in JoinClassRequest.objects.filter(class_id=cur_class_id).all():
-                data = json.dumps({
-                    'id': join_class_request.id,
-                    'user_name': join_class_request.people.account.user.username,
-                    'name': join_class_request.people.name
-                })
-                join_class_request_list.append(data)
-            return Response(join_class_request_list)
-        except Exception:
-            return Response('get join class request failed.')
+            cur_class = Class.objects.get(id=request.data.get('class_id'))
+            join_class_requests = []
+            for join_class_request in cur_class.class_JoinClassRequest.all():
+                data = {
+                    'join_class_request_id': join_class_request.id,
+                    'name': join_class_request.student.name
+                }
+                join_class_requests.append(data)
+            return Response(join_class_requests)
+        except Exception as e:
+            return Response(str(e))
 
     @action(methods=['post'], detail=False)
     def handle_join_class_request(self, request):
@@ -595,12 +596,13 @@ class JoinClassRequestView(viewsets.ModelViewSet):
             if_accept = request.data.get('if_accept')
             join_class_request_id = request.data.get('join_class_request_id')
             join_class_request = JoinClassRequest.objects.get(id=join_class_request_id)
+            student = join_class_request.student
             if if_accept:
-                clazz = Class.objects.get(id=join_class_request.class_id)
-                student = join_class_request.people
-                student.clazz = clazz
+                student.clazz = join_class_request.class_id
                 student.save()
-            join_class_request.delete()
+                join_class_request.delete()
+            else:
+                student.delete()
             return Response('handle_join_class_request succeed.')
         except Exception as e:
             return Response(str(e))
@@ -743,8 +745,8 @@ def auto_register_student_account(open_id):
             add_permission(new_account)
             new_account.save()
             return new_account
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
 
 
 # 自动登录方法
@@ -753,8 +755,8 @@ def auto_login(request, target_account):
         target_user = target_account.user
         target_user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, target_user)
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
 
 
 # 设置people信息
@@ -764,8 +766,9 @@ def set_people_info(request, is_teacher, account, clazz):
         new_people = People.objects.create(name=name, is_teacher=is_teacher, account=account,
                                            clazz=clazz)
         new_people.save()
-    except Exception:
-        raise Exception
+        return new_people
+    except Exception as e:
+        raise e
 
 
 # 通过openid获得账户信息
@@ -775,5 +778,5 @@ def get_account_by_openid(open_id, is_teacher):
         for account in accounts:
             if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
                 return account
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
