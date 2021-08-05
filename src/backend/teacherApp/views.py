@@ -96,7 +96,7 @@ class BackendAccountView(viewsets.ModelViewSet):
                 serializer = BackendAccountSerializer(new_account)
                 return Response(serializer.data)
         except Exception as e:
-            return Response(str(e))
+            return Response('login failed.')
 
     @action(methods=['post'], detail=False)
     def set_student_info(self, request):

@@ -7,18 +7,14 @@
 		</view>
 		<view class="cu-form-group margin-top">
 			<view class="title">班级id</view>
-				<input placeholder="请输入要申请加入的班级id" name="input"></input>
+				<input placeholder="请输入要申请加入的班级id" name="input" @input="inputClassId"></input>
 		</view>
 		<view class="cu-form-group">
 				<view class="title">姓名</view>
-				<input placeholder="请输入你的姓名" name="input"></input>
-		</view>
-		<view class="cu-form-group">
-				<view class="title">性别</view>
-				<input placeholder="请输入你的性别" name="input"></input>
+				<input placeholder="请输入你的姓名" name="input" @input="inputName"></input>
 		</view>
 		<view class="padding flex justify-end">
-			<button class="cu-btn bg-grey lg">确认提交</button>
+			<button class="cu-btn bg-grey lg" @click="joinClass()">确认提交</button>
 		</view>
 	</view>
 </template>
@@ -27,12 +23,44 @@
 export default {
     data() {
         return {
-            user: {
-                user_name: 'stupid之人'
-            }
+            open_id: '',
+			class_id: '',
+			name: ''
         };
     },
     methods: {
+		inputClassId(e) {
+		    this.class_id = e.target.value;
+		},
+		inputName(e) {
+		    this.name = e.target.value;
+		},
+		joinClass() {
+			uni.request({
+				url: 'http://localhost:8002/teacherApp/JoinClassRequest/create_join_class_request/',
+				data: {
+					'open_id': this.open_id,
+					'class_id': this.class_id,
+					'user_name': this.name
+				},
+				method:'post',
+				success: res => {
+					if (res.data === 'create_join_class_request succeed') {
+						uni.showToast({
+						    title: '申请成功',
+							icon: "none"
+						});
+						uni.navigateBack();
+					}
+					else {
+						uni.showToast({
+						    title: '申请失败',
+							icon: "none"
+						});
+					}
+				}
+			});
+		}
     }
 };
 </script>

@@ -25,16 +25,7 @@ export default {
 	data() {
 	    return {
 			open_id: '',
-			classes: [
-				{
-					id: 1304,
-					class_name: '非人类研究中心'
-				},
-				{
-					id: 1603,
-					class_name: '嘉心糖俱乐部'
-				}
-			]
+			classes: []
 	    };
 	},
 	onLoad: function (option) {
@@ -49,7 +40,7 @@ export default {
 		},
 		toJoinClass() {
 			uni.navigateTo({
-				url: '../JoinClass'
+				url: '../JoinClass?open_id=' + this.open_id
 			});
 		}
 	}

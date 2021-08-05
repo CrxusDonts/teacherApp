@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import './node_modules/weapp-cookie/index'
 import cuCustom from 'colorui/components/cu-custom.vue'
 
 Vue.component('cu-custom',cuCustom)

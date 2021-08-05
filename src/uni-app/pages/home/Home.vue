@@ -49,6 +49,7 @@ export default {
 				},
 				method:'post',
 				success: res => {
+					console.log(res.data)
 					if (res.data === 'teacher first login') {
 						uni.navigateTo({
 							url: '../TeacherLogin?open_id=' + this.open_id
@@ -63,9 +64,27 @@ export default {
 			});
 		},
 		toStudentHome() {
-			uni.navigateTo({
-				url: './StudentHome?open_id='+this.open_id
-			})
+			uni.request({
+				url: 'http://localhost:8002/teacherApp/BackendAccount/determine_first_login/',
+				data: {
+					'open_id': this.open_id,
+					'is_teacher': false
+				},
+				method:'post',
+				success: res => {
+					if (res.data !== 'login failed.') {
+						uni.navigateTo({
+							url: './StudentHome?open_id='+this.open_id
+						})
+					}
+					else {
+						uni.showToast({
+						    title: '登陆失败',
+							icon: "none"
+						});
+					}
+				}
+			});
 		}
 	}
 };
