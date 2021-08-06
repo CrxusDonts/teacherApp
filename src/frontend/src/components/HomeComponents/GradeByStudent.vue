@@ -64,9 +64,9 @@ export default {
             this.details = response.data;
             this.$http.post('People/get_class_student/', {
                 class_id: this.class_id
-            }).then(response => {
-                for (let i = 0;i < response.data.length;i++) {
-                    this.students.push({ student_id: response.data[i].id, student_name: response.data[i].name, have_finished: 0, have_not_finished: 0 });
+            }).then(homework_response => {
+                for (let i = 0;i < homework_response.data.length;i++) {
+                    this.students.push({ student_id: homework_response.data[i].id, student_name: homework_response.data[i].name, have_finished: 0, have_not_finished: 0 });
                     for (const value of this.details) {
                         if (value.student_id === this.students[i].student_id && value.if_finish) {
                             this.students[i].have_finished += 1;

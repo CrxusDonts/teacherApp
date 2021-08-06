@@ -9,11 +9,6 @@
                          :width="100">
         </el-table-column>
         <el-table-column
-            prop="user_name"
-            label="账号"
-            width="180">
-        </el-table-column>
-        <el-table-column
             prop="name"
             label="姓名">
         </el-table-column>
@@ -49,9 +44,8 @@ export default {
         }).then(response => {
             for (const value of response.data.length) {
                 this.join_class_request.push({
-                    id: this.getId(value),
-                    user_name: this.getId(value),
-                    name: this.getId(value)
+                    id: value.join_class_request_id,
+                    name: value.name
                 });
             }
         });
@@ -70,7 +64,7 @@ export default {
                 }
             });
         },
-        handleRefuse(index, row) {
+        handleRefuse(index) {
             this.$http.post('JoinClassRequest/handle_join_class_request/', {
                 if_accept: 0,
                 join_class_request_id: this.join_class_request[index].id
@@ -82,16 +76,8 @@ export default {
                     alert('失败，请重试！');
                 }
             });
-        },
-        getId(string) {
-            return string.split(',')[0].split(':')[1];
-        },
-        getUserName(string) {
-            return string.split(',')[1].split(':')[1].split('"')[1];
-        },
-        getName(string) {
-            return string.split(',')[2].split(':')[1].split('"')[1];
         }
     }
 };
 </script>
+

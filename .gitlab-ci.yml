@@ -35,4 +35,3 @@ sonarqube-check:
   allow_failure: true
   only:
     - master
-

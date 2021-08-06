@@ -63,9 +63,9 @@ export default {
         }).then(response => {
             // 获得作业完成详情
             this.details = response.data;
-            this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(response => {
-                for (let i = 0;i < response.data.length;i++) {
-                    this.homeworks.push({ homework_id: response.data[i].id, homework_title: response.data[i].title, have_finished: 0, have_not_finished: 0 });
+            this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(homework_response => {
+                for (let i = 0;i < homework_response.data.length;i++) {
+                    this.homeworks.push({ homework_id: homework_response.data[i].id, homework_title: homework_response.data[i].title, have_finished: 0, have_not_finished: 0 });
                     for (const value of this.details) {
                         if (value.homework_id === this.homeworks[i].homework_id && value.if_finish) {
                             this.homeworks[i].have_finished += 1;

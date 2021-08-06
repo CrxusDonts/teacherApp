@@ -57,10 +57,18 @@ export default {
                 this.class_name = response.data.class_name;
                 this.class_id = response.data.id;
                 this.$router.push({ path: '/home/' + this.user_name + '/homeworkManagement', query: { class_id: this.class_id }});
+                this.handleBadgeNum();
             } else {
                 alert('获取班级失败！');
             }
-            // 获取气泡数量
+        });
+    },
+    methods: {
+        handleSelect(key) {
+            this.$router.push({ path: key });
+        },
+        // 获取旗袍数量
+        handleBadgeNum() {
             this.$http.get('ManageInvitation/get_invitation/').then(get_invitation_response => {
                 if (get_invitation_response.data !== 'get_invitation failed.') {
                     this.num_of_invite_me = get_invitation_response.data.length;
@@ -73,14 +81,10 @@ export default {
             }).then(get_join_class_request_response => {
                 this.num_of_join_class_request = get_join_class_request_response.data.length;
             });
-        });
-    },
-    methods: {
-        handleSelect(key) {
-            this.$router.push({ path: key });
         },
         classIdChanged(val) {
             this.class_id = val;
+            this.handleBadgeNum();
         },
         nums_of_invite_me_changed() {
             this.num_of_invite_me -= 1;
