@@ -96,10 +96,10 @@ export default {
             .then(response => {
                 this.files = response.data;
             }).then(() => {
-                for (let i = 0; i < this.files.length; i++) {
-                    this.files[i].url = 'http://localhost:8002/' + this.files[i].url.substring(6);
-                    if (this.files[i].file_type === 1) {
-                        this.playerOptions.sources.push(this.files[i].url);
+                for (const file of this.files) {
+                    file.url = 'http://localhost:8002/' + file.url.substring(6);
+                    if (file.file_type === 1) {
+                        this.playerOptions.sources.push(file.url);
                     }
                 }
             });
@@ -196,12 +196,12 @@ export default {
                     homework: this.choice_question.homework
                 });
             }
-            for (let i = 0; i < this.options.length; i++) {
-                this.$http.put('Options/' + this.options[i].id + '/', {
-                    text_content: this.options[i].text_content,
-                    order: this.options[i].order,
-                    if_correct: this.options[i].if_correct,
-                    question: this.options[i].question
+            for (const option of this.options) {
+                this.$http.put('Options/' + option.id + '/', {
+                    text_content: option.text_content,
+                    order: option.order,
+                    if_correct: option.if_correct,
+                    question: option.question
                 });
             }
         }

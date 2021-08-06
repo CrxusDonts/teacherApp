@@ -61,17 +61,17 @@ export default {
                 alert('获取班级失败！');
             }
             // 获取气泡数量
-            this.$http.get('ManageInvitation/get_invitation/').then(response => {
-                if (response.data !== 'get_invitation failed.') {
-                    this.num_of_invite_me = response.data.length;
+            this.$http.get('ManageInvitation/get_invitation/').then(get_invitation_response => {
+                if (get_invitation_response.data !== 'get_invitation failed.') {
+                    this.num_of_invite_me = get_invitation_response.data.length;
                 } else {
                     alert('获取邀请列表失败，请重试！');
                 }
             });
             this.$http.post('JoinClassRequest/get_join_class_request/', {
                 class_id: this.class_id
-            }).then(response => {
-                this.num_of_join_class_request = response.data.length;
+            }).then(get_join_class_request_response => {
+                this.num_of_join_class_request = get_join_class_request_response.data.length;
             });
         });
     },

@@ -85,10 +85,10 @@ export default {
             .then(response => {
                 this.files = response.data;
             }).then(() => {
-                for (let i = 0; i < this.files.length; i++) {
-                    this.files[i].url = 'http://localhost:8002/' + this.files[i].url.substring(6);
-                    if (this.files[i].file_type === 1) {
-                        this.playerOptions.sources.push(this.files[i].url);
+                for (const file of this.files) {
+                    file.url = 'http://localhost:8002/' + file.url.substring(6);
+                    if (file.file_type === 1) {
+                        this.playerOptions.sources.push(file.url);
                     }
                 }
             });
@@ -176,10 +176,10 @@ export default {
                 text_content: this.completion_question.text_content,
                 homework: this.completion_question.homework
             });
-            for (let i = 0; i < this.answers.length; i++) {
-                this.$http.put('CompletionQuestionAnswer/' + this.answers[i].id + '/', {
-                    answer: this.answers[i].answer,
-                    question: this.answers[i].question
+            for (const answer of this.answers) {
+                this.$http.put('CompletionQuestionAnswer/' + answer.id + '/', {
+                    answer: answer.answer,
+                    question: answer.question
                 });
             }
         }

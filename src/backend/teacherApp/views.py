@@ -2,13 +2,20 @@ import string
 import random
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
-from django.db import transaction
-from rest_framework import viewsets
+from django.db import transaction, IntegrityError, OperationalError
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.utils import json
+from .models import BackendAccount, Class, Manager, People, Options, ChoiceQuestion, ChoiceQuestionUserAnswer, Media, \
+    Homework, CompletionQuestion, CompletionQuestionAnswer, SubjectiveQuestion, CompletionQuestionUserAnswer, \
+    SubjectiveQuestionUserAnswer, TeacherComment, JoinClassRequest, ManageInvitation
 
-from .serializers import *
+from .serializers import BackendAccountSerializer, ClassSerializer, HomeworkSerializer, PeopleSerializer, \
+    ManagerSerializer, ChoiceQuestionSerializer, OptionsSerializer, MediaSerializer, ChoiceQuestionUserAnswerSerializer, \
+    CompletionQuestionSerializer, SubjectiveQuestionSerializer, CompletionQuestionAnswerSerializer, \
+    CompletionQuestionUserAnswerSerializer, SubjectiveQuestionUserAnswerSerializer, TeacherCommentSerializer, \
+    JoinClassRequestSerializer, ManageInvitationSerializer
 
 
 class BackendAccountView(viewsets.ModelViewSet):
@@ -246,7 +253,7 @@ class ManagerView(viewsets.ModelViewSet):
             target_account = BackendAccount.objects.get(user=target_user)
             manager = target_account.account_manager.all().get(clazz=target_class)
             if manager.is_owner:
-                raise Exception
+                raise OperationalError
             else:
                 manager.delete()
             return Response('delete_teacher succeed.')
@@ -266,7 +273,7 @@ class PeopleView(viewsets.ModelViewSet):
             target_account = BackendAccount.objects.get(user=target_user)
             target_people = People.objects.get(account=target_account, is_teacher=True)
             return Response(target_people.name)
-        except Exception as e:
+        except Exception:
             return Response('get_name failed.')
 
     @action(methods=['post'], detail=False)
@@ -400,6 +407,7 @@ class MediaView(viewsets.ModelViewSet):
 class HomeworkView(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
+    homework_not_found = 'Homework not found.'
 
     # 添加选择题
     @action(methods=['post'], detail=True)
@@ -407,7 +415,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             homework = Homework.objects.get(id=pk)
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         text_content = request.data.get('text_content')
         choice_question = ChoiceQuestion.objects.create(text_content=text_content, homework=homework)
         choice_question.save()
@@ -420,7 +428,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             homework = Homework.objects.get(id=pk)
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         text_content = request.data.get('text_content')
         completion_question = CompletionQuestion.objects.create(text_content=text_content, homework=homework)
         serializer = CompletionQuestionSerializer(completion_question)
@@ -432,7 +440,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             homework = Homework.objects.get(id=pk)
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         text_content = request.data.get('text_content')
         subjective_question = SubjectiveQuestion.objects.create(text_content=text_content, homework=homework)
         serializer = SubjectiveQuestionSerializer(subjective_question)
@@ -444,7 +452,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             choice_question_list = get_question(pk=pk, question_type='choice_question')
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         serializer = ChoiceQuestionSerializer(choice_question_list, many=True)
         return Response(serializer.data)
 
@@ -454,7 +462,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             completion_question_list = get_question(pk=pk, question_type='completion_question')
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         serializer = ChoiceQuestionSerializer(completion_question_list, many=True)
         return Response(serializer.data)
 
@@ -464,7 +472,7 @@ class HomeworkView(viewsets.ModelViewSet):
         try:
             subjective_question_list = get_question(pk=pk, question_type='subjective_question')
         except Exception:
-            return Response('Homework not found.')
+            return Response(self.homework_not_found)
         serializer = SubjectiveQuestionSerializer(subjective_question_list, many=True)
         return Response(serializer.data)
 
@@ -495,7 +503,6 @@ class CompletionQuestionView(viewsets.ModelViewSet):
                 answers.append(answer)
             serializer = CompletionQuestionAnswerSerializer(answers, many=True)
             return Response(serializer.data)
-            pass
         except Exception as e:
             return Response(str(e))
 
@@ -701,8 +708,8 @@ def account_login(request):
             return True
         else:
             return False
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
 
 
 # 用于注册班级的方法
@@ -711,8 +718,8 @@ def register_class(name):
     try:
         new_class = Class.objects.create(class_name=class_name)
         new_class.save()
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
     return new_class
 
 
@@ -721,8 +728,8 @@ def add_manager(is_owner, account, class_name):
     try:
         new_manager = Manager.objects.create(is_owner=is_owner, account=account, clazz=class_name)
         new_manager.save()
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
 
 
 # 用于对用户添加权限的方法
@@ -736,8 +743,8 @@ def add_permission(backend_account):
 def get_question(pk, question_type):
     try:
         homework = Homework.objects.get(id=pk)
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
     question_list = []
     if question_type == 'choice_question':
         for choice_question in ChoiceQuestion.objects.filter(homework=homework):
@@ -751,7 +758,7 @@ def get_question(pk, question_type):
     return question_list
 
 
-# 用于返回对应媒体对象的方法
+# 用于返回对应媒体对象
 def get_media(pk):
     try:
         target_media = Media.objects.get(id=pk)

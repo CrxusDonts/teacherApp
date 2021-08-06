@@ -1,9 +1,13 @@
 import json
-from django.contrib.auth.models import User
 
 from django.test import TestCase
-from teacherApp.models import *
-from teacherApp.views import *
+from rest_framework.authtoken.admin import User
+
+from teacherApp.models import Class
+from teacherApp.views import register_class, auto_register_student_account
+
+type_json = 'application/json'
+test_email = '1291923247@qq.com'
 
 
 class BackendAccountViewTest(TestCase):
@@ -21,7 +25,7 @@ class BackendAccountViewTest(TestCase):
         })
         response = self.client. \
             post(path=self.base_url + 'register_teacher/',
-                 data=test_data, content_type='application/json')
+                 data=test_data, content_type=type_json)
         self.assertEqual(response.data, 'Register succeed.')
 
     def test_login(self):
@@ -30,7 +34,7 @@ class BackendAccountViewTest(TestCase):
             'password': self.password
         })
         response = self.client. \
-            post(path=self.base_url + 'login/', data=test_data, content_type='application/json')
+            post(path=self.base_url + 'login/', data=test_data, content_type=type_json)
         self.assertEqual(response.data, 'Login failed.')
 
     def test_change_password(self):
@@ -42,7 +46,7 @@ class BackendAccountViewTest(TestCase):
         })
         response = self.client. \
             put(path=self.base_url + 'change_password/',
-                data=test_data, content_type='application/json')
+                data=test_data, content_type=type_json)
         self.assertEqual(response.data, 'Modify password succeed.')
 
     def test_logout(self):
@@ -51,7 +55,7 @@ class BackendAccountViewTest(TestCase):
             'password': self.password
         })
         response = self.client. \
-            post(path=self.base_url + 'logout/', data=test_data, content_type='application/json')
+            post(path=self.base_url + 'logout/', data=test_data, content_type=type_json)
         self.assertEqual(response.data, 'logout succeed.')
 
 
@@ -62,7 +66,7 @@ class ClassViewTest(TestCase):
         self.class_name = 'class4test'
         self.base_url = 'http://localhost:8002/teacherApp/Class/'
         User.objects. \
-            create_superuser(username=self.user_name, password=self.password, email='1291923247@qq.com')
+            create_superuser(username=self.user_name, password=self.password, email=test_email)
         self.client.login(username=self.user_name, password=self.password)
         self.clazz = Class.objects.create(class_name=self.class_name)
         self.clazz.save()
@@ -72,22 +76,22 @@ class ClassViewTest(TestCase):
             'title': 'test_title'
         })
         response = self.client. \
-            post(path=self.base_url + '1/new_homework/', data=test_data, content_type='application/json')
+            post(path=self.base_url + '1/new_homework/', data=test_data, content_type=type_json)
         self.assertEqual(response.data, 'Class not found.')
 
     def test_get_homeworks(self):
         response = self.client. \
-            get(path=self.base_url + '1/get_homeworks/', content_type='application/json')
+            get(path=self.base_url + '1/get_homeworks/', content_type=type_json)
         self.assertEqual(response.data, 'Class not found.')
 
     def test_get_my_class(self):
         response = self.client. \
-            get(path=self.base_url + 'get_my_class/', content_type='application/json')
+            get(path=self.base_url + 'get_my_class/', content_type=type_json)
         self.assertEqual(response.data, 'Get my own class failed.')
 
     def test_get_manage_class_list(self):
         response = self.client. \
-            get(path=self.base_url + 'get_manage_class_list/', content_type='application/json')
+            get(path=self.base_url + 'get_manage_class_list/', content_type=type_json)
         self.assertEqual(response.data, 'Get my manage class failed.')
 
 
@@ -98,7 +102,7 @@ class ManagerViewTest(TestCase):
         self.class_name = 'class4test1'
         self.base_url = 'http://localhost:8002/teacherApp/'
         User.objects. \
-            create_superuser(username=self.user_name, password=self.password, email='1291923247@qq.com')
+            create_superuser(username=self.user_name, password=self.password, email=test_email)
         self.client.login(username=self.user_name, password=self.password)
 
     def test_get_teacher(self):
@@ -109,13 +113,13 @@ class ManagerViewTest(TestCase):
         })
         self.client. \
             post(path=self.base_url + 'BackendAccount/register_teacher/',
-                 data=test_data, content_type='application/json')
+                 data=test_data, content_type=type_json)
         test_data = json.dumps({
             'class_id': 1
         })
         response = self.client. \
             post(path=self.base_url + 'Manager/get_teacher/',
-                 data=test_data, content_type='application/json')
+                 data=test_data, content_type=type_json)
         self.assertEqual(response.status_code, 200)
 
 
@@ -126,7 +130,7 @@ class InterfaceTest(TestCase):
         self.class_name = 'class4test2'
         self.base_url = 'http://localhost:8002/teacherApp/'
         self.user = User.objects. \
-            create_superuser(username=self.user_name, password=self.password, email='1291923247@qq.com')
+            create_superuser(username=self.user_name, password=self.password, email=test_email)
         self.client.login(username=self.user_name, password=self.password)
 
     def test_register_class(self):
@@ -136,4 +140,3 @@ class InterfaceTest(TestCase):
     def test_register_student_account(self):
         account = auto_register_student_account('123456789')
         self.assertEqual(account.open_id, '123456789')
-

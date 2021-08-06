@@ -62,29 +62,29 @@ export default {
             class_id: this.class_id
         }).then(response => {
             if (response.data !== 'get_class_student failed.') {
-                for (let i = 0; i < response.data.length; i++) {
+                for (const value of response.data) {
                     this.students.push({
-                        id: response.data[i].id,
-                        name: response.data[i].name,
+                        id: value.id,
+                        name: value.name,
                         have_finished: 0,
                         have_not_finished: 0
                     });
                 }
-                for (let i = 0; i < this.students.length; i++) {
+                for (const student of this.students) {
                     this.$http.post('People/get_student_homework/', {
                         class_id: this.class_id,
-                        people_id: this.students[i].id
+                        people_id: student.id
                     }).then(response => {
                         for (let j = 0; j < response.data.length; j++) {
                             this.grades_by_student.push({
-                                id: this.students[i].id, name: this.students[i].name,
+                                id: student.id, name: student.name,
                                 homework_title: response.data[j].homework_title, if_finish: response.data[j].if_finish
                             });
                             if (this.grades_by_student[j].if_finish) {
-                                this.students[i].have_finished += 1;
+                                student.have_finished += 1;
                             }
                             if (!this.grades_by_student[j].if_finish) {
-                                this.students[i].have_not_finished += 1;
+                                student.have_not_finished += 1;
                             }
                         }
                     });
@@ -96,11 +96,11 @@ export default {
     },
     methods: {
         handleDetail(index) {
-            for (let i = 0; i < this.grades_by_student.length; i++) {
-                if (this.grades_by_student[i].id === this.students[index].id) {
+            for (const data of this.grades_by_student) {
+                if (data.id === this.students[index].id) {
                     this.this_student_grade.push({
-                        title: this.grades_by_student[i].homework_title,
-                        if_finish: this.grades_by_student[i].if_finish ? '完成' : '未完成'
+                        title: data.homework_title,
+                        if_finish: data.if_finish ? '完成' : '未完成'
                     });
                 }
             }
@@ -109,7 +109,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>

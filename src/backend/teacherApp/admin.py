@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import *
+from .models import BackendAccount, Class, Manager, People, Options, ChoiceQuestion, ChoiceQuestionUserAnswer, Media, \
+    Homework, CompletionQuestion, CompletionQuestionAnswer, SubjectiveQuestion, CompletionQuestionUserAnswer, \
+    SubjectiveQuestionUserAnswer, TeacherComment, JoinClassRequest, ManageInvitation
 
 admin.site.register(BackendAccount)
 admin.site.register(Class)
