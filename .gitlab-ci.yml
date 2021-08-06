@@ -32,7 +32,7 @@ sonarqube-check:
       - .sonar/cache
   script: 
     - sonar-scanner
-  allow_failure: false
+  allow_failure: true
   only:
     - master
 
