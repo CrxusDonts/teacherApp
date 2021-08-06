@@ -100,9 +100,9 @@ export default {
             } else {
                 alert('获取班级失败！');
             }
-            for (let i = 0;i < this.homeworks.length;i++) {
-                this.homeworks[i].start_time = this.handleTime(this.homeworks[i].start_time);
-                this.homeworks[i].due_time = this.handleTime(this.homeworks[i].due_time);
+            for (const homework of this.homeworks) {
+                homework.start_time = this.handleTime(homework.start_time);
+                homework.due_time = this.handleTime(homework.due_time);
             }
         });
     },
@@ -121,9 +121,9 @@ export default {
                 }).then(response => {
                     if (response.data === 'New homework succeed.') {
                         alert('创建成功！');
-                        this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(response => {
-                            if (response.data !== 'Class not found.') {
-                                this.homeworks = response.data;
+                        this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(get_homeworks_response => {
+                            if (get_homeworks_response.data !== 'Class not found.') {
+                                this.homeworks = get_homeworks_response.data;
                             } else {
                                 alert('获取班级失败！');
                             }

@@ -53,10 +53,10 @@ export default {
             } else {
                 alert('失败！');
             }
-            this.$http.get('Class/get_manage_class_list/').then(response => {
-                if (response.data !== 'Get my manage class failed.') {
-                    for (let i = 0;i < response.data.length;i++) {
-                        this.classes.push({ id: response.data[i].id, class_name: response.data[i].class_name });
+            this.$http.get('Class/get_manage_class_list/').then(get_manage_class_list_response => {
+                if (get_manage_class_list_response.data !== 'Get my manage class failed.') {
+                    for (const value of get_manage_class_list_response.data) {
+                        this.classes.push({ id: value.id, class_name: value.class_name });
                     }
                 } else {
                     alert('失败！');

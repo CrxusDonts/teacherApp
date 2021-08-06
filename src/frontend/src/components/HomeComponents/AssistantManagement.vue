@@ -65,8 +65,8 @@ export default {
             class_id: this.class_id
         }).then(response => {
             if (response.data !== 'get_teacher failed.') {
-                for (let i = 0;i < response.data.length;i++) {
-                    this.assistant.push({ user_name: this.getUserName(response.data[i]) });
+                for (const value of response.data) {
+                    this.assistant.push({ user_name: this.getUserName(value) });
                 }
             } else {
                 alert('获取管理人员失败！');
@@ -115,8 +115,8 @@ export default {
             return string.split(',')[1].split(':')[1].split('"')[1];
         },
         ifContain(tableData, id) {
-            for (let i = 0;i < tableData.length;i++) {
-                if (tableData[i].userName === id) {
+            for (const value of tableData) {
+                if (value.user_name === id) {
                     return true;
                 }
             }
@@ -125,7 +125,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>

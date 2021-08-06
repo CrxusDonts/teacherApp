@@ -57,12 +57,12 @@ export default {
         this.user_name = this.$route.params.user_name;
         this.$http.get('ManageInvitation/get_invitation/').then(response => {
             if (response.data !== 'get_invitation failed.') {
-                for (let i = 0; i < response.data.length; i++) {
+                for (const value of response.data) {
                     this.invite_me.push({
-                        invitation_id: this.getInviteId(response.data[i]),
-                        invitor_user_name: this.getInviter(response.data[i]),
-                        invite_class_id: this.getInviterClassId(response.data[i]),
-                        invite_class_name: this.getInviterClassName(response.data[i])
+                        invitation_id: this.getInviteId(value),
+                        invitor_user_name: this.getInviter(value),
+                        invite_class_id: this.getInviterClassId(value),
+                        invite_class_name: this.getInviterClassName(value)
                     });
                 }
             } else {
@@ -105,7 +105,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>

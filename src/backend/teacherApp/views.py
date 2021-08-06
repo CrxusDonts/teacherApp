@@ -279,10 +279,8 @@ class PeopleView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def get_class_student(self, request):
         try:
-            cur_class_id = request.data.get('class_id')
-            cur_class = Class.objects.get(id=cur_class_id)
-            target_student = People.objects.filter(clazz=cur_class, is_teacher=False).all()
-            serializer = PeopleSerializer(target_student, many=True)
+            target_students = return_student_of_class(request.data.get('class_id'))
+            serializer = PeopleSerializer(target_students, many=True)
             return Response(serializer.data)
         except Exception:
             return Response('get_class_student failed.')
@@ -308,12 +306,35 @@ class PeopleView(viewsets.ModelViewSet):
                         'student_name': student.name,
                         'homework_id': homework.id,
                         'homework_title': homework.title,
-                        'if_finish': if_student_finish_homework(student, homework)
+                        'if_finish': is_student_finish_homework(student, homework)
                     }
                     homework_detail.append(data)
             return Response(homework_detail)
         except Exception:
             return Response('get_student_homework failed.')
+
+    @action(methods=['post'], detail=False)
+    def get_student(self, request):  # 按照班级id获取当前登录账户下的学生
+        try:
+            target_class = Class.objects.get(id=request.data.get('class_id'))
+            target_account = BackendAccount.objects.get(user=request.user)
+            target_student = People.objects.get(clazz=target_class, is_teacher=False, account=target_account)
+            return Response(PeopleSerializer(target_student).data)
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def get_done_homework_students(self, request):  # 按照班级id，作业id返回当前已经完成当前作业的学生
+        try:
+            students = return_student_of_class(request.data.get('class_id'))
+            target_homework = Homework.objects.get(id=request.data.get('homework_id'))
+            done_homework_students = []
+            for student in students:
+                if is_student_finish_homework(student, target_homework):
+                    done_homework_students.append(student)
+            return Response(PeopleSerializer(done_homework_students, many=True).data)
+        except Exception as e:
+            return Response(str(e))
 
 
 class ChoiceQuestionView(viewsets.ModelViewSet):
@@ -704,37 +725,28 @@ class ManageInvitationView(viewsets.ModelViewSet):
 
 # 登录函数
 def account_login(request):
-    try:
-        user_name = request.data.get('user_name')
-        password = request.data.get('password')
-        user = authenticate(username=user_name, password=password)
-        if user:
-            login(request, user)
-            return True
-        else:
-            return False
-    except Exception as e:
-        raise e
+    user_name = request.data.get('user_name')
+    password = request.data.get('password')
+    user = authenticate(username=user_name, password=password)
+    if user:
+        login(request, user)
+        return True
+    else:
+        return False
 
 
 # 用于注册班级的方法
 def register_class(name):
     class_name = name
-    try:
-        new_class = Class.objects.create(class_name=class_name)
-        new_class.save()
-    except Exception as e:
-        raise e
+    new_class = Class.objects.create(class_name=class_name)
+    new_class.save()
     return new_class
 
 
 # 用于添加manager表的方法
 def add_manager(is_owner, account, class_name):
-    try:
-        new_manager = Manager.objects.create(is_owner=is_owner, account=account, clazz=class_name)
-        new_manager.save()
-    except Exception as e:
-        raise e
+    new_manager = Manager.objects.create(is_owner=is_owner, account=account, clazz=class_name)
+    new_manager.save()
 
 
 # 用于对用户添加权限的方法
@@ -746,10 +758,7 @@ def add_permission(backend_account):
 
 # 用于返回作业的方法
 def get_question(pk, question_type):
-    try:
-        homework = Homework.objects.get(id=pk)
-    except Exception as e:
-        raise e
+    homework = Homework.objects.get(id=pk)
     question_list = []
     if question_type == 'choice_question':
         for choice_question in ChoiceQuestion.objects.filter(homework=homework):
@@ -765,79 +774,68 @@ def get_question(pk, question_type):
 
 # 用于返回对应媒体对象
 def get_media(pk):
-    try:
-        target_media = Media.objects.get(id=pk)
-        return target_media
-    except Exception as e:
-        raise e
+    target_media = Media.objects.get(id=pk)
+    return target_media
 
 
 # 注册一个学生账户的方法
 def auto_register_student_account(open_id):
-    try:
-        with transaction.atomic():
-            ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
-            user_name = 'student' + ran_str + str(BackendAccount.objects.all().count())
-            password = ''.join(random.sample(string.ascii_letters + string.digits, 8))
-            new_user = User.objects.create_user(username=user_name, password=password)
-            new_account = BackendAccount.objects.create(user=new_user, open_id=open_id)
-            add_permission(new_account)
-            new_account.save()
-            return new_account
-    except Exception as e:
-        raise e
+    with transaction.atomic():
+        ran_str = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+        user_name = 'student' + ran_str + str(BackendAccount.objects.all().count())
+        password = ''.join(random.sample(string.ascii_letters + string.digits, 8))
+        new_user = User.objects.create_user(username=user_name, password=password)
+        new_account = BackendAccount.objects.create(user=new_user, open_id=open_id)
+        add_permission(new_account)
+        new_account.save()
+        return new_account
 
 
 # 自动登录方法
 def auto_login(request, target_account):
-    try:
-        target_user = target_account.user
-        target_user.backend = 'django.contrib.auth.backends.ModelBackend'
-        login(request, target_user)
-    except Exception as e:
-        raise e
+    target_user = target_account.user
+    target_user.backend = 'django.contrib.auth.backends.ModelBackend'
+    login(request, target_user)
 
 
 # 设置people信息
 def set_people_info(request, is_teacher, account, clazz):
-    try:
-        name = request.data.get('name')
-        new_people = People.objects.create(name=name, is_teacher=is_teacher, account=account,
-                                           clazz=clazz)
-        new_people.save()
-        return new_people
-    except Exception as e:
-        raise e
+    name = request.data.get('name')
+    new_people = People.objects.create(name=name, is_teacher=is_teacher, account=account,
+                                       clazz=clazz)
+    new_people.save()
+    return new_people
 
 
 # 通过openid获得账户信息
 def get_account_by_openid(open_id, is_teacher):
-    try:
-        accounts = BackendAccount.objects.filter(open_id=open_id).all()
-        for account in accounts:
-            if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
-                return account
-    except Exception as e:
-        raise e
+    accounts = BackendAccount.objects.filter(open_id=open_id).all()
+    for account in accounts:
+        if People.objects.filter(account=account, is_teacher=is_teacher).count() != 0:
+            return account
+
+
+# 返回班级下的学生
+def return_student_of_class(class_id):
+    cur_class = Class.objects.get(id=class_id)
+    target_students = People.objects.filter(clazz=cur_class, is_teacher=False).all()
+    return target_students
 
 
 # 通过作业id与people_id获得该学生是否完成该作业
-def if_student_finish_homework(this_student, this_homework):
-    try:
-        choice_questions = ChoiceQuestion.objects.filter(homework=this_homework).all()
-        for choice_question in choice_questions:
-            if ChoiceQuestionUserAnswer.objects.filter(question=choice_question, student=this_student).count() == 0:
-                return False
-        completion_questions = CompletionQuestion.objects.filter(homework=this_homework).all()
-        for completion_question in completion_questions:
-            if CompletionQuestionUserAnswer.objects.filter(question=completion_question,
-                                                           student=this_student).count() == 0:
-                return False
-        subjective_questions = SubjectiveQuestion.objects.filter(homework=this_homework).all()
-        for subjective_question in subjective_questions:
-            if SubjectiveQuestionUserAnswer.objects.filter(question=subjective_question,
-                                                           student=this_student).count() == 0:
-                return False
-        return True
-    except Exception as e:
-        raise e
+def is_student_finish_homework(this_student, this_homework):
+    choice_questions = ChoiceQuestion.objects.filter(homework=this_homework).all()
+    for choice_question in choice_questions:
+        if ChoiceQuestionUserAnswer.objects.filter(question=choice_question, student=this_student).count() == 0:
+            return False
+    completion_questions = CompletionQuestion.objects.filter(homework=this_homework).all()
+    for completion_question in completion_questions:
+        if CompletionQuestionUserAnswer.objects.filter(question=completion_question,
+                                                       student=this_student).count() == 0:
+            return False
+    subjective_questions = SubjectiveQuestion.objects.filter(homework=this_homework).all()
+    for subjective_question in subjective_questions:
+        if SubjectiveQuestionUserAnswer.objects.filter(question=subjective_question,
+                                                       student=this_student).count() == 0:
+            return False
+    return True

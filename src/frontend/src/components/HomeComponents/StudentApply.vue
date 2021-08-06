@@ -47,11 +47,11 @@ export default {
         this.$http.post('JoinClassRequest/get_join_class_request/', {
             class_id: this.class_id
         }).then(response => {
-            for (let i = 0; i < response.data.length; i++) {
+            for (const value of response.data.length) {
                 this.join_class_request.push({
-                    id: this.getId(response.data[i]),
-                    user_name: this.getId(response.data[i]),
-                    name: this.getId(response.data[i])
+                    id: this.getId(value),
+                    user_name: this.getId(value),
+                    name: this.getId(value)
                 });
             }
         });
@@ -95,7 +95,3 @@ export default {
     }
 };
 </script>
-
-<style scoped>
-
-</style>
