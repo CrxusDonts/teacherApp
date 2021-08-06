@@ -106,15 +106,6 @@ class BackendAccountView(viewsets.ModelViewSet):
             return Response('login failed.')
 
     @action(methods=['post'], detail=False)
-    def set_student_info(self, request):
-           try:
-               name = request.data.get('name')
-               pass
-               # TODO:等待前端提需求
-           except Exception as e:
-               return Response(str(e))
-
-    @action(methods=['post'], detail=False)
     def miniapp_teacher_first_login(self, request):
         try:
             if account_login(request):
@@ -211,6 +202,19 @@ class ClassView(viewsets.ModelViewSet):
         except Exception as e:
             return Response(str(e))
 
+    @action(methods=['get'], detail=False)
+    def get_class_of_student(self, request):
+        try:
+            cur_user = request.user
+            cur_account = BackendAccount.objects.get(user=cur_user)
+            students = cur_account.account_people.filter(is_teacher=False).all()
+            class_list = []
+            for student in students:
+                class_list.append(student.clazz)
+            return Response(ClassSerializer(class_list, many=True).data)
+        except Exception as e:
+            return Response(e)
+
 
 class ManagerView(viewsets.ModelViewSet):
     queryset = Manager.objects.all()
@@ -275,7 +279,6 @@ class PeopleView(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception:
             return Response('get_class_student failed.')
-
 
     @action(methods=['post'], detail=False)
     def get_student_homework(self, request):
@@ -824,5 +827,5 @@ def if_student_finish_homework(this_student, this_homework):
                                                            student=this_student).count() == 0:
                 return False
         return True
-    except Exception:
-        raise Exception
+    except Exception as e:
+        raise e
