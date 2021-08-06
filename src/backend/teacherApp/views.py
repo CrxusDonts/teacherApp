@@ -290,22 +290,27 @@ class PeopleView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def get_student_homework(self, request):
         try:
-            cur_people_id = request.data.get('people_id')
-            target_student = People.objects.get(id=cur_people_id, is_teacher=False)
-            # 得到班级的作业列表
             cur_class_id = request.data.get('class_id')
             cur_class = Class.objects.get(id=cur_class_id)
+            student_list = []
+            for student in People.objects.filter(clazz=cur_class, is_teacher=False):
+                student_list.append(student)
+            # 得到班级的作业列表
             homework_list = []
             for homework in Homework.objects.filter(clazz=cur_class):
                 homework_list.append(homework)
             # 得到每个作业该学生的完成情况
             homework_detail = []
             for homework in homework_list:
-                data = {
-                    'homework_title': homework.title,
-                    'if_finish': if_student_finish_homework(target_student, homework)
-                }
-                homework_detail.append(data)
+                for student in student_list:
+                    data = {
+                        'student_id': student.id,
+                        'student_name': student.name,
+                        'homework_id': homework.id,
+                        'homework_title': homework.title,
+                        'if_finish': if_student_finish_homework(student, homework)
+                    }
+                    homework_detail.append(data)
             return Response(homework_detail)
         except Exception:
             return Response('get_student_homework failed.')

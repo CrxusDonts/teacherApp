@@ -10,7 +10,7 @@
                              :width="100">
             </el-table-column>
             <el-table-column
-                prop="name"
+                prop="student_name"
                 label="姓名"
                 width="180">
             </el-table-column>
@@ -28,14 +28,14 @@
                 align="right"
                 label="操作">
                 <template slot-scope="scope">
-                    <el-button plain icon="el-icon-edit" size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情
+                    <el-button plain icon="el-icon-search" size="mini" @click="handleDetail(scope.$index, scope.row)">查看详情
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
         <el-dialog title="作业详情" :visible.sync="dialog_visible">
             <el-table :data="this_student_grade">
-                <el-table-column property="title" label="作业标题" width="200"></el-table-column>
+                <el-table-column property="homework_title" label="作业标题" width="200"></el-table-column>
                 <el-table-column property="if_finish" label="是否完成" width="200"></el-table-column>
             </el-table>
         </el-dialog>
@@ -48,7 +48,7 @@ export default {
     data() {
         return {
             students: [],
-            grades_by_student: [],
+            details: [],
             this_student_grade: [],
             dialog_visible: false,
             class_id: '',
@@ -58,50 +58,33 @@ export default {
     mounted() {
         this.class_id = this.$route.query.class_id;
         this.user_name = this.$route.params.user_name;
-        this.$http.post('People/get_class_student/', {
+        this.$http.post('People/get_student_homework/', {
             class_id: this.class_id
         }).then(response => {
-            if (response.data !== 'get_class_student failed.') {
-                for (const value of response.data) {
-                    this.students.push({
-                        id: value.id,
-                        name: value.name,
-                        have_finished: 0,
-                        have_not_finished: 0
-                    });
-                }
-                for (const student of this.students) {
-                    this.$http.post('People/get_student_homework/', {
-                        class_id: this.class_id,
-                        people_id: student.id
-                    }).then(response => {
-                        for (let j = 0; j < response.data.length; j++) {
-                            this.grades_by_student.push({
-                                id: student.id, name: student.name,
-                                homework_title: response.data[j].homework_title, if_finish: response.data[j].if_finish
-                            });
-                            if (this.grades_by_student[j].if_finish) {
-                                student.have_finished += 1;
-                            }
-                            if (!this.grades_by_student[j].if_finish) {
-                                student.have_not_finished += 1;
-                            }
+            this.details = response.data;
+            this.$http.post('People/get_class_student/', {
+                class_id: this.class_id
+            }).then(response => {
+                for (let i = 0;i < response.data.length;i++) {
+                    this.students.push({ student_id: response.data[i].id, student_name: response.data[i].name, have_finished: 0, have_not_finished: 0 });
+                    for (const value of this.details) {
+                        if (value.student_id === this.students[i].student_id && value.if_finish) {
+                            this.students[i].have_finished += 1;
                         }
-                    });
+                        if (value.student_id === this.students[i].student_id && !value.if_finish) {
+                            this.students[i].have_not_finished += 1;
+                        }
+                    }
                 }
-            } else {
-                alert('获取学生失败！');
-            }
+            });
         });
     },
     methods: {
         handleDetail(index) {
-            for (const data of this.grades_by_student) {
-                if (data.id === this.students[index].id) {
-                    this.this_student_grade.push({
-                        title: data.homework_title,
-                        if_finish: data.if_finish ? '完成' : '未完成'
-                    });
+            this.this_student_grade = [];
+            for (const value of this.details) {
+                if (this.students[index].student_id === value.student_id) {
+                    this.this_student_grade.push({ homework_title: value.homework_title, if_finish: value.if_finish ? '已完成' : '未完成' });
                 }
             }
             this.dialog_visible = true;
