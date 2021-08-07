@@ -36,12 +36,15 @@ export default {
             this.name = e.target.value;
         },
         joinClass() {
+            console.log(this.open_id);
+            console.log(this.class_id);
+            console.log(this.name);
             uni.request({
                 url: 'http://localhost:8002/teacherApp/JoinClassRequest/create_join_class_request/',
                 data: {
                     'open_id': this.open_id,
                     'class_id': this.class_id,
-                    'user_name': this.name
+                    'name': this.name
                 },
                 method: 'post',
                 success: res => {
@@ -50,7 +53,14 @@ export default {
                             title: '申请成功',
                             icon: 'none'
                         });
-                        uni.navigateBack();
+                        setTimeout(() => {
+                            uni.navigateBack();
+                        }, 1000);
+                    } else if (res.data === 'Class matching query does not exist.') {
+                        uni.showToast({
+                            title: '申请失败,班级不存在',
+                            icon: 'none'
+                        });
                     } else {
                         uni.showToast({
                             title: '申请失败',
@@ -63,6 +73,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

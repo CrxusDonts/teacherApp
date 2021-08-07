@@ -45,3 +45,4 @@ src/frontend/.npm/
 src/backend/teacherApp/migrations
 src/backend/static/media
 src/uni-app/unpackage
+src/uni-app/node_modules

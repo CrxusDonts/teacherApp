@@ -23,15 +23,13 @@ export default {
             homework: '',
             students: [
                 {
-                    'name': '圣嘉然'
+                    'name': '杰诺斯'
                 }
             ]
         };
     },
     onLoad: function(option) {
         this.homework = JSON.parse(option.homework);
-    },
-    mounted() {
     },
     methods: {
         checkHomework(student) {
@@ -42,6 +40,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

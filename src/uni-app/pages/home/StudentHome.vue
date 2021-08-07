@@ -12,9 +12,6 @@
 				<view class="content">
 					<view class="text-grey">{{clazz.class_name}}</view>
 				</view>
-				<view class="action">
-					<view class="cu-tag round bg-grey sm">5</view>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -31,6 +28,22 @@ export default {
     onLoad: function(option) {
         this.open_id = option.open_id;
     },
+    mounted() {
+	    uni.request({
+	        url: 'http://localhost:8002/teacherApp/Class/get_class_of_student/',
+	        method: 'get',
+	        success: res => {
+	            if (res.data !== 'Get my manage class failed.') {
+	                    this.classes = res.data;
+	            } else {
+	                uni.showToast({
+	                    title: '获取班级列表失败',
+	                    icon: 'none'
+	                });
+	            }
+	        }
+	    });
+    },
     methods: {
         toClassManagement(clazz) {
             uni.navigateTo({
@@ -45,6 +58,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

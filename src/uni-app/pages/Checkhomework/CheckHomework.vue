@@ -6,13 +6,14 @@
 			</view>
 		</view>
 		<ChoiceQuestion v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
-                    :order='order + index' :index="index">
+                    :order='order + index' :index="index" :student_name="student.name">
 		</ChoiceQuestion>
 		<CompletionQuestion v-for="(completionQuestion, index) in completion_questions" :completionQuestion="completionQuestion"
-                        :order='choice_questions.length + order + index' :index="index">
+                        :order='choice_questions.length + order + index' :index="index" :student_name="student.name">
 		</CompletionQuestion>
 		<SubjectiveQuestion v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
-                        :order='choice_questions.length + completion_questions.length + order + index' :index="index">
+                        :order='choice_questions.length + completion_questions.length + order + index'
+						:index="index" :student_name="student.name">
 		</SubjectiveQuestion>
 	</view>
 </template>
@@ -69,5 +70,3 @@ export default {
 };
 </script>
 
-<style>
-</style>

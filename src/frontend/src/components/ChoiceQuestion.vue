@@ -40,7 +40,7 @@
       </el-form>
       <!--图片上传框-->
       <el-upload action="#" list-type="picture-card" :file-list="files"
-                 :on-change = "change" :on-remove = "remove" :before-upload = "beforeAvatarUpload">
+                 :on-change = "change" :on-remove = "remove" :before-upload = "beforeMediaUpload">
         <em class="el-icon-upload"></em>
         <div slot="tip" class="el-upload__tip">请上传多媒体</div>
       </el-upload>
@@ -151,7 +151,7 @@ export default {
                 this.is_max = false;
             }
         },
-        beforeAvatarUpload(file) {
+        beforeMediaUpload(file) {
             if (this.is_max) {
                 this.$message.error('最多上传3个文件');
             } else {

@@ -1,5 +1,6 @@
 import string
 import random
+import os
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction, IntegrityError, OperationalError
@@ -392,7 +393,7 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def add_user_answer(self, request):
         try:
-            answer_orders = request.data.get('answer_order').split(' ')
+            answer_orders = request.data.get('answer_order')[0:-1].split(' ')
             question_id = request.data.get('question_id')
             target_question = ChoiceQuestion.objects.get(id=question_id)
             student_id = request.data.get('student_id')
@@ -558,7 +559,7 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
         try:
             question_id = request.data.get('question_id')
             target_question = CompletionQuestion.objects.get(id=question_id)
-            answers = request.data.get('answers').split(' ')  # 如果是空的，需要一个标识符
+            answers = request.data.get('answers')[0:-1].split(' ')  # 如果是空的，需要一个标识符
             student_id = request.data.get('student_id')
             student = People.objects.get(id=student_id)
             historical_answers = student.CompletionUser_answer.filter(question=target_question).all()
@@ -607,6 +608,38 @@ class SubjectiveQuestionView(viewsets.ModelViewSet):
 class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
     queryset = SubjectiveQuestionUserAnswer.objects.all()
     serializer_class = SubjectiveQuestionUserAnswerSerializer
+    real_path = '/opt/backend/'
+
+    @action(methods=['post'], detail=False)
+    def put_subjective_question_media(self, request):
+        try:
+            with transaction.atomic():
+                file = request.FILES.get('media')
+                file_type = 0 if request.data.get('file_type') == 'image' else 1
+                target_question = SubjectiveQuestion.objects.get(id=request.data.get('question_id'))
+                target_student = People.objects.get(id=request.data.get('student_id'))
+                is_first = request.data.get('is_first')
+                historical_answers = target_student.SubjectiveUser_answer.filter(question=target_question).all()
+                for history in historical_answers:
+                    if is_first == 'true':
+                        for media in history.subjective_user_answer_media.all():
+                            if os.path.exists(self.real_path + media.url.url):
+                                os.remove(self.real_path + media.url.url)
+                            history.delete()
+                    else:
+                        new_media = Media.objects.create(url=file, file_type=file_type,
+                                                         subjective_question_user_answer=history)
+                        new_media.save()
+                        return Response('succeed' + 'sb')
+                new_answer = SubjectiveQuestionUserAnswer.objects.create(student=target_student,
+                                                                         question=target_question)
+                new_answer.save()
+                new_media = Media.objects.create(url=file, file_type=file_type,
+                                                 subjective_question_user_answer=new_answer)
+                new_media.save()
+            return Response('succeed')
+        except Exception as e:
+            return Response(str(e))
 
 
 class TeacherCommentView(viewsets.ModelViewSet):
@@ -633,7 +666,7 @@ class JoinClassRequestView(viewsets.ModelViewSet):
                         return Response('create_join_class_request succeed')
                 return Response('create_join_class_request failed.')
         except Exception as e:
-            return Response(str(e) + 'sb')
+            return Response(str(e))
 
     @action(methods=['post'], detail=False)
     def get_join_class_request(self, request):

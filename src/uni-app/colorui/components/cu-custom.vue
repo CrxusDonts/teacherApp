@@ -16,52 +16,52 @@
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				StatusBar: this.StatusBar,
-				CustomBar: this.CustomBar
-			};
-		},
-		name: 'cu-custom',
-		computed: {
-			style() {
-				var StatusBar= this.StatusBar;
-				var CustomBar= this.CustomBar;
-				var bgImage = this.bgImage;
-				var style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
-				if (this.bgImage) {
-					style = `${style}background-image:url(${bgImage});`;
-				}
-				return style
-			}
-		},
-		props: {
-			bgColor: {
-				type: String,
-				default: ''
-			},
-			isBack: {
-				type: [Boolean, String],
-				default: false
-			},
-			bgImage: {
-				type: String,
-				default: ''
-			},
-		},
-		methods: {
-			BackPage() {
-				if (getCurrentPages().length < 2 && 'undefined' !== typeof __wxConfig) {
-					let url = '/' + __wxConfig.pages[0]
-					return uni.redirectTo({url})
-				}
-				uni.navigateBack({
-					delta: 1
-				});
-			}
-		}
-	}
+export default {
+    data() {
+        return {
+            StatusBar: this.StatusBar,
+            CustomBar: this.CustomBar
+        };
+    },
+    name: 'cu-custom',
+    computed: {
+        style() {
+            var StatusBar = this.StatusBar;
+            var CustomBar = this.CustomBar;
+            var bgImage = this.bgImage;
+            var style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
+            if (this.bgImage) {
+                style = `${style}background-image:url(${bgImage});`;
+            }
+            return style;
+        }
+    },
+    props: {
+        bgColor: {
+            type: String,
+            default: ''
+        },
+        isBack: {
+            type: [Boolean, String],
+            default: false
+        },
+        bgImage: {
+            type: String,
+            default: ''
+        }
+    },
+    methods: {
+        BackPage() {
+            if (getCurrentPages().length < 2 && typeof __wxConfig !== 'undefined') {
+                const url = '/' + __wxConfig.pages[0];
+                return uni.redirectTo({ url });
+            }
+            uni.navigateBack({
+                delta: 1
+            });
+        }
+    }
+};
 </script>
 
 <style>

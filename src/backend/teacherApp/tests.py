@@ -1,8 +1,7 @@
 import json
 
+from django.contrib.auth.models import User
 from django.test import TestCase
-from rest_framework.authtoken.admin import User
-
 from teacherApp.models import Class
 from teacherApp.views import register_class, auto_register_student_account
 
@@ -21,7 +20,8 @@ class BackendAccountViewTest(TestCase):
         test_data = json.dumps({
             'user_name': self.user_name,
             'password': self.password,
-            'class_name': self.class_name
+            'class_name': self.class_name,
+            'name': 'test_name'
         })
         response = self.client. \
             post(path=self.base_url + 'register_teacher/',

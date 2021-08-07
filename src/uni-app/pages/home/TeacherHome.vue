@@ -4,7 +4,7 @@
 			<view class="action">
 				<text class="cuIcon-title text-blue "></text> {{'欢迎你，' + user_name}}
 			</view>
-			<button class="cu-btn bg-grey margin-right" @click="logout()">退出登陆</button>
+			<button class="cu-btn bg-grey margin-right" @click="logout()">退出登录</button>
 		</view>
 		<view class="cu-list menu-avatar">
 			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="clazz in classes" @click="toClassManagement(clazz)">
@@ -13,7 +13,7 @@
 					<view class="text-grey">{{clazz.class_name}}</view>
 				</view>
 				<view class="action">
-					<view class="cu-tag round bg-grey sm">5</view>
+						<view class="cu-tag round bg-grey sm">{{clazz.count}}</view>
 				</view>
 			</view>
 		</view>
@@ -36,7 +36,9 @@ export default {
             url: 'http://localhost:8002/teacherApp/Class/get_my_class/',
             method: 'get',
             success: res => {
-                if (res.data !== 'Get my own class failed.') { this.classes.push(res.data); } else {
+                if (res.data !== 'Get my own class failed.') {
+                    this.classes.push(res.data);
+                } else {
                     uni.showToast({
                         title: '获取我的班级失败',
                         icon: 'none'
@@ -60,6 +62,18 @@ export default {
                 }
             }
         });
+        for (const clazz of this.classes) {
+            uni.request({
+			    url: 'http://localhost:8002/teacherApp/Class/get_people_count_of_class/',
+                data: {
+                    'class_id': clazz.id
+                },
+			    method: 'post',
+			    success: res => {
+			        clazz.count = res.data;
+			    }
+            });
+        }
     },
     methods: {
         toClassManagement(clazz) {
@@ -78,6 +92,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

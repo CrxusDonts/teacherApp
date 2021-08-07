@@ -53,14 +53,18 @@ export default {
                     url: 'HomeworkManagement?homework=' + JSON.stringify(homework)
                 });
             } else {
-                uni.navigateTo({
-                    url: 'DoHomework/DoHomework?homework=' + JSON.stringify(homework) + '&student=' + JSON.stringify(this.student)
-                });
+                if (homework.repeatable) {
+                    uni.navigateTo({
+                        url: 'DoHomework/DoHomework?homework=' + JSON.stringify(homework) + '&student=' + JSON.stringify(this.student)
+                    });
+                } else {
+                    uni.showToast({
+                        title: '该作业不可重复提交，请等待老师批改',
+                        icon: 'none'
+                    });
+                }
             }
         }
     }
 };
 </script>
-
-<style>
-</style>

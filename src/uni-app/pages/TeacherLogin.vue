@@ -49,12 +49,18 @@ export default {
                 method: 'post',
                 success: res => {
                     if (res.data === 'login succeeded.') {
-                        uni.navigateTo({
-                            url: 'home/TeacherHome?user_name=' + this.user_name
+                        uni.showToast({
+                            title: '登录成功',
+                            icon: 'none'
                         });
+                        setTimeout(() => {
+                            uni.navigateTo({
+                                url: 'home/TeacherHome?user_name=' + this.user_name
+                            });
+                        }, 1000);
                     } else {
                         uni.showToast({
-                            title: '登陆失败',
+                            title: '登录失败',
                             icon: 'none'
                         });
                     }
@@ -64,6 +70,3 @@ export default {
     }
 };
 </script>
-
-<style>
-</style>

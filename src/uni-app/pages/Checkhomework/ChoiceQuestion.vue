@@ -4,13 +4,20 @@
 				<view class="cu-item">
 					<view class="content flex-sub padding">
 						<view class="text-lg margin-left">{{order + '.' + choiceQuestion.text_content}}</view>
+						<view style="display: flex;">
+							<view v-for="file in files">
+								<image v-if="file.file_type === 0" class="margin-left margin-top image"
+								:src="file.url" @click="previewImage(file.url)"></image>
+								<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
+							</view>
+						</view>
 						<view class="flex margin-top margin-left" v-for="option in options">
 							<view v-if="option.if_correct" class="cuIcon-check"></view>
 							<view v-if="!option.if_correct" class="cuIcon-close"></view>
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}
 						</view>
 						<view class="flex margin-top margin-left">
-							他的答案：
+							{{student_name}}的答案：
 							<view v-for="student_answer in student_answers">
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.order)}}
 							</view>
@@ -23,25 +30,54 @@
 
 <script>
 export default {
-    props: ['choiceQuestion', 'order', 'index'],
+    props: ['choiceQuestion', 'order', 'index', 'student_name'],
     name: 'ChoiceQuestion',
     data() {
         return {
             options: [],
+            files: [],
             student_answers: []
         };
     },
     mounted() {
         uni.request({
-            url: 'ChoiceQuestion/' + this.choiceQuestion.id + '/get_options/',
+            url: 'http://localhost:8002/teacherApp/ChoiceQuestion/' + this.choiceQuestion.id + '/get_options/',
             method: 'GET',
             success: res => {
                 this.options = res.data;
             }
         });
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/ChoiceQuestion/' + this.choiceQuestion.id + '/get_topic_media/',
+            method: 'GET',
+            success: res => {
+                this.files = res.data;
+                for (let i = 0; i < this.files.length; i++) {
+                    this.files[i].url = 'http://localhost:8002/' + this.files[i].url.substring(6);
+                }
+            }
+        });
+    },
+    methods: {
+        // 预览图片
+        previewImage(url) {
+            uni.previewImage({
+                current: 0,
+                urls: [url]
+            });
+        }
     }
 };
 </script>
 
 <style>
+.image {
+    width: 250upx;
+    height: 250upx;
+}
+
+.video {
+    width: 250upx;
+    height: 250upx;
+}
 </style>
