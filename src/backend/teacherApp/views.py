@@ -625,7 +625,7 @@ class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
                         for media in history.subjective_user_answer_media.all():
                             if os.path.exists(self.real_path + media.url.url):
                                 os.remove(self.real_path + media.url.url)
-                            history.delete()
+                            #history.delete()
                     else:
                         new_media = Media.objects.create(url=file, file_type=file_type,
                                                          subjective_question_user_answer=history)

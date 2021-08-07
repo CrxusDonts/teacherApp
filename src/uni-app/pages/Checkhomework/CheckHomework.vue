@@ -6,10 +6,10 @@
 			</view>
 		</view>
 		<ChoiceQuestion v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
-                    :order='order + index' :index="index" :student_name="student.name">
+                    :order='order + index' :index="index" :student="student">
 		</ChoiceQuestion>
 		<CompletionQuestion v-for="(completionQuestion, index) in completion_questions" :completionQuestion="completionQuestion"
-                        :order='choice_questions.length + order + index' :index="index" :student_name="student.name">
+                        :order='choice_questions.length + order + index' :index="index" :student="student">
 		</CompletionQuestion>
 		<SubjectiveQuestion v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
                         :order='choice_questions.length + completion_questions.length + order + index'
@@ -64,8 +64,6 @@ export default {
                 this.subjective_questions = res.data;
             }
         });
-    },
-    methods: {
     }
 };
 </script>

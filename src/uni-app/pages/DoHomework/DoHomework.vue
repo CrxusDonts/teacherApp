@@ -27,10 +27,9 @@ export default {
     data() {
         return {
             order: 1,
-            student: {
-                id: 4
-            },
-            homework: {},
+            student: '',
+            homework: '',
+            clazz: '',
             choice_questions: [],
             completion_questions: [],
             subjective_questions: []
@@ -41,8 +40,8 @@ export default {
         CompletionQuestion,
         SubjectiveQuestion
     },
-    onLoad: option => {
-        // this.student = JSON.parse(option.student);
+    onLoad: function(option) {
+        this.student = JSON.parse(option.student);
         this.homework = JSON.parse(option.homework);
     },
     mounted() {

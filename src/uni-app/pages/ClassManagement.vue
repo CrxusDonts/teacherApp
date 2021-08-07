@@ -2,7 +2,10 @@
 	<view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-title text-blue "></text> {{clazz.class_name}}
+				<text class="cuIcon-title text-blue" style="float: right;"></text> {{clazz.class_name}}
+			</view>
+			<view v-if="!is_teacher" class="action">
+				<text style="float: right;"></text> {{student.name}}
 			</view>
 		</view>
 		<view class="cu-list menu-avatar">
@@ -45,12 +48,22 @@ export default {
                 }
             }
         });
+        uni.request({
+		    url: 'http://localhost:8002/teacherApp/People/get_student/',
+            data: {
+                'class_id': this.clazz.id
+            },
+		    method: 'POST',
+		    success: res => {
+		        this.student = res.data;
+		    }
+        });
     },
     methods: {
         toHomeworkManagement(homework) {
             if (this.is_teacher) {
                 uni.navigateTo({
-                    url: 'HomeworkManagement?homework=' + JSON.stringify(homework)
+                    url: 'HomeworkManagement?homework=' + JSON.stringify(homework) + '&clazz=' + JSON.stringify(this.clazz)
                 });
             } else {
                 if (homework.repeatable) {

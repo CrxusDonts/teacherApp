@@ -167,7 +167,7 @@ export default {
                         'is_first': i === 0 ? 'true' : 'false'
                     },
                     success: res => {
-                        console.log(res);
+                        console.log(res.data);
                     }
                 });
             }

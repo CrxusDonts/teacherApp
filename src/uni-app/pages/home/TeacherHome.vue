@@ -12,9 +12,6 @@
 				<view class="content">
 					<view class="text-grey">{{clazz.class_name}}</view>
 				</view>
-				<view class="action">
-						<view class="cu-tag round bg-grey sm">{{clazz.count}}</view>
-				</view>
 			</view>
 		</view>
 	</view>
@@ -62,18 +59,6 @@ export default {
                 }
             }
         });
-        for (const clazz of this.classes) {
-            uni.request({
-			    url: 'http://localhost:8002/teacherApp/Class/get_people_count_of_class/',
-                data: {
-                    'class_id': clazz.id
-                },
-			    method: 'post',
-			    success: res => {
-			        clazz.count = res.data;
-			    }
-            });
-        }
     },
     methods: {
         toClassManagement(clazz) {

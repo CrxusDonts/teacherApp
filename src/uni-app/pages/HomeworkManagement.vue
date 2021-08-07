@@ -20,16 +20,27 @@
 export default {
     data() {
         return {
+            clazz: '',
             homework: '',
-            students: [
-                {
-                    'name': '杰诺斯'
-                }
-            ]
+            students: []
         };
     },
     onLoad: function(option) {
+        this.clazz = JSON.parse(option.clazz);
         this.homework = JSON.parse(option.homework);
+    },
+    mounted() {
+        uni.request({
+		    url: 'http://localhost:8002/teacherApp/People/get_done_homework_students/',
+            data: {
+                'class_id': this.clazz.id,
+                'homework_id': this.homework.id
+            },
+		    method: 'POST',
+		    success: res => {
+		        this.students = res.data;
+		    }
+        });
     },
     methods: {
         checkHomework(student) {

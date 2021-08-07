@@ -17,9 +17,9 @@
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}
 						</view>
 						<view class="flex margin-top margin-left">
-							{{student_name}}的答案：
+							{{student.name}}的答案：
 							<view v-for="student_answer in student_answers">
-							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.order)}}
+							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.answer_order)}}
 							</view>
 						</view>
 					</view>
@@ -30,7 +30,7 @@
 
 <script>
 export default {
-    props: ['choiceQuestion', 'order', 'index', 'student_name'],
+    props: ['choiceQuestion', 'order', 'index', 'student'],
     name: 'ChoiceQuestion',
     data() {
         return {
@@ -55,6 +55,17 @@ export default {
                 for (let i = 0; i < this.files.length; i++) {
                     this.files[i].url = 'http://localhost:8002/' + this.files[i].url.substring(6);
                 }
+            }
+        });
+        uni.request({
+            url: 'http://localhost:8002/teacherApp/ChoiceQuestionUserAnswer/get_user_answer/',
+            data: {
+                'question_id': this.choiceQuestion.id,
+                'student_id': this.student.id
+            },
+            method: 'POST',
+            success: res => {
+                this.student_answers = res.data;
             }
         });
     },
