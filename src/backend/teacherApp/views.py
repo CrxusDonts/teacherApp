@@ -86,6 +86,18 @@ class BackendAccountView(viewsets.ModelViewSet):
             return Response('logout failed.')
 
     @action(methods=['post'], detail=False)
+    def miniapp_logout(self, request):
+        try:
+            cur_user = request.user
+            target_account = BackendAccount.objects.get(user=cur_user)
+            target_account.open_id = ''
+            target_account.save()
+            logout(request)
+            return Response('logout succeed.')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
     def determine_first_login(self, request):
         try:
             open_id = request.data.get('open_id')
@@ -572,7 +584,7 @@ class CompletionQuestionUserAnswerView(viewsets.ModelViewSet):
                 new_answer.save()
             return Response('add_user_answer succeed.')
         except Exception as e:
-            return Response(str(e))
+            return Response(str(e) + ' completion')
 
     @action(methods=['post'], detail=False)
     def get_user_answer(self, request):
@@ -611,33 +623,48 @@ class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
     real_path = '/opt/backend/'
 
     @action(methods=['post'], detail=False)
+    def delete_historical_answer(self, request):
+        try:
+            with transaction.atomic():
+                target_question = SubjectiveQuestion.objects.get(id=request.data.get('question_id'))
+                target_student = People.objects.get(id=request.data.get('student_id'))
+                historical_answers = target_student.SubjectiveUser_answer.filter(question=target_question).all()
+                for history in historical_answers:
+                    for media in history.subjective_user_answer_media.all():
+                        if os.path.exists(self.real_path + media.url.url):
+                            os.remove(self.real_path + media.url.url)
+                    history.delete()
+                new_answer = SubjectiveQuestionUserAnswer.objects.create(student=target_student,
+                                                                         question=target_question)
+                new_answer.save()
+                return Response(new_answer.id)
+        except Exception:
+            return Response('delete failed.')
+
+    @action(methods=['post'], detail=False)
     def put_subjective_question_media(self, request):
         try:
             with transaction.atomic():
                 file = request.FILES.get('media')
                 file_type = 0 if request.data.get('file_type') == 'image' else 1
-                target_question = SubjectiveQuestion.objects.get(id=request.data.get('question_id'))
-                target_student = People.objects.get(id=request.data.get('student_id'))
-                is_first = request.data.get('is_first')
-                historical_answers = target_student.SubjectiveUser_answer.filter(question=target_question).all()
-                for history in historical_answers:
-                    if is_first == 'true':
-                        for media in history.subjective_user_answer_media.all():
-                            if os.path.exists(self.real_path + media.url.url):
-                                os.remove(self.real_path + media.url.url)
-                            #history.delete()
-                    else:
-                        new_media = Media.objects.create(url=file, file_type=file_type,
-                                                         subjective_question_user_answer=history)
-                        new_media.save()
-                        return Response('succeed' + 'sb')
-                new_answer = SubjectiveQuestionUserAnswer.objects.create(student=target_student,
-                                                                         question=target_question)
-                new_answer.save()
+                target_answer = SubjectiveQuestionUserAnswer.objects.get(id=int(request.data.get('answer_id')))
                 new_media = Media.objects.create(url=file, file_type=file_type,
-                                                 subjective_question_user_answer=new_answer)
+                                                 subjective_question_user_answer=target_answer)
                 new_media.save()
             return Response('succeed')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def get_user_answer(self, request):
+        try:
+            target_question = SubjectiveQuestion.objects.get(id=request.data.get('question_id'))
+            target_student = People.objects.get(id=request.data.get('student_id'))
+            target_answer = SubjectiveQuestionUserAnswer.objects.get(question=target_question, student=target_student)
+            medias = []
+            for media in target_answer.subjective_user_answer_media.all():
+                medias.append(media)
+            return Response(MediaSerializer(medias, many=True).data)
         except Exception as e:
             return Response(str(e))
 

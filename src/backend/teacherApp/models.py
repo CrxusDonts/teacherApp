@@ -86,6 +86,9 @@ class SubjectiveQuestionUserAnswer(models.Model):
 
 class TeacherComment(models.Model):
     text_content = models.TextField(default='null')
+    pos_x = models.DecimalField(max_digits=19, decimal_places=10)
+    pos_y = models.DecimalField(max_digits=19, decimal_places=10)
+    time_slot = models.TimeField()
 
 
 class JoinClassRequest(models.Model):
