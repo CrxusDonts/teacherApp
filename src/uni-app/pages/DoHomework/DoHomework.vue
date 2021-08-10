@@ -6,16 +6,16 @@
 			</view>
 			<button class="cu-btn bg-grey margin-right" @click="submitHomework()">点击提交</button>
 		</view>
-		<ChoiceQuestion v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
+		<choice-question v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
                     :order='order + index' :index="index" ref="choiceQuestion">
-		</ChoiceQuestion>
-		<CompletionQuestion v-for="(completionQuestion, index) in completion_questions" :completionQuestion="completionQuestion"
+		</choice-question>
+		<completion-question v-for="(completionQuestion, index) in completion_questions" :completionQuestion="completionQuestion"
                         :order='choice_questions.length + order + index' :index="index" ref="completionQuestion">
-		</CompletionQuestion>
-		<SubjectiveQuestion v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
+		</completion-question>
+		<subjective-question v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
                         :order='choice_questions.length + completion_questions.length + order + index' :index="index"
 						ref="subjectiveQuestion">
-		</SubjectiveQuestion>
+		</subjective-question>
 	</view>
 </template>
 
@@ -46,21 +46,21 @@ export default {
     },
     mounted() {
         uni.request({
-            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_choice_question/',
+            url: this.$BASICURL + 'Homework/' + this.homework.id + '/get_choice_question/',
             method: 'GET',
             success: res => {
                 this.choice_questions = res.data;
             }
         });
         uni.request({
-            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_completion_question/',
+            url: this.$BASICURL + 'Homework/' + this.homework.id + '/get_completion_question/',
             method: 'GET',
             success: res => {
                 this.completion_questions = res.data;
             }
         });
         uni.request({
-            url: 'http://localhost:8002/teacherApp/Homework/' + this.homework.id + '/get_subjective_question/',
+            url: this.$BASICURL + 'Homework/' + this.homework.id + '/get_subjective_question/',
             method: 'GET',
             success: res => {
                 this.subjective_questions = res.data;

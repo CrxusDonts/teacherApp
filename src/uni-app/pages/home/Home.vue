@@ -16,7 +16,7 @@
 export default {
     data() {
         return {
-            open_id: ''
+            open_id: '',
         };
     },
     mounted() {
@@ -29,8 +29,8 @@ export default {
                 uni.request({
                     url: url,
                     method: 'GET',
-                    success: result => {
-                        this.open_id = result.data.openid;
+                    success: res => {
+                        this.open_id = res.data.openid;
                     },
                     fail: err => {
                         console.log('获取openId失败');
@@ -43,7 +43,7 @@ export default {
         toTeacherHome() {
             if (this.open_id !== '') {
                 uni.request({
-				    url: 'http://localhost:8002/teacherApp/BackendAccount/determine_first_login/',
+				    url: this.$BASICURL + 'BackendAccount/determine_first_login/',
 				    data: {
 				        'open_id': this.open_id,
 				        'is_teacher': true
@@ -59,14 +59,17 @@ export default {
 				                url: 'TeacherHome?user_name=' + res.data
 				            });
 				        }
-				    }
+				    },
+					fail: res => {
+						console.log(res)
+					}
                 });
             }
         },
         toStudentHome() {
             if (this.open_id !== '') {
                 uni.request({
-				    url: 'http://localhost:8002/teacherApp/BackendAccount/determine_first_login/',
+				    url: this.$BASICURL + 'BackendAccount/determine_first_login/',
 				    data: {
 				        'open_id': this.open_id,
 				        'is_teacher': false

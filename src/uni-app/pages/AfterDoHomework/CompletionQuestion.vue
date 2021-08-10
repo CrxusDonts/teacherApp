@@ -3,7 +3,7 @@
 		<view class="cu-item shadow">
 				<view class="cu-item">
 					<view class="content flex-sub padding">
-						<view class="text-lg margin-left">{{order + '.' + choiceQuestion.text_content}}</view>
+						<view class="text-lg margin-left">{{order + '.' + completionQuestion.text_content}}</view>
 						<view class="grid">
 							<view v-for="(file, file_index) in files">
 								<image v-if="file.file_type === 0" class="margin-left margin-top image"
@@ -11,15 +11,16 @@
 								<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
 							</view>
 						</view>
-						<view class="flex margin-top margin-left" v-for="(option, index) in options">
-							<view v-if="option.if_correct" class="cuIcon-check"></view>
-							<view v-if="!option.if_correct" class="cuIcon-close"></view>
-							{{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}
+						<view class="grid margin-top margin-left">
+							正确答案：
+							<view v-for="(answer, index) in answers" class="answer">
+							{{answer.answer}}
+							</view>
 						</view>
-						<view class="flex margin-top margin-left">
-							{{student.name}}的答案：
-							<view v-for="(student_answer, index) in student_answers">
-							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.answer_order)}}
+						<view class="grid margin-top margin-left">
+							你的答案：
+							<view class="answer" v-for="(student_answer, index) in student_answers">
+								{{student_answer.answer}}
 							</view>
 						</view>
 					</view>
@@ -30,37 +31,37 @@
 
 <script>
 export default {
-    props: ['choiceQuestion', 'order', 'index', 'student'],
-    name: 'ChoiceQuestion',
+    props: ['completionQuestion', 'order', 'index', 'student'],
+    name: 'CompletionQuestion',
     data() {
         return {
-            options: [],
+            answers: [],
             files: [],
             student_answers: []
         };
     },
     mounted() {
         uni.request({
-            url: this.$BASICURL + 'ChoiceQuestion/' + this.choiceQuestion.id + '/get_options/',
+            url: this.$BASICURL + 'CompletionQuestion/' + this.completionQuestion.id + '/get_answers/',
             method: 'GET',
             success: res => {
-                this.options = res.data;
+                this.answers = res.data;
             }
         });
         uni.request({
-            url: this.$BASICURL + 'ChoiceQuestion/' + this.choiceQuestion.id + '/get_topic_media/',
+            url: this.$BASICURL + 'CompletionQuestion/' + this.completionQuestion.id + '/get_completion_media/',
             method: 'GET',
             success: res => {
                 this.files = res.data;
-                for (let i = 0; i < this.files.length; i++) {
-                    this.files[i].url = this.$FILEBASICURL + this.files[i].url.substring(6);
+                for (const file of this.files) {
+                    file.url = this.$FILEBASICURL + file.url.substring(6);
                 }
             }
         });
         uni.request({
-            url: this.$BASICURL + 'ChoiceQuestionUserAnswer/get_user_answer/',
+            url: this.$BASICURL + 'CompletionQuestionUserAnswer/get_user_answer/',
             data: {
-                'question_id': this.choiceQuestion.id,
+                'question_id': this.completionQuestion.id,
                 'student_id': this.student.id
             },
             method: 'POST',
@@ -76,12 +77,16 @@ export default {
                 current: 0,
                 urls: [url]
             });
-        },
+        }
     }
 };
 </script>
 
 <style>
+.answer + .answer {
+    margin-left: 50rpx;
+}
+
 .image {
     width: 250upx;
     height: 250upx;

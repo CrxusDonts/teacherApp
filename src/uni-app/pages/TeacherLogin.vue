@@ -2,7 +2,7 @@
 	<view>
 		<view class="cu-bar bg-white">
 			<view class="action">
-				<text class="cuIcon-title text-blue"></text>请输入你的信息
+				<text class="cuIcon-title text-blue"></text>请输入你的信息(如果没有账户，请到后台注册)
 			</view>
 		</view>
 		<view class="cu-form-group margin-top">
@@ -40,7 +40,7 @@ export default {
         },
         login() {
             uni.request({
-                url: 'http://localhost:8002/teacherApp/BackendAccount/miniapp_teacher_first_login/',
+                url: this.$BASICURL + 'BackendAccount/miniapp_teacher_first_login/',
                 data: {
                     'open_id': this.open_id,
                     'user_name': this.user_name,
@@ -48,7 +48,7 @@ export default {
                 },
                 method: 'post',
                 success: res => {
-                    if (res.data === 'login succeeded.') {
+                    if (res.data !== 'login failed.') {
                         uni.showToast({
                             title: '登录成功',
                             icon: 'none'

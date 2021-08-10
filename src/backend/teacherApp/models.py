@@ -75,12 +75,12 @@ class CompletionQuestionUserAnswer(models.Model):
 
 class SubjectiveQuestion(models.Model):
     text_content = models.TextField(default='null')
-    homework = models.ForeignKey(Homework, on_delete=models.CASCADE, null=False)
+    homework = models.ForeignKey(Homework, related_name='homework_subjective', on_delete=models.CASCADE, null=False)
     is_contain_media = models.BooleanField(default=False)
 
 
 class SubjectiveQuestionUserAnswer(models.Model):
-    question = models.ForeignKey(SubjectiveQuestion, on_delete=models.CASCADE)
+    question = models.ForeignKey(SubjectiveQuestion, related_name='SubjectiveQuestion_answer', on_delete=models.CASCADE)
     student = models.ForeignKey(People, related_name='SubjectiveUser_answer', on_delete=models.CASCADE, null=True)
 
 
@@ -120,7 +120,7 @@ class TeacherComment(models.Model):
     text_content = models.TextField(default='null')
     pos_x = models.DecimalField(max_digits=19, decimal_places=10, default=0)
     pos_y = models.DecimalField(max_digits=19, decimal_places=10, default=0)
-    time_slot = models.TimeField()
+    time_slot = models.DecimalField(max_digits=10, decimal_places=5, default=0)
     media = models.ForeignKey(Media, related_name='Media_comment',
                               on_delete=models.CASCADE, null=True)
     url = models.FileField(upload_to='./static/media/%Y/%m/%d/')

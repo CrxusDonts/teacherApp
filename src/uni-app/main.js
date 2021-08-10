@@ -7,6 +7,9 @@ Vue.component('cu-custom', cuCustom);
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$BASICURL = 'http://10.22.53.143:8002/teacherApp/';
+Vue.prototype.$FILEBASICURL = 'http://10.22.53.143:8002/';
+
 App.mpType = 'app';
 
 const app = new Vue({

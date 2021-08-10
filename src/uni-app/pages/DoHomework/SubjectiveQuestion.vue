@@ -7,7 +7,7 @@
 					<view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
 				</view>
 			</view>
-			<view style="display: flex;">
+			<view class="grid">
 				<view v-for="file in files">
 					<image v-if="file.file_type === 0" class="margin-left margin-top image"
 					:src="file.url" @click="previewImage(file.url)"></image>
@@ -18,13 +18,13 @@
 			<view class="flex margin-top margin-left">
 				你的答案：
 			</view>
-			<view style="display: flex;">
-				<view class="margin-left margin-top" v-for="(image,index) in images" :key="index">
+			<view class="grid">
+				<view class="margin-left margin-top" v-for="(image,index) in images">
 					<image class="image" :src="image" :data-src="image" @click="previewImage(image)"></image>
 					<button class="cuIcon-close bg-red close-button" @click="delect(index)">
 					</button>
 				</view>
-				<view class="margin-left margin-top" v-for="(video, index) in videos" :key="index">
+				<view class="margin-left margin-top" v-for="(video, index) in videos">
 					<video class="video" :src="video"></video>
 					<button class="cuIcon-close bg-red close-button" @click="delectVideo(index)">
 					</button>
@@ -59,12 +59,12 @@ export default {
     },
     mounted() {
         uni.request({
-            url: 'http://localhost:8002/teacherApp/SubjectiveQuestion/' + this.subjectiveQuestion.id + '/get_subjective_question_media/',
+            url: this.$BASICURL + 'SubjectiveQuestion/' + this.subjectiveQuestion.id + '/get_subjective_question_media/',
             method: 'GET',
             success: res => {
                 this.files = res.data;
                 for (const file of this.files) {
-                    file.url = 'http://localhost:8002/' + file.url.substring(6);
+                    file.url = this.$FILEBASICURL + file.url.substring(6);
                 }
             }
         });
@@ -106,7 +106,7 @@ export default {
                 camera: this.cameraList[this.cameraIndex].value, // 'front'、'back'，默认'back'
                 sourceType: sourceType[this.sourceTypeIndex],
                 success: res => {
-                    this.videos = this.videos.concat(res.tempFilePaths);
+                    this.videos = this.videos.concat(res.tempFilePath);
                     if (this.videos.length == 4) {
                         this.videoOfImagesShow = false;
                     }
@@ -155,34 +155,44 @@ export default {
             });
         },
         submitSubjectiveQuestion(student_id) {
-            for (let i = 0; i < this.images.length; i++) {
-                uni.uploadFile({
-                    url: 'http://localhost:8002/teacherApp/SubjectiveQuestionUserAnswer/put_subjective_question_media/',
-                    filePath: this.images[i],
-                    name: 'media',
-                    formData: {
-                        'file_type': 'image',
-                        'question_id': this.subjectiveQuestion.id,
-                        'student_id': student_id,
-                        'is_first': i === 0 ? 'true' : 'false'
-                    },
-                    success: res => {
-                        console.log(res.data);
-                    }
-                });
-            }
-            for (const video of this.videos) {
-                uni.uploadFile({
-                    url: 'http://localhost:8002/teacherApp/SubjectiveQuestionUserAnswer/put_subjective_question_media/',
-                    filePath: video,
-                    name: 'media',
-                    formData: {
-                        'file_type': 'video',
-                        'question_id': this.subjectiveQuestion.id,
-                        'student_id': student_id
-                    }
-                });
-            }
+			let answer_id;
+			uni.request({
+				url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/delete_historical_answer/',
+				method:'POST',
+				data: {
+				    'question_id': this.subjectiveQuestion.id,
+				    'student_id': student_id,
+				},
+				success: res => {
+					answer_id = res.data;
+					for (let i = 0; i < this.images.length; i++) {
+					    uni.uploadFile({
+					        url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
+					        filePath: this.images[i],
+					        name: 'media',
+					        formData: {
+								'answer_id': answer_id,
+					            'file_type': 'image'
+					        },
+					    });
+					}
+					for (const video of this.videos) {
+					    uni.uploadFile({
+					        url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
+					        filePath: video,
+					        name: 'media',
+					        formData: {
+					            'answer_id': answer_id,
+					            'file_type': 'video'
+					        }
+					    });
+					}
+				},
+				fail:err=>{
+					console.log(err.data)
+				}
+			})
+
         },
         isEmpty() {
             if (this.images.length === 0 && this.videos.length === 0) {

@@ -4,7 +4,6 @@
 			<view class="action">
 				<text class="cuIcon-title text-blue "></text> {{student.name + '的' + homework.title}}
 			</view>
-			<button class="cu-btn bg-grey margin-right" @click="comment()">批改完毕</button>
 		</view>
 		<choice-question v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
                     :order='order + index' :index="index" :student="student">
@@ -14,14 +13,14 @@
 		</completion-question>
 		<subjective-question v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
                         :order='choice_questions.length + completion_questions.length + order + index'
-						:index="index" :student="student" ref="subjectiveQuestion">
+						:index="index" :student="student">
 		</subjective-question>
 	</view>
 </template>
 
 <script>
-import ChoiceQuestion from './ChoiceQuestion.vue';
-import CompletionQuestion from './CompletionQuestion.vue';
+import ChoiceQuestion from '../Checkhomework/ChoiceQuestion.vue'
+import CompletionQuestion from '../Checkhomework/CompletionQuestion.vue';
 import SubjectiveQuestion from './SubjectiveQuestion.vue';
 export default {
     data() {
@@ -65,29 +64,7 @@ export default {
                 this.subjective_questions = res.data;
             }
         });
-    },
-	methods: {
-		comment() {
-			const _this = this;
-			uni.showModal({
-			    title: '完成批改?',
-			    success: res => {
-					if (res.confirm) {
-						_this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
-						    subjectiveQuestion.comment();
-						});
-						uni.showToast({
-						    title: '批改成功',
-						    icon: 'none'
-						});
-						setTimeout(() => {
-						    uni.navigateBack();
-						}, 1000);
-					}
-				}
-			});
-		}
-	}
+    }
 };
 </script>
 

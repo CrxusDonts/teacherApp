@@ -5,7 +5,7 @@
 				<view class="content flex-sub padding">
 					<view class="text-lg margin-left">{{order + '.' + completionQuestion.text_content}}</view>
 				</view>
-				<view style="display: flex;">
+				<view class="grid">
 					<view v-for="file in files">
 						<image v-if="file.file_type === 0" class="margin-left margin-top image"
 						:src="file.url" @click="previewImage(file.url)"></image>
@@ -34,7 +34,7 @@ export default {
     },
     mounted() {
         uni.request({
-            url: 'http://localhost:8002/teacherApp/CompletionQuestion/' + this.completionQuestion.id + '/get_answers/',
+            url: this.$BASICURL + 'CompletionQuestion/' + this.completionQuestion.id + '/get_answers/',
             method: 'GET',
             success: res => {
                 this.student_answers = res.data;
@@ -45,12 +45,12 @@ export default {
             }
         });
         uni.request({
-            url: 'http://localhost:8002/teacherApp/CompletionQuestion/' + this.completionQuestion.id + '/get_completion_media/',
+            url: this.$BASICURL + 'CompletionQuestion/' + this.completionQuestion.id + '/get_completion_media/',
             method: 'GET',
             success: res => {
                 this.files = res.data;
                 for (const file of this.files) {
-                    file.url = 'http://localhost:8002/' + file.url.substring(6);
+                    file.url = this.$FILEBASICURL + file.url.substring(6);
                 }
             }
         });
@@ -73,7 +73,7 @@ export default {
                 answer += ' ';
             }
             uni.request({
-                url: 'http://localhost:8002/teacherApp/CompletionQuestionUserAnswer/add_user_answer/',
+                url: this.$BASICURL + 'CompletionQuestionUserAnswer/add_user_answer/',
                 data: {
                     'answers': answer,
                     'question_id': this.completionQuestion.id,

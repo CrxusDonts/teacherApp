@@ -30,7 +30,7 @@ export default {
     },
     mounted() {
 	    uni.request({
-	        url: 'http://localhost:8002/teacherApp/Class/get_class_of_student/',
+	        url: this.$BASICURL + 'Class/get_class_of_student/',
 	        method: 'get',
 	        success: res => {
 	            if (res.data !== 'Get my manage class failed.') {
@@ -47,7 +47,7 @@ export default {
     methods: {
         toClassManagement(clazz) {
             uni.navigateTo({
-                url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0'
+                url: '../HomeworkManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=0'
             });
         },
         toJoinClass() {

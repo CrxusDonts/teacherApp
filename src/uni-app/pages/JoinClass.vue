@@ -28,6 +28,9 @@ export default {
             name: ''
         };
     },
+	onLoad: function(option) {
+	    this.open_id = option.open_id;
+	},
     methods: {
         inputClassId(e) {
             this.class_id = e.target.value;
@@ -36,11 +39,8 @@ export default {
             this.name = e.target.value;
         },
         joinClass() {
-            console.log(this.open_id);
-            console.log(this.class_id);
-            console.log(this.name);
             uni.request({
-                url: 'http://localhost:8002/teacherApp/JoinClassRequest/create_join_class_request/',
+                url: this.$BASICURL + 'JoinClassRequest/create_join_class_request/',
                 data: {
                     'open_id': this.open_id,
                     'class_id': this.class_id,

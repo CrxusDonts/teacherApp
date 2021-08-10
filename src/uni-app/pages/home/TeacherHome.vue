@@ -30,7 +30,7 @@ export default {
     },
     mounted() {
         uni.request({
-            url: 'http://localhost:8002/teacherApp/Class/get_my_class/',
+            url: this.$BASICURL + 'Class/get_my_class/',
             method: 'get',
             success: res => {
                 if (res.data !== 'Get my own class failed.') {
@@ -44,7 +44,7 @@ export default {
             }
         });
         uni.request({
-            url: 'http://localhost:8002/teacherApp/Class/get_manage_class_list/',
+            url: this.$BASICURL + 'Class/get_manage_class_list/',
             method: 'get',
             success: res => {
                 if (res.data !== 'Get my manage class failed.') {
@@ -63,16 +63,34 @@ export default {
     methods: {
         toClassManagement(clazz) {
             uni.navigateTo({
-                url: '../ClassManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=1'
+                url: '../HomeworkManagement?clazz=' + JSON.stringify(clazz) + '&is_teacher=1'
             });
         },
         logout() {
-            uni.request({
-                url: 'http://localhost:8002/teacherApp/BackendAccount/logout/',
-                method: 'post',
-                success: res => {
-                }
-            });
+			uni.showModal({
+			    title: '是否提交?',
+			    success: res => {
+			        if (res.confirm) {
+						uni.request({
+						    url: this.$BASICURL + 'BackendAccount/miniapp_logout/',
+						    method: 'post',
+						    success: res => {
+								if (res.data === 'logout succeed.') {
+									uni.showToast({
+									    title: '退出登录',
+									    icon: 'none'
+									});
+									setTimeout(() => {
+									    uni.navigateTo({
+									        url: './Home'
+									    });
+									}, 1000);
+								}
+						    }
+						});
+					}
+				}
+			});
         }
     }
 };

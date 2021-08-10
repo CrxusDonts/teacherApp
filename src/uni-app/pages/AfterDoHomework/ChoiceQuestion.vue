@@ -17,7 +17,7 @@
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}
 						</view>
 						<view class="flex margin-top margin-left">
-							{{student.name}}的答案：
+							你的答案：
 							<view v-for="(student_answer, index) in student_answers">
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.answer_order)}}
 							</view>

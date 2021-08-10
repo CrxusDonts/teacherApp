@@ -13,16 +13,22 @@
 			"path":"pages/TeacherLogin"
 		},
 		{
-			"path":"pages/ClassManagement"
+			"path":"pages/HomeworkManagement"
 		},
 		{
-			"path":"pages/HomeworkManagement"
+			"path":"pages/StudentHomeworkManagement"
 		},
 		{
 			"path":"pages/Checkhomework/CheckHomework"
 		},
 		{
+			"path":"pages/AfterCheckhomework/AfterCheckHomework"
+		},
+		{
 			"path":"pages/DoHomework/DoHomework"
+		},
+		{
+			"path":"pages/AfterDoHomework/AfterDoHomework"
 		},
 		{
 			"path":"pages/JoinClass"

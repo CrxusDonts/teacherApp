@@ -16,9 +16,6 @@
 			<view class="margin-top margin-left">
 				{{student.name}}的答案：
 			</view>
-			<view class="margin-left text-sm text-grey">
-				长按图片或暂停视频后长按视频画面进行评论，长按评论可语音输入或打字输入。(每个答案最多评论9条)
-			</view>
 			<view class="grid">
 				<view v-for="(student_answer, answer_index) in student_answers">
 					<comment-image v-if="student_answer.file_type === 0" :studentanswer='student_answer' ref="commentImage"></comment-image>

@@ -6,6 +6,7 @@ from datetime import time
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction, IntegrityError, OperationalError
+from django.utils import timezone
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -512,6 +513,41 @@ class HomeworkView(viewsets.ModelViewSet):
         serializer = SubjectiveQuestionSerializer(subjective_question_list, many=True)
         return Response(serializer.data)
 
+    @action(methods=['get'], detail=True)
+    def get_due_time(self, request, pk):
+        try:
+            target_homework = Homework.objects.get(id=pk)
+            return Response(str(target_homework.due_time.astimezone())[:-9])
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['get'], detail=True)
+    def is_overdue(self, request, pk):
+        try:
+            due_time = Homework.objects.get(id=pk).due_time
+            now = timezone.localtime()
+            difference = now - due_time
+            if difference.total_seconds() < 0:
+                return Response('False')
+            else:
+                return Response('True')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def is_corrected(self, request):
+        try:
+            target_homework = Homework.objects.get(id=request.data.get('homework_id'))
+            target_student = People.objects.get(id=request.data.get('student_id'))
+            for subjective_question in target_homework.homework_subjective.all():
+                for answer in subjective_question.SubjectiveQuestion_answer.filter(student=target_student):
+                    for media in answer.subjective_user_answer_media.all():
+                        if media.Media_comment.all().count() != 0:
+                            return Response('True')
+            return Response('False')
+        except Exception as e:
+            return Response(str(e))
+
 
 class CompletionQuestionView(viewsets.ModelViewSet):
     queryset = CompletionQuestion.objects.all()
@@ -676,13 +712,10 @@ class TeacherCommentView(viewsets.ModelViewSet):
             pos_x = request.data.get('pos_x')
             pos_y = request.data.get('pos_y')
             content = request.data.get('content')
-            hour = request.data.get('hour')
-            minute = request.data.get('minute')
-            second = request.data.get('second')
+            current_time = request.data.get('currentTime')
             target_media = Media.objects.get(id=request.data.get('media_id'))
-            my_time = time(hour, minute, second)
             new_comment = TeacherComment.objects.create(pos_x=pos_x, pos_y=pos_y, text_content=content,
-                                                        time_slot=my_time, media=target_media)
+                                                        time_slot=current_time, media=target_media)
             new_comment.save()
             return Response(TeacherCommentSerializer(new_comment).data)
         except Exception as e:
