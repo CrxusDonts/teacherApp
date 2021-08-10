@@ -1,6 +1,8 @@
 import string
 import random
 import os
+from datetime import time
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Permission
 from django.db import transaction, IntegrityError, OperationalError
@@ -438,11 +440,6 @@ class ChoiceQuestionUserAnswerView(viewsets.ModelViewSet):
             return Response(str(e))
 
 
-class MediaView(viewsets.ModelViewSet):
-    queryset = Media.objects.all()
-    serializer_class = MediaSerializer
-
-
 class HomeworkView(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
@@ -673,6 +670,46 @@ class TeacherCommentView(viewsets.ModelViewSet):
     queryset = TeacherComment.objects.all()
     serializer_class = TeacherCommentSerializer
 
+    @action(methods=['post'], detail=False)
+    def add_teacher_comment(self, request):
+        try:
+            pos_x = request.data.get('pos_x')
+            pos_y = request.data.get('pos_y')
+            content = request.data.get('content')
+            hour = request.data.get('hour')
+            minute = request.data.get('minute')
+            second = request.data.get('second')
+            target_media = Media.objects.get(id=request.data.get('media_id'))
+            my_time = time(hour, minute, second)
+            new_comment = TeacherComment.objects.create(pos_x=pos_x, pos_y=pos_y, text_content=content,
+                                                        time_slot=my_time, media=target_media)
+            new_comment.save()
+            return Response(TeacherCommentSerializer(new_comment).data)
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def add_comment_voice(self, request):
+        try:
+            file = request.FILES.get('voice')
+            target_comment = TeacherComment.objects.get(id=request.data.get('comment_id'))
+            target_comment.url = file
+            target_comment.save()
+            return Response('add_comment_voice succeed.')
+        except Exception as e:
+            return Response(str(e))
+
+    @action(methods=['post'], detail=False)
+    def get_teacher_comment(self, request):
+        try:
+            target_media = Media.objects.get(id=request.data.get('media_id'))
+            comments = []
+            for comment in target_media.Media_comment.all():
+                comments.append(comment)
+            return Response(TeacherCommentSerializer(comments, many=True).data)
+        except Exception as e:
+            return Response(str(e))
+
 
 class JoinClassRequestView(viewsets.ModelViewSet):
     queryset = JoinClassRequest.objects.all()
@@ -783,6 +820,11 @@ class ManageInvitationView(viewsets.ModelViewSet):
             return Response('handle_invitation failed.')
 
 
+class MediaView(viewsets.ModelViewSet):
+    queryset = Media.objects.all()
+    serializer_class = MediaSerializer
+
+
 # 登录函数
 def account_login(request):
     user_name = request.data.get('user_name')
@@ -882,7 +924,7 @@ def return_student_of_class(class_id):
     return target_students
 
 
-# 通过作业id与people_id获得该学生是否完成该作业
+# 通过作业id与people_id获得该学生是否完成作业
 def is_student_finish_homework(this_student, this_homework):
     choice_questions = ChoiceQuestion.objects.filter(homework=this_homework).all()
     for choice_question in choice_questions:

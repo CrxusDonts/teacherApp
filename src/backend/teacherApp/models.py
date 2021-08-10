@@ -84,13 +84,6 @@ class SubjectiveQuestionUserAnswer(models.Model):
     student = models.ForeignKey(People, related_name='SubjectiveUser_answer', on_delete=models.CASCADE, null=True)
 
 
-class TeacherComment(models.Model):
-    text_content = models.TextField(default='null')
-    pos_x = models.DecimalField(max_digits=19, decimal_places=10)
-    pos_y = models.DecimalField(max_digits=19, decimal_places=10)
-    time_slot = models.TimeField()
-
-
 class JoinClassRequest(models.Model):
     class_id = models.ForeignKey(Class, related_name='class_JoinClassRequest', on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(People, related_name='student_JoinClassRequest', on_delete=models.CASCADE, null=True)
@@ -106,12 +99,9 @@ class Media(models.Model):
     url = models.FileField(upload_to='./static/media/%Y/%m/%d/')
     type_file = (
         (0, 'image'),
-        (1, 'video'),
-        (2, 'voice')
+        (1, 'video')
     )
     file_type = models.IntegerField(choices=type_file, default=0)
-    teacher_comment = models.ForeignKey(TeacherComment, related_name='comment_media', on_delete=models.CASCADE,
-                                        null=True)
     choice_question = models.ForeignKey(ChoiceQuestion, related_name='choice_media', on_delete=models.CASCADE,
                                         null=True)
     completion_question = models.ForeignKey(CompletionQuestion, related_name='completion_media',
@@ -124,3 +114,13 @@ class Media(models.Model):
                                                         related_name='subjective_user_answer_media',
                                                         on_delete=models.CASCADE,
                                                         null=True)
+
+
+class TeacherComment(models.Model):
+    text_content = models.TextField(default='null')
+    pos_x = models.DecimalField(max_digits=19, decimal_places=10, default=0)
+    pos_y = models.DecimalField(max_digits=19, decimal_places=10, default=0)
+    time_slot = models.TimeField()
+    media = models.ForeignKey(Media, related_name='Media_comment',
+                              on_delete=models.CASCADE, null=True)
+    url = models.FileField(upload_to='./static/media/%Y/%m/%d/')
