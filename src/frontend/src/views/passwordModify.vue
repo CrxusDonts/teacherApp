@@ -55,13 +55,13 @@ export default {
                     old_password: this.old_password,
                     new_password: this.new_password
                 }).then(response => {
-                    console.log(response.data);
                     if (response.data === 'Modify password succeed.') {
                         this.$message({
                             message: '密码修改成功',
                             type: 'success'
                         });
-                        this.$router.push({ path: '/home' });
+                        this.$http.post('BackendAccount/logout/');
+                        this.$router.push({ path: '/' });
                     } else if (response.data === 'Old password is not correct.') {
                         this.$message.error('原密码错误');
                     } else {

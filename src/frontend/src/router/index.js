@@ -26,7 +26,10 @@ const routes = [{
     // 登录界面
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+        title: '首页'
+    }
 },
 // 注册界面
 {

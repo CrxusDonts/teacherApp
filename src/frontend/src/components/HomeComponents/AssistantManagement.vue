@@ -89,6 +89,10 @@ export default {
             });
         },
         invite() {
+            if (this.form.id === '') {
+                alert('请输入账号');
+                return;
+            }
             this.dialog_form_visible = false;
             // 向后端发送请求
             if (!this.ifContain(this.assistant, this.form.id)) {
@@ -96,7 +100,7 @@ export default {
                     user_name: this.form.id,
                     class_id: this.class_id
                 }).then(response => {
-                    if (response.data === 'invite succeed.') {
+                    if (response.data !== 'invite failed.') {
                         alert('邀请成功！');
                     } else if (response.data === 'invite failed.') {
                         alert('邀请失败！请检查用户名');
