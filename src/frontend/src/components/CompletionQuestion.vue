@@ -171,17 +171,29 @@ export default {
             }
         },
         save() {
-            this.edit_completion_question_form_visible = false;
-            this.$http.put('CompletionQuestion/' + this.completion_question.id + '/', {
-                text_content: this.completion_question.text_content,
-                homework: this.completion_question.homework
-            });
-            for (const answer of this.answers) {
-                this.$http.put('CompletionQuestionAnswer/' + answer.id + '/', {
-                    answer: answer.answer,
-                    question: answer.question
+            if (this.completion_question.text_content === '' || !this.ifFull(this.answers)) {
+                alert('请填入所有信息');
+            } else {
+                this.edit_completion_question_form_visible = false;
+                this.$http.put('CompletionQuestion/' + this.completion_question.id + '/', {
+                    text_content: this.completion_question.text_content,
+                    homework: this.completion_question.homework
                 });
+                for (const answer of this.answers) {
+                    this.$http.put('CompletionQuestionAnswer/' + answer.id + '/', {
+                        answer: answer.answer,
+                        question: answer.question
+                    });
+                }
             }
+        },
+        ifFull(answers) {
+            for (const answer of answers) {
+                if (answer.answer.length === 0 || answer.answer === '') {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 };

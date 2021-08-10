@@ -17,7 +17,6 @@
             align="right"
             label="操作">
             <template slot-scope="scope">
-                <el-button plain icon="el-icon-edit" size="mini" @click="handleEdit(scope.$index, scope.row)">编辑学生</el-button>
                 <el-button type="danger" plain icon="el-icon-delete" size="mini" @click="handleRemove(scope.$index, scope.row)">移除学生</el-button>
             </template>
         </el-table-column>
@@ -25,6 +24,7 @@
 </template>
 
 <script>
+
 export default {
     name: 'StudentManagement',
     data() {
@@ -48,9 +48,6 @@ export default {
         });
     },
     methods: {
-        handleEdit(index, row) {
-            // TODO 与后端交互
-        },
         handleRemove(index) {
             this.$http.delete('People/' + this.students[index].id + '/');
             this.students.splice(index, 1);

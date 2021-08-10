@@ -135,7 +135,6 @@ export default {
                 is_correct: 1,
                 question: this.choice_question
             }).then(response => {
-                console.log(response.data);
                 this.options.push(response.data);
             });
         },
@@ -189,21 +188,33 @@ export default {
             }
         },
         save() {
-            this.edit_choice_question_form_visible = false;
-            if (this.choice_question !== '') {
-                this.$http.put('ChoiceQuestion/' + this.choice_question.id + '/', {
-                    text_content: this.choice_question.text_content,
-                    homework: this.choice_question.homework
-                });
+            if (this.choice_question.text_content === '' || !this.ifFull(this.options)) {
+                alert('请填入所有信息');
+            } else {
+                this.edit_choice_question_form_visible = false;
+                if (this.choice_question !== '') {
+                    this.$http.put('ChoiceQuestion/' + this.choice_question.id + '/', {
+                        text_content: this.choice_question.text_content,
+                        homework: this.choice_question.homework
+                    });
+                }
+                for (const option of this.options) {
+                    this.$http.put('Options/' + option.id + '/', {
+                        text_content: option.text_content,
+                        order: option.order,
+                        if_correct: option.if_correct,
+                        question: option.question
+                    });
+                }
             }
-            for (const option of this.options) {
-                this.$http.put('Options/' + option.id + '/', {
-                    text_content: option.text_content,
-                    order: option.order,
-                    if_correct: option.if_correct,
-                    question: option.question
-                });
+        },
+        ifFull(options) {
+            for (const option of options) {
+                if (option.text_content.length === 0 || option.if_correct === '' || typeof (option.if_correct) === 'undefined') {
+                    return false;
+                }
             }
+            return true;
         }
     }
 };

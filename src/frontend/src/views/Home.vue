@@ -48,7 +48,9 @@ export default {
             num_of_join_class_request: ''
         };
     },
-    components: { Header },
+    components: {
+        Header
+    },
     mounted: function() {
         this.user_name = this.$route.params.user_name;
         // 获取班级

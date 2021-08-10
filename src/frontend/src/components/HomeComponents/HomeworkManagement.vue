@@ -71,12 +71,21 @@
                 <el-button type="primary" @click="newHomework">确 定</el-button>
             </div>
         </el-dialog>
+        <!--二维码-->
+        <el-dialog title="分享" :visible.sync="qr_code_visible">
+            <vue-qr :text="qr_code.url" :logoSrc="qr_code.image_url" :margin="10" colorDark="#333333" colorLight="#fff"
+                    :size="200"></vue-qr>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+import vueQr from 'vue-qr';
 export default {
     name: 'HomeworkManagement',
+    components: {
+        vueQr
+    },
     data() {
         return {
             homeworks: [],
@@ -88,7 +97,13 @@ export default {
             new_homework_form_visible: false,
             form_label_width: '140px',
             class_id: '',
-            user_name: ''
+            user_name: '',
+            qr_code_visible: false,
+            qr_code: {
+                url: 'https://se.jisuanke.com/CourseOrganizationPlatform/bugmakers/teacherapp/-/issues',
+                // eslint-disable-next-line no-undef
+                image_url: require('../../assets/icon3.jpg')
+            }
         };
     },
     mounted() {
@@ -108,7 +123,7 @@ export default {
     },
     methods: {
         newHomework() {
-            if (this.form.name === '' || this.form.time_value === '' || this.form.repeatable === '') {
+            if (this.form.title === '' || this.form.time_value === '' || this.form.repeatable === '') {
                 alert('请填入所有信息!');
             } else {
                 this.new_homework_form_visible = false;
@@ -142,8 +157,8 @@ export default {
                 class_id: this.class_id
             }});
         },
-        handleShare(index, row) {
-            // TODO Share
+        handleShare() {
+            this.qr_code_visible = true;
         },
         handleDelete(index) {
             this.$http.delete('Homework/' + this.homeworks[index].id + '/');

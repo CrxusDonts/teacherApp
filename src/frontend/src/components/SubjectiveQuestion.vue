@@ -134,11 +134,15 @@ export default {
             }
         },
         save() {
-            this.edit_subject_question_form_visible = false;
-            this.$http.put('SubjectiveQuestion/' + this.subjective_question.id + '/', {
-                text_content: this.subjective_question.text_content,
-                homework: this.subjective_question.homework
-            });
+            if (this.subjective_question.text_content === '') {
+                alert('请填入所有信息');
+            } else {
+                this.edit_subject_question_form_visible = false;
+                this.$http.put('SubjectiveQuestion/' + this.subjective_question.id + '/', {
+                    text_content: this.subjective_question.text_content,
+                    homework: this.subjective_question.homework
+                });
+            }
         }
     }
 };

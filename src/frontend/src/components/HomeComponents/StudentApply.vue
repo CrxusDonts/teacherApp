@@ -42,7 +42,7 @@ export default {
         this.$http.post('JoinClassRequest/get_join_class_request/', {
             class_id: this.class_id
         }).then(response => {
-            for (const value of response.data.length) {
+            for (const value of response.data) {
                 this.join_class_request.push({
                     id: value.join_class_request_id,
                     name: value.name
