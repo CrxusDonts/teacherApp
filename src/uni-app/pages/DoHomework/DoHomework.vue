@@ -80,43 +80,55 @@ export default {
                 success: res => {
                     if (res.confirm) {
                         let is_empty = false;
-                        _this.$refs.choiceQuestion.forEach(choiceQuestion => {
-                            if (choiceQuestion.isEmpty()) {
-                                uni.showToast({
-                                    title: '请完成所有题目',
-                                    icon: 'none'
-                                });
-                                is_empty = true;
-                            }
-                        });
-                        _this.$refs.completionQuestion.forEach(completionQuestion => {
-                            if (completionQuestion.isEmpty()) {
-                                uni.showToast({
-                                    title: '请完成所有题目',
-                                    icon: 'none'
-                                });
-                                is_empty = true;
-                            }
-                        });
-                        _this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
-                            if (subjectiveQuestion.isEmpty()) {
-                                uni.showToast({
-                                    title: '请完成所有题目',
-                                    icon: 'none'
-                                });
-                                is_empty = true;
-                            }
-                        });
+						if (this.choice_questions.length !== 0) {
+							_this.$refs.choiceQuestion.forEach(choiceQuestion => {
+							    if (choiceQuestion.isEmpty()) {
+							        uni.showToast({
+							            title: '请完成所有题目',
+							            icon: 'none'
+							        });
+							        is_empty = true;
+							    }
+							});
+						}
+                        if (this.completion_questions.length !== 0) {
+							_this.$refs.completionQuestion.forEach(completionQuestion => {
+							    if (completionQuestion.isEmpty()) {
+							        uni.showToast({
+							            title: '请完成所有题目',
+							            icon: 'none'
+							        });
+							        is_empty = true;
+							    }
+							});
+						}
+                        if (this.subjective_questions.length !== 0) {
+							_this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
+							    if (subjectiveQuestion.isEmpty()) {
+							        uni.showToast({
+							            title: '请完成所有题目',
+							            icon: 'none'
+							        });
+							        is_empty = true;
+							    }
+							});
+						}
                         if (!is_empty) {
-                            _this.$refs.choiceQuestion.forEach(choiceQuestion => {
-                                choiceQuestion.submitChoiceQuestion(_this.student.id);
-                            });
-                            _this.$refs.completionQuestion.forEach(completionQuestion => {
-                                completionQuestion.submitCompletionQuestion(_this.student.id);
-                            });
-                            _this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
-                                subjectiveQuestion.submitSubjectiveQuestion(_this.student.id);
-                            });
+							if (this.choice_questions.length !== 0) {
+								_this.$refs.choiceQuestion.forEach(choiceQuestion => {
+								    choiceQuestion.submitChoiceQuestion(_this.student.id);
+								});
+							}
+                            if (this.completion_questions.length !== 0) {
+								_this.$refs.completionQuestion.forEach(completionQuestion => {
+								    completionQuestion.submitCompletionQuestion(_this.student.id);
+								});
+							}
+                            if (this.subjective_questions.length !== 0) {
+								_this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
+								    subjectiveQuestion.submitSubjectiveQuestion(_this.student.id);
+								});
+							}
                             uni.showToast({
                                 title: '提交成功',
                                 icon: 'none'
