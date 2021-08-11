@@ -14,10 +14,10 @@
                     </view>
                     <checkbox-group class="block" @change="checkboxChange">
                         <view v-for="option in options" class="margin-top margin-left">
-                            <checkbox :class="option.checked?'checked':''"
+                            <checkbox :class="option.checked?'checked':''" style="transform:scale(0.7)"
                                       :checked="option.checked?true:false" :value="option.order">
                             </checkbox>
-                            {{ String.fromCharCode("A".charCodeAt(0) - 1 + option.order) }}.{{ option.text_content }}
+                            {{ String.fromCharCode("A".charCodeAt(0) + option.order) }}.{{ option.text_content }}
                         </view>
                     </checkbox-group>
                 </view>
@@ -106,12 +106,12 @@ export default {
 
 <style>
 .image {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 
 .video {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 </style>

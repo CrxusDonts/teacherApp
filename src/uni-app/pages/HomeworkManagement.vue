@@ -107,13 +107,9 @@ export default {
                                             title: '该作业已过期',
                                             icon: 'none'
                                         });
-                                    } else {
-                                        console.log(isOverdueRes.data);
                                     }
                                 }
                             });
-                        } else {
-                            console.log(res.data);
                         }
                     }
                 });

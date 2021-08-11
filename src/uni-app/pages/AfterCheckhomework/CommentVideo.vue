@@ -6,7 +6,7 @@
             <movable-view v-for="(comment, comment_index) in teacher_comments" :v-if="comment.show" :x="comment.pos_x"
                           :y="comment.pos_y"
                           direction="all" class="comment round bg-red">
-                <text style="margin-left: 8rpx;"></text>
+                <text class="text"></text>
                 {{ comment_index + 1 }}
             </movable-view>
         </movable-area>
@@ -88,12 +88,16 @@ export default {
 
 <style>
 .video {
-    width: 650 upx;
-    height: 500 upx;
+    width: 650upx;
+    height: 500upx;
 }
 
 .comment {
-    width: 30 rpx;
-    height: 30 rpx;
+    width: 30rpx;
+    height: 30rpx;
+}
+
+.text {
+    margin-left: 8rpx;
 }
 </style>

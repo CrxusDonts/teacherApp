@@ -49,7 +49,6 @@ export default {
                 },
                 method: 'post',
                 success: res => {
-                    console.log(res.data);
                     if (res.data !== 'login failed.') {
                         uni.showToast({
                             title: '登录成功',

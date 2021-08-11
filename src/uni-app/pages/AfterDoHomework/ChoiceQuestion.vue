@@ -84,12 +84,12 @@ export default {
 
 <style>
 .image {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 
 .video {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 </style>

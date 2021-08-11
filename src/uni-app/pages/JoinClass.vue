@@ -1,5 +1,5 @@
 <template>
-    <view>
+    <view class="bg-gradual-blue page">
         <view class="cu-bar bg-white">
             <view class="action">
                 <text class="cuIcon-title text-blue"></text>
@@ -15,7 +15,7 @@
             <input placeholder="请输入你的姓名" name="input" @input="inputName"></input>
         </view>
         <view class="padding flex justify-end">
-            <button class="cu-btn bg-grey lg" @click="joinClass()">确认提交</button>
+            <button class="cu-btn bg-grey lg" @click="joinClass">确认提交</button>
         </view>
     </view>
 </template>

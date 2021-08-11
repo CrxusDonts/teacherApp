@@ -4,13 +4,13 @@
             <image class="image" :src="student_answer.url" @click="previewImage(student_answer.url)"></image>
             <movable-view v-for="(comment, comment_index) in teacher_comments" :x="comment.x" :y="comment.y"
                           direction="all" class="comment round bg-red" @touchend="commentMove($event, comment_index)">
-                <text style="margin-left: 8rpx;"></text>
+                <text class="text"></text>
                 {{ comment_index + 1 }}
             </movable-view>
         </movable-area>
         <view class="voice-content margin">对答案进行评价：
             <view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
-                <view style="margin-top: 10rpx;">{{ comment_index + 1 + '.' }}</view>
+                <view class="comment_class">{{ comment_index + 1 + '.' }}</view>
                 <input class="solid" @input="getInput($event, comment_index)" :value="comment.comment"/>
                 <button class="cu-btn cuIcon-voice margin-left bg-green" @touchstart="record(comment_index)"
                         @touchend="recordEnd()"></button>
@@ -70,9 +70,6 @@ export default {
                 this.teacher_comments[comment_index].comment = res.result;
                 this.teacher_comments[comment_index].voice = res.tempFilePath;
             };
-            this.voiceManager.onError = res => {
-                console.error('error msg', res.msg);
-            };
         },
         // 开始录音
         record(comment_index) {
@@ -131,12 +128,20 @@ export default {
 
 <style>
 .image {
-    width: 650 upx;
-    height: 500 upx;
+    width: 650upx;
+    height: 500upx;
 }
 
 .comment {
-    width: 30 rpx;
-    height: 30 rpx;
+    width: 30rpx;
+    height: 30rpx;
+}
+
+.text {
+    margin-left: 8rpx;
+}
+
+.comment_class {
+    margin-top: 10rpx;
 }
 </style>

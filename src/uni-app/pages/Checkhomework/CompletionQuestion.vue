@@ -85,16 +85,16 @@ export default {
 
 <style>
 .answer + .answer {
-    margin-left: 50 rpx;
+    margin-left: 50rpx;
 }
 
 .image {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 
 .video {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 </style>

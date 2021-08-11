@@ -62,8 +62,6 @@ export default {
                         uni.navigateTo({
                             url: 'Checkhomework/CheckHomework?student=' + JSON.stringify(student) + '&homework=' + JSON.stringify(this.homework)
                         });
-                    } else {
-                        console.log(res.data);
                     }
                 }
             });

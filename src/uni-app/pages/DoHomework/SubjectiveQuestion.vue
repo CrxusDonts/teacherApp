@@ -189,9 +189,6 @@ export default {
                         });
                     }
                 },
-                fail: err => {
-                    console.log(err.data);
-                }
             });
         },
         isEmpty() {
@@ -206,18 +203,18 @@ export default {
 
 <style>
 .image {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 
 .video {
-    width: 250 upx;
-    height: 250 upx;
+    width: 250upx;
+    height: 250upx;
 }
 
 .close-button {
     position: absolute;
-    margin-top: -259 upx;
-    margin-left: 167 upx;
+    margin-top: -259upx;
+    margin-left: 167upx;
 }
 </style>

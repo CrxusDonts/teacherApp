@@ -1,5 +1,5 @@
 <template>
-    <view>
+    <view class="bg-gradual-blue light page">
         <view class="cu-bar bg-white">
             <view class="action">
                 <text class="cuIcon-title text-blue"></text>
@@ -7,8 +7,12 @@
             </view>
         </view>
         <view class="padding flex flex-direction">
-            <button class="cu-btn bg-grey lg cuIcon-people" @click="toTeacherHome()">我是老师</button>
-            <button class="cu-btn bg-grey margin-tb-sm lg cuIcon-people" @click="toStudentHome()">我是学生</button>
+            <button class="button bg-white" @click="toTeacherHome()">
+                <image class="image" :src="teacher_image_url"></image>
+			</button>
+            <button class="button bg-white margin-tb-sm" @click="toStudentHome()">
+                <image class="image" :src="student_image_url"></image>
+			</button>
         </view>
     </view>
 </template>
@@ -17,7 +21,9 @@
 export default {
     data() {
         return {
-            open_id: ''
+            open_id: '',
+			teacher_image_url: '/static/teacher.jpg',
+            student_image_url: '/static/student.png'
         };
     },
     mounted() {
@@ -32,9 +38,6 @@ export default {
                     method: 'GET',
                     success: res => {
                         this.open_id = res.data.openid;
-                    },
-                    fail: err => {
-                        console.log('获取openId失败');
                     }
                 });
             }
@@ -94,3 +97,17 @@ export default {
     }
 };
 </script>
+
+<style>
+.button {
+    width: 450upx;
+    height: 450upx;
+    background-color: rgb(246, 246, 246);
+}
+
+.image {
+    width: 200upx;
+    height: 200upx;
+	margin-top: 120upx;
+}
+</style>
