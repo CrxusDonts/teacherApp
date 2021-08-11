@@ -66,7 +66,7 @@ export default {
         }).then(response => {
             if (response.data !== 'get_teacher failed.') {
                 for (const value of response.data) {
-                    this.assistant.push({ user_name: this.getUserName(value) });
+                    this.assistant.push({ user_name: value.username });
                 }
             } else {
                 alert('获取管理人员失败！');
@@ -114,9 +114,6 @@ export default {
         cancel() {
             this.dialog_form_visible = false;
             this.form.id = '';
-        },
-        getUserName(string) {
-            return string.split(',')[1].split(':')[1].split('"')[1];
         },
         ifContain(tableData, id) {
             for (const value of tableData) {

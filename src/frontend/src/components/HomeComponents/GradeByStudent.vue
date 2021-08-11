@@ -33,10 +33,10 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog title="作业详情" :visible.sync="dialog_visible">
+        <el-dialog title="作业详情" :visible.sync="dialog_visible" width="650px">
             <el-table :data="this_student_grade">
-                <el-table-column property="homework_title" label="作业标题" width="200"></el-table-column>
-                <el-table-column property="if_finish" label="是否完成" width="200"></el-table-column>
+                <el-table-column property="homework_title" label="作业标题" width="300"></el-table-column>
+                <el-table-column property="if_finish" label="是否完成" width="300"></el-table-column>
             </el-table>
         </el-dialog>
     </div>

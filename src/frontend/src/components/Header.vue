@@ -10,7 +10,7 @@
     font-size: 32px;">布置作业系统</span>
     <el-dropdown :show-timeout=10 :hide-timeout=50 style="float: right;
     padding-right: 10px;">
-      <div class="el-dropdown-link">
+      <div v-if="typeof (user_name) !=='undefined'" class="el-dropdown-link">
         <span>你好,{{name}}</span>
         <span style="float: right;
                     margin-left: 10px;">
@@ -37,15 +37,17 @@ export default {
     },
     mounted() {
         this.user_name = this.$route.params.user_name;
-        this.$http.post('People/get_name/', {
-            user_name: this.user_name
-        }).then(response => {
-            if (response.data !== 'get_name failed.') {
-                this.name = response.data;
-            } else {
-                this.name = '无名少侠';
-            }
-        });
+        if (typeof (this.user_name) !== 'undefined') {
+            this.$http.post('People/get_name/', {
+                user_name: this.user_name
+            }).then(response => {
+                if (response.data !== 'get_name failed.') {
+                    this.name = response.data;
+                } else {
+                    this.name = '无名少侠';
+                }
+            });
+        }
     },
     methods: {
         passwordModify() {

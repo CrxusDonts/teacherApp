@@ -59,10 +59,10 @@ export default {
             if (response.data !== 'get_invitation failed.') {
                 for (const value of response.data) {
                     this.invite_me.push({
-                        invitation_id: this.getInviteId(value),
-                        invitor_user_name: this.getInviter(value),
-                        invite_class_id: this.getInviterClassId(value),
-                        invite_class_name: this.getInviterClassName(value)
+                        invitation_id: value.id,
+                        invitor_user_name: value.inviter,
+                        invite_class_id: value.class_id,
+                        invite_class_name: value.class_name
                     });
                 }
             } else {
@@ -88,19 +88,6 @@ export default {
                 this.invite_me.splice(index, 1);
                 this.$emit('nums_of_invite_me_changed');
             });
-        },
-        // 由于后端返回的是字符串，所以要对字符串进行处理
-        getInviteId(string) {
-            return string.split(',')[0].split(':')[1];
-        },
-        getInviter(string) {
-            return string.split(',')[1].split(':')[1].split('"')[1];
-        },
-        getInviterClassId(string) {
-            return string.split(',')[2].split(':')[1];
-        },
-        getInviterClassName(string) {
-            return string.split(',')[3].split(':')[1].split('"')[1];
         }
     }
 };

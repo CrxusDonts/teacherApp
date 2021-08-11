@@ -250,10 +250,10 @@ class ManagerView(viewsets.ModelViewSet):
             cur_class = Class.objects.get(id=cur_class_id)
             manager_list = []
             for manager in cur_class.class_manager.all():
-                data = json.dumps({
+                data = {
                     'id': manager.account.id,
                     'username': manager.account.user.username
-                })
+                }
                 manager_list.append(data)
             return Response(manager_list)
         except Exception:
@@ -825,12 +825,12 @@ class ManageInvitationView(viewsets.ModelViewSet):
             cur_account = BackendAccount.objects.get(user=request.user)
             invitation_list = []
             for invitation in cur_account.account_invitee.all():
-                data = json.dumps({
+                data = {
                     'id': invitation.id,
                     'inviter': invitation.inviter.user.username,
                     'class_id': invitation.clazz.id,
                     'class_name': invitation.clazz.class_name
-                })
+                }
                 invitation_list.append(data)
             return Response(invitation_list)
         except Exception:
