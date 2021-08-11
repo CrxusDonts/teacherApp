@@ -19,49 +19,49 @@
 
 <script>
 export default {
-	props: ['studentanswer'],
-	data() {
-	    return {
-			student_answer: '',
-	        teacher_comments: [],
-			comment_limit: 9,
-			voiceManager: ''
-	    };
-	},
-	mounted() {
-		this.student_answer = this.studentanswer;
-		uni.request({
-		    url:  this.$BASICURL + 'TeacherComment/get_teacher_comment/',
-			data: {
-				'media_id': this.student_answer.id
-			},
-		    method: 'post',
-		    success: res => {
-		        this.teacher_comments = res.data;
-				for (const comment of this.teacher_comments) {
-					if (comment.url) {
-						comment.url = this.$FILEBASICURL + comment.url.substring(6);
-					}
-				}
-		    }
-		});
-	},
-	methods: {
-	    // 预览图片
-	    previewImage(url) {
-	        uni.previewImage({
-	            current: 0,
-	            urls: [url]
-	        });
-	    },
-		// 播放音频
-		voicePlay(comment) {
-			const innerAudioContext = uni.createInnerAudioContext();
-			innerAudioContext.autoplay = true;
-			innerAudioContext.src = comment.url;
-			innerAudioContext.onPlay();
-		},
-	}
+    props: ['studentanswer'],
+    data() {
+        return {
+            student_answer: '',
+            teacher_comments: [],
+            comment_limit: 9,
+            voiceManager: ''
+        };
+    },
+    mounted() {
+        this.student_answer = this.studentanswer;
+        uni.request({
+            url: this.$BASICURL + 'TeacherComment/get_teacher_comment/',
+            data: {
+                'media_id': this.student_answer.id
+            },
+            method: 'post',
+            success: res => {
+                this.teacher_comments = res.data;
+                for (const comment of this.teacher_comments) {
+                    if (comment.url) {
+                        comment.url = this.$FILEBASICURL + comment.url.substring(6);
+                    }
+                }
+            }
+        });
+    },
+    methods: {
+        // 预览图片
+        previewImage(url) {
+            uni.previewImage({
+                current: 0,
+                urls: [url]
+            });
+        },
+        // 播放音频
+        voicePlay(comment) {
+            const innerAudioContext = uni.createInnerAudioContext();
+            innerAudioContext.autoplay = true;
+            innerAudioContext.src = comment.url;
+            innerAudioContext.onPlay();
+        }
+    }
 };
 </script>
 
@@ -72,7 +72,7 @@ export default {
 }
 
 .comment {
-	width: 30rpx;
-	height: 30rpx;
+    width: 30rpx;
+    height: 30rpx;
 }
 </style>

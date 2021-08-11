@@ -1,40 +1,40 @@
 <template>
-	<view class="cu-card case">
-        <!--题目 -->
-		<view class="cu-item shadow">
-			<view class="cu-item">
-				<view class="content flex-sub padding">
-					<view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
-				</view>
-			</view>
-			<view class="grid">
-				<view v-for="file in files">
-					<image v-if="file.file_type === 0" class="margin-left margin-top image"
-					:src="file.url" @click="previewImage(file.url)"></image>
-					<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
-				</view>
-			</view>
-			<!-- 学生答案 -->
-			<view class="flex margin-top margin-left">
-				你的答案：
-			</view>
-			<view class="grid">
-				<view class="margin-left margin-top" v-for="(image,index) in images">
-					<image class="image" :src="image" :data-src="image" @click="previewImage(image)"></image>
-					<button class="cuIcon-close bg-red close-button" @click="delect(index)">
-					</button>
-				</view>
-				<view class="margin-left margin-top" v-for="(video, index) in videos">
-					<video class="video" :src="video"></video>
-					<button class="cuIcon-close bg-red close-button" @click="delectVideo(index)">
-					</button>
-				</view>
-			</view>
-			<button class="cu-btn block line-black lg margin" @click="chooseVideoImage()">
-				<text class="cuIcon-upload"></text> 上传答案
-			</button>
-		</view>
-	</view>
+  <view class="cu-card case">
+    <!--题目 -->
+    <view class="cu-item shadow">
+      <view class="cu-item">
+        <view class="content flex-sub padding">
+          <view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
+        </view>
+      </view>
+      <view class="grid">
+        <view v-for="file in files">
+          <image v-if="file.file_type === 0" class="margin-left margin-top image"
+                 :src="file.url" @click="previewImage(file.url)"></image>
+          <video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
+        </view>
+      </view>
+      <!-- 学生答案 -->
+      <view class="flex margin-top margin-left">
+        你的答案：
+      </view>
+      <view class="grid">
+        <view class="margin-left margin-top" v-for="(image,index) in images">
+          <image class="image" :src="image" :data-src="image" @click="previewImage(image)"></image>
+          <button class="cuIcon-close bg-red close-button" @click="delect(index)">
+          </button>
+        </view>
+        <view class="margin-left margin-top" v-for="(video, index) in videos">
+          <video class="video" :src="video"></video>
+          <button class="cuIcon-close bg-red close-button" @click="delectVideo(index)">
+          </button>
+        </view>
+      </view>
+      <button class="cu-btn block line-black lg margin" @click="chooseVideoImage()">
+        <text class="cuIcon-upload"></text> 上传答案
+      </button>
+    </view>
+  </view>
 </template>
 
 <script>
@@ -70,7 +70,7 @@ export default {
         });
     },
     methods: {
-        // 点击上传图片或视频
+    // 点击上传图片或视频
         chooseVideoImage() {
             uni.showActionSheet({
                 title: '选择上传类型',
@@ -155,44 +155,43 @@ export default {
             });
         },
         submitSubjectiveQuestion(student_id) {
-			let answer_id;
-			uni.request({
-				url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/delete_historical_answer/',
-				method:'POST',
-				data: {
-				    'question_id': this.subjectiveQuestion.id,
-				    'student_id': student_id,
-				},
-				success: res => {
-					answer_id = res.data;
-					for (let i = 0; i < this.images.length; i++) {
-					    uni.uploadFile({
-					        url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
-					        filePath: this.images[i],
-					        name: 'media',
-					        formData: {
-								'answer_id': answer_id,
-					            'file_type': 'image'
-					        },
-					    });
-					}
-					for (const video of this.videos) {
-					    uni.uploadFile({
-					        url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
-					        filePath: video,
-					        name: 'media',
-					        formData: {
-					            'answer_id': answer_id,
-					            'file_type': 'video'
-					        }
-					    });
-					}
-				},
-				fail:err=>{
-					console.log(err.data)
-				}
-			})
-
+            let answer_id;
+            uni.request({
+                url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/delete_historical_answer/',
+                method: 'POST',
+                data: {
+                    'question_id': this.subjectiveQuestion.id,
+                    'student_id': student_id
+                },
+                success: res => {
+                    answer_id = res.data;
+                    for (let i = 0; i < this.images.length; i++) {
+                        uni.uploadFile({
+                            url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
+                            filePath: this.images[i],
+                            name: 'media',
+                            formData: {
+                                'answer_id': answer_id,
+                                'file_type': 'image'
+                            }
+                        });
+                    }
+                    for (const video of this.videos) {
+                        uni.uploadFile({
+                            url: this.$BASICURL + 'SubjectiveQuestionUserAnswer/put_subjective_question_media/',
+                            filePath: video,
+                            name: 'media',
+                            formData: {
+                                'answer_id': answer_id,
+                                'file_type': 'video'
+                            }
+                        });
+                    }
+                },
+                fail: err => {
+                    console.log(err.data);
+                }
+            });
         },
         isEmpty() {
             if (this.images.length === 0 && this.videos.length === 0) {
@@ -216,7 +215,7 @@ export default {
 }
 
 .close-button {
-    position:absolute;
+    position: absolute;
     margin-top: -259upx;
     margin-left: 167upx;
 }

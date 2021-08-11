@@ -5,20 +5,20 @@
 					<view class="content flex-sub padding">
 						<view class="text-lg margin-left">{{order + '.' + choiceQuestion.text_content}}</view>
 						<view class="grid">
-							<view v-for="(file, file_index) in files">
+							<view v-for="file in files">
 								<image v-if="file.file_type === 0" class="margin-left margin-top image"
 								:src="file.url" @click="previewImage(file.url)"></image>
 								<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
 							</view>
 						</view>
-						<view class="flex margin-top margin-left" v-for="(option, index) in options">
+						<view class="flex margin-top margin-left" v-for="option in options">
 							<view v-if="option.if_correct" class="cuIcon-check"></view>
 							<view v-if="!option.if_correct" class="cuIcon-close"></view>
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + option.order)}}.{{option.text_content}}
 						</view>
 						<view class="flex margin-top margin-left">
 							你的答案：
-							<view v-for="(student_answer, index) in student_answers">
+							<view v-for="student_answer in student_answers">
 							{{String.fromCharCode("A".charCodeAt(0) - 1 + student_answer.answer_order)}}
 							</view>
 						</view>
@@ -76,7 +76,7 @@ export default {
                 current: 0,
                 urls: [url]
             });
-        },
+        }
     }
 };
 </script>

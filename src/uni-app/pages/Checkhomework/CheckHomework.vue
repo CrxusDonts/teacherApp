@@ -66,28 +66,28 @@ export default {
             }
         });
     },
-	methods: {
-		comment() {
-			const _this = this;
-			uni.showModal({
-			    title: '完成批改?',
-			    success: res => {
-					if (res.confirm) {
-						_this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
-						    subjectiveQuestion.comment();
-						});
-						uni.showToast({
-						    title: '批改成功',
-						    icon: 'none'
-						});
-						setTimeout(() => {
-						    uni.navigateBack();
-						}, 1000);
-					}
-				}
-			});
-		}
-	}
+    methods: {
+        comment() {
+            const _this = this;
+            uni.showModal({
+                title: '完成批改?',
+                success: res => {
+                    if (res.confirm) {
+                        _this.$refs.subjectiveQuestion.forEach(subjectiveQuestion => {
+                            subjectiveQuestion.comment();
+                        });
+                        uni.showToast({
+                            title: '批改成功',
+                            icon: 'none'
+                        });
+                        setTimeout(() => {
+                            uni.navigateBack();
+                        }, 1000);
+                    }
+                }
+            });
+        }
+    }
 };
 </script>
 

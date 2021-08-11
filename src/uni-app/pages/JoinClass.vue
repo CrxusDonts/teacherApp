@@ -28,9 +28,9 @@ export default {
             name: ''
         };
     },
-	onLoad: function(option) {
-	    this.open_id = option.open_id;
-	},
+    onLoad: function(option) {
+        this.open_id = option.open_id;
+    },
     methods: {
         inputClassId(e) {
             this.class_id = e.target.value;

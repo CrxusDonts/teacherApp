@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import ChoiceQuestion from '../Checkhomework/ChoiceQuestion.vue'
+import ChoiceQuestion from '../Checkhomework/ChoiceQuestion.vue';
 import CompletionQuestion from '../Checkhomework/CompletionQuestion.vue';
 import SubjectiveQuestion from './SubjectiveQuestion.vue';
 export default {
