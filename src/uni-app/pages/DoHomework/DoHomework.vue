@@ -1,28 +1,33 @@
 <template>
-	<view>
-		<view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-title text-blue "></text> {{homework.title}}
-			</view>
-			<button class="cu-btn bg-grey margin-right" @click="submitHomework()">点击提交</button>
-		</view>
-		<choice-question v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
-                    :order='order + index' :index="index" ref="choiceQuestion">
-		</choice-question>
-		<completion-question v-for="(completionQuestion, index) in completion_questions" :completionQuestion="completionQuestion"
-                        :order='choice_questions.length + order + index' :index="index" ref="completionQuestion">
-		</completion-question>
-		<subjective-question v-for="(subjectiveQuestion, index) in subjective_questions" :subjectiveQuestion="subjectiveQuestion"
-                        :order='choice_questions.length + completion_questions.length + order + index' :index="index"
-						ref="subjectiveQuestion">
-		</subjective-question>
-	</view>
+    <view>
+        <view class="cu-bar bg-white solid-bottom margin-top">
+            <view class="action">
+                <text class="cuIcon-title text-blue "></text>
+                {{ homework.title }}
+            </view>
+            <button class="cu-btn bg-grey margin-right" @click="submitHomework()">点击提交</button>
+        </view>
+        <choice-question v-for="(choiceQuestion, index) in choice_questions" :choiceQuestion="choiceQuestion"
+                         :order='order + index' :index="index" ref="choiceQuestion">
+        </choice-question>
+        <completion-question v-for="(completionQuestion, index) in completion_questions"
+                             :completionQuestion="completionQuestion"
+                             :order='choice_questions.length + order + index' :index="index" ref="completionQuestion">
+        </completion-question>
+        <subjective-question v-for="(subjectiveQuestion, index) in subjective_questions"
+                             :subjectiveQuestion="subjectiveQuestion"
+                             :order='choice_questions.length + completion_questions.length + order + index'
+                             :index="index"
+                             ref="subjectiveQuestion">
+        </subjective-question>
+    </view>
 </template>
 
 <script>
 import ChoiceQuestion from './ChoiceQuestion.vue';
 import CompletionQuestion from './CompletionQuestion.vue';
 import SubjectiveQuestion from './SubjectiveQuestion.vue';
+
 export default {
     data() {
         return {
@@ -40,7 +45,7 @@ export default {
         CompletionQuestion,
         SubjectiveQuestion
     },
-    onLoad: function(option) {
+    onLoad: function (option) {
         this.student = JSON.parse(option.student);
         this.homework = JSON.parse(option.homework);
     },

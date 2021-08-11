@@ -1,20 +1,23 @@
 <template>
-	<view>
-		<movable-area class="image margin-left margin-top">
-			<image class="image" :src="student_answer.url" @click="previewImage(student_answer.url)"></image>
-			<movable-view v-for="(comment, comment_index) in teacher_comments" :x="comment.pos_x" :y="comment.pos_y"
-			direction="all" class="comment round bg-red">
-			<text style="margin-left: 8rpx;"></text>{{comment_index+1}}
-			</movable-view>
-		</movable-area>
-		<view class="voice-content margin">你的评价：
-			<view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
-				<view>{{comment_index + 1 + '.'}}</view>
-				<text></text>{{comment.text_content}}
-				<button v-if="comment.url" class="cu-btn sm cuIcon-notification bg-green" @click="voicePlay(comment)"></button>
-			</view>
-		</view>
-	</view>
+    <view>
+        <movable-area class="image margin-left margin-top">
+            <image class="image" :src="student_answer.url" @click="previewImage(student_answer.url)"></image>
+            <movable-view v-for="(comment, comment_index) in teacher_comments" :x="comment.pos_x" :y="comment.pos_y"
+                          direction="all" class="comment round bg-red">
+                <text style="margin-left: 8rpx;"></text>
+                {{ comment_index + 1 }}
+            </movable-view>
+        </movable-area>
+        <view class="voice-content margin">你的评价：
+            <view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
+                <view>{{ comment_index + 1 + '.' }}</view>
+                <text></text>
+                {{ comment.text_content }}
+                <button v-if="comment.url" class="cu-btn sm cuIcon-notification bg-green"
+                        @click="voicePlay(comment)"></button>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
@@ -67,12 +70,12 @@ export default {
 
 <style>
 .image {
-    width: 650upx;
-    height: 500upx;
+    width: 650 upx;
+    height: 500 upx;
 }
 
 .comment {
-    width: 30rpx;
-    height: 30rpx;
+    width: 30 rpx;
+    height: 30 rpx;
 }
 </style>

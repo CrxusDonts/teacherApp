@@ -1,25 +1,25 @@
 <template>
-	<view class="cu-card case">
-		<view class="cu-item shadow">
-			<view class="cu-item">
-				<view class="content flex-sub padding">
-					<view class="text-lg margin-left">{{order + '.' + completionQuestion.text_content}}</view>
-				</view>
-				<view class="grid">
-					<view v-for="file in files">
-						<image v-if="file.file_type === 0" class="margin-left margin-top image"
-						:src="file.url" @click="previewImage(file.url)"></image>
-						<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
-					</view>
-				</view>
-			</view>
-			<view v-for="(student_answer, index) in student_answers" class="cu-form-group margin-left">
-				<view class="title">{{student_answer.order}}.</view>
-				<input class="solid" placeholder="请输入答案" name="input"
-				:value="student_answer.answer" @input="inputAnswer($event,index)"></input>
-			</view>
-		</view>
-	</view>
+    <view class="cu-card case">
+        <view class="cu-item shadow">
+            <view class="cu-item">
+                <view class="content flex-sub padding">
+                    <view class="text-lg margin-left">{{ order + '.' + completionQuestion.text_content }}</view>
+                </view>
+                <view class="grid">
+                    <view v-for="file in files">
+                        <image v-if="file.file_type === 0" class="margin-left margin-top image"
+                               :src="file.url" @click="previewImage(file.url)"></image>
+                        <video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
+                    </view>
+                </view>
+            </view>
+            <view v-for="(student_answer, index) in student_answers" class="cu-form-group margin-left">
+                <view class="title">{{ student_answer.order }}.</view>
+                <input class="solid" placeholder="请输入答案" name="input"
+                       :value="student_answer.answer" @input="inputAnswer($event,index)"></input>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
@@ -96,12 +96,12 @@ export default {
 
 <style>
 .image {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 
 .video {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 </style>

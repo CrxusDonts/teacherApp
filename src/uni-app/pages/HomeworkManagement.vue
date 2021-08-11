@@ -1,25 +1,28 @@
 <template>
-  <view>
-    <view class="cu-bar bg-white solid-bottom margin-top">
-      <view class="action">
-        <text class="cuIcon-title text-blue" style="float: right;"></text> {{clazz.class_name}}
-      </view>
-      <view v-if="!is_teacher" class="action">
-        <text style="float: right;"></text> {{student.name}}
-      </view>
-    </view>
-    <view class="cu-list menu-avatar">
-      <view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="homework in homeworks" @click="toHomeworkManagement(homework)">
-        <view class="cu-avatar round lg cuIcon-copy"></view>
-        <view class="content">
-          <view class="text-grey">{{homework.title}}</view>
+    <view>
+        <view class="cu-bar bg-white solid-bottom margin-top">
+            <view class="action">
+                <text class="cuIcon-title text-blue" style="float: right;"></text>
+                {{ clazz.class_name }}
+            </view>
+            <view v-if="!is_teacher" class="action">
+                <text style="float: right;"></text>
+                {{ student.name }}
+            </view>
         </view>
-        <view class="margin-top-lg">
-          <view class="margin-top-lg text-grey text-xs">{{'截止时间:'+homework.due_time}}</view>
+        <view class="cu-list menu-avatar">
+            <view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="homework in homeworks"
+                  @click="toHomeworkManagement(homework)">
+                <view class="cu-avatar round lg cuIcon-copy"></view>
+                <view class="content">
+                    <view class="text-grey">{{ homework.title }}</view>
+                </view>
+                <view class="margin-top-lg">
+                    <view class="margin-top-lg text-grey text-xs">{{ '截止时间:' + homework.due_time }}</view>
+                </view>
+            </view>
         </view>
-      </view>
     </view>
-  </view>
 </template>
 
 <script>
@@ -32,7 +35,7 @@ export default {
             homeworks: []
         };
     },
-    onLoad: function(option) {
+    onLoad: function (option) {
         this.clazz = JSON.parse(option.clazz);
         this.is_teacher = JSON.parse(option.is_teacher);
     },

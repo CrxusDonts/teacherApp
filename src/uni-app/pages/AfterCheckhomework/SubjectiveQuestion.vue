@@ -1,34 +1,37 @@
 <template>
-	<view class="cu-card case">
-		<view class="cu-item shadow">
-			<view class="cu-item">
-				<view class="content flex-sub padding">
-					<view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
-				</view>
-			</view>
-			<view class="grid">
-				<view v-for="file in files">
-					<image v-if="file.file_type === 0" class="margin-left margin-top image"
-					:src="file.url" @click="previewImage(file.url)"></image>
-					<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
-				</view>
-			</view>
-			<view class="margin-top margin-left">
-				{{student.name}}的答案：
-			</view>
-			<view class="grid">
-				<view v-for="student_answer in student_answers">
-					<comment-image v-if="student_answer.file_type === 0" :studentanswer='student_answer' ref="commentImage"></comment-image>
-					<comment-video v-if="student_answer.file_type === 1" :studentanswer='student_answer' ref="commentVideo"></comment-video>
-				</view>
-			</view>
-		</view>
-	</view>
+    <view class="cu-card case">
+        <view class="cu-item shadow">
+            <view class="cu-item">
+                <view class="content flex-sub padding">
+                    <view class="text-lg margin-left">{{ order + '.' + subjectiveQuestion.text_content }}</view>
+                </view>
+            </view>
+            <view class="grid">
+                <view v-for="file in files">
+                    <image v-if="file.file_type === 0" class="margin-left margin-top image"
+                           :src="file.url" @click="previewImage(file.url)"></image>
+                    <video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
+                </view>
+            </view>
+            <view class="margin-top margin-left">
+                {{ student.name }}的答案：
+            </view>
+            <view class="grid">
+                <view v-for="student_answer in student_answers">
+                    <comment-image v-if="student_answer.file_type === 0" :studentanswer='student_answer'
+                                   ref="commentImage"></comment-image>
+                    <comment-video v-if="student_answer.file_type === 1" :studentanswer='student_answer'
+                                   ref="commentVideo"></comment-video>
+                </view>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
 import CommentImage from './CommentImage.vue';
 import CommentVideo from './CommentVideo.vue';
+
 export default {
     props: ['subjectiveQuestion', 'order', 'index', 'student'],
     name: 'SubjectiveQuestion',
@@ -86,12 +89,12 @@ export default {
 
 <style>
 .image {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 
 .video {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 </style>

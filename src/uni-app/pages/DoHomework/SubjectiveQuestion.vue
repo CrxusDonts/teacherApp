@@ -1,40 +1,41 @@
 <template>
-  <view class="cu-card case">
-    <!--题目 -->
-    <view class="cu-item shadow">
-      <view class="cu-item">
-        <view class="content flex-sub padding">
-          <view class="text-lg margin-left">{{order + '.' + subjectiveQuestion.text_content}}</view>
+    <view class="cu-card case">
+        <!--题目 -->
+        <view class="cu-item shadow">
+            <view class="cu-item">
+                <view class="content flex-sub padding">
+                    <view class="text-lg margin-left">{{ order + '.' + subjectiveQuestion.text_content }}</view>
+                </view>
+            </view>
+            <view class="grid">
+                <view v-for="file in files">
+                    <image v-if="file.file_type === 0" class="margin-left margin-top image"
+                           :src="file.url" @click="previewImage(file.url)"></image>
+                    <video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
+                </view>
+            </view>
+            <!-- 学生答案 -->
+            <view class="flex margin-top margin-left">
+                你的答案：
+            </view>
+            <view class="grid">
+                <view class="margin-left margin-top" v-for="(image,index) in images">
+                    <image class="image" :src="image" :data-src="image" @click="previewImage(image)"></image>
+                    <button class="cuIcon-close bg-red close-button" @click="delect(index)">
+                    </button>
+                </view>
+                <view class="margin-left margin-top" v-for="(video, index) in videos">
+                    <video class="video" :src="video"></video>
+                    <button class="cuIcon-close bg-red close-button" @click="delectVideo(index)">
+                    </button>
+                </view>
+            </view>
+            <button class="cu-btn block line-black lg margin" @click="chooseVideoImage()">
+                <text class="cuIcon-upload"></text>
+                上传答案
+            </button>
         </view>
-      </view>
-      <view class="grid">
-        <view v-for="file in files">
-          <image v-if="file.file_type === 0" class="margin-left margin-top image"
-                 :src="file.url" @click="previewImage(file.url)"></image>
-          <video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
-        </view>
-      </view>
-      <!-- 学生答案 -->
-      <view class="flex margin-top margin-left">
-        你的答案：
-      </view>
-      <view class="grid">
-        <view class="margin-left margin-top" v-for="(image,index) in images">
-          <image class="image" :src="image" :data-src="image" @click="previewImage(image)"></image>
-          <button class="cuIcon-close bg-red close-button" @click="delect(index)">
-          </button>
-        </view>
-        <view class="margin-left margin-top" v-for="(video, index) in videos">
-          <video class="video" :src="video"></video>
-          <button class="cuIcon-close bg-red close-button" @click="delectVideo(index)">
-          </button>
-        </view>
-      </view>
-      <button class="cu-btn block line-black lg margin" @click="chooseVideoImage()">
-        <text class="cuIcon-upload"></text> 上传答案
-      </button>
     </view>
-  </view>
 </template>
 
 <script>
@@ -50,7 +51,7 @@ export default {
             videos: [],
             sourceType: ['拍摄', '相册', '拍摄或相册'],
             sourceTypeIndex: 2,
-            cameraList: [{ value: 'back', name: '后置摄像头', checked: 'true' }, { value: 'front', name: '前置摄像头' }],
+            cameraList: [{value: 'back', name: '后置摄像头', checked: 'true'}, {value: 'front', name: '前置摄像头'}],
             cameraIndex: 0
         };
     },
@@ -70,7 +71,7 @@ export default {
         });
     },
     methods: {
-    // 点击上传图片或视频
+        // 点击上传图片或视频
         chooseVideoImage() {
             uni.showActionSheet({
                 title: '选择上传类型',
@@ -205,18 +206,18 @@ export default {
 
 <style>
 .image {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 
 .video {
-    width: 250upx;
-    height: 250upx;
+    width: 250 upx;
+    height: 250 upx;
 }
 
 .close-button {
     position: absolute;
-    margin-top: -259upx;
-    margin-left: 167upx;
+    margin-top: -259 upx;
+    margin-left: 167 upx;
 }
 </style>

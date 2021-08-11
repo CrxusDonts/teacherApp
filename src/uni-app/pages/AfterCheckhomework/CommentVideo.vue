@@ -1,20 +1,24 @@
 <template>
-	<view>
-		<movable-area class="video margin-left margin-top">
-			<video id="myVideo" class="video" @timeupdate="watchTime" @play="videoPlay" :src="student_answer.url"></video>
-			<movable-view v-for="(comment, comment_index) in teacher_comments" :v-if="comment.show" :x="comment.pos_x" :y="comment.pos_y"
-			direction="all" class="comment round bg-red">
-			<text style="margin-left: 8rpx;"></text>{{comment_index+1}}
-			</movable-view>
-		</movable-area>
-		<view class="voice-content margin">你的评价：
-			<view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
-				<view>{{comment_index + 1 + '.'}}</view>
-				<text></text>{{comment.text_content}}
-				<button class="cu-btn sm cuIcon-notification bg-green" @click="voicePlay(comment)"></button>
-			</view>
-		</view>
-	</view>
+    <view>
+        <movable-area class="video margin-left margin-top">
+            <video id="myVideo" class="video" @timeupdate="watchTime" @play="videoPlay"
+                   :src="student_answer.url"></video>
+            <movable-view v-for="(comment, comment_index) in teacher_comments" :v-if="comment.show" :x="comment.pos_x"
+                          :y="comment.pos_y"
+                          direction="all" class="comment round bg-red">
+                <text style="margin-left: 8rpx;"></text>
+                {{ comment_index + 1 }}
+            </movable-view>
+        </movable-area>
+        <view class="voice-content margin">你的评价：
+            <view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
+                <view>{{ comment_index + 1 + '.' }}</view>
+                <text></text>
+                {{ comment.text_content }}
+                <button class="cu-btn sm cuIcon-notification bg-green" @click="voicePlay(comment)"></button>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
@@ -84,12 +88,12 @@ export default {
 
 <style>
 .video {
-    width: 650upx;
-    height: 500upx;
+    width: 650 upx;
+    height: 500 upx;
 }
 
 .comment {
-    width: 30rpx;
-    height: 30rpx;
+    width: 30 rpx;
+    height: 30 rpx;
 }
 </style>

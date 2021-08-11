@@ -139,6 +139,10 @@ export default {
                         this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(get_homeworks_response => {
                             if (get_homeworks_response.data !== 'Class not found.') {
                                 this.homeworks = get_homeworks_response.data;
+                                for (const homework of this.homeworks) {
+                                    homework.start_time = this.handleTime(homework.start_time);
+                                    homework.due_time = this.handleTime(homework.due_time);
+                                }
                             } else {
                                 alert('获取班级失败！');
                             }

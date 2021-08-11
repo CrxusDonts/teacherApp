@@ -1,20 +1,22 @@
 <template>
-	<view>
-		<movable-area class="image margin-left margin-top" @longpress="newComment">
-			<image class="image" :src="student_answer.url" @click="previewImage(student_answer.url)"></image>
-			<movable-view v-for="(comment, comment_index) in teacher_comments" :x="comment.x" :y="comment.y"
-			direction="all" class="comment round bg-red" @touchend="commentMove($event, comment_index)">
-			<text style="margin-left: 8rpx;"></text>{{comment_index+1}}
-			</movable-view>
-		</movable-area>
-		<view class="voice-content margin">对答案进行评价：
-			<view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
-				<view style="margin-top: 10rpx;">{{comment_index + 1 + '.'}}</view>
-				<input class="solid" @input="getInput($event, comment_index)" :value="comment.comment"/>
-				<button class="cu-btn cuIcon-voice margin-left bg-green"@touchstart="record(comment_index)" @touchend="recordEnd()"></button>
-			</view>
-		</view>
-	</view>
+    <view>
+        <movable-area class="image margin-left margin-top" @longpress="newComment">
+            <image class="image" :src="student_answer.url" @click="previewImage(student_answer.url)"></image>
+            <movable-view v-for="(comment, comment_index) in teacher_comments" :x="comment.x" :y="comment.y"
+                          direction="all" class="comment round bg-red" @touchend="commentMove($event, comment_index)">
+                <text style="margin-left: 8rpx;"></text>
+                {{ comment_index + 1 }}
+            </movable-view>
+        </movable-area>
+        <view class="voice-content margin">对答案进行评价：
+            <view v-for="(comment, comment_index) in teacher_comments" class="flex margin-top">
+                <view style="margin-top: 10rpx;">{{ comment_index + 1 + '.' }}</view>
+                <input class="solid" @input="getInput($event, comment_index)" :value="comment.comment"/>
+                <button class="cu-btn cuIcon-voice margin-left bg-green" @touchstart="record(comment_index)"
+                        @touchend="recordEnd()"></button>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
@@ -129,12 +131,12 @@ export default {
 
 <style>
 .image {
-    width: 650upx;
-    height: 500upx;
+    width: 650 upx;
+    height: 500 upx;
 }
 
 .comment {
-    width: 30rpx;
-    height: 30rpx;
+    width: 30 rpx;
+    height: 30 rpx;
 }
 </style>

@@ -671,8 +671,8 @@ class SubjectiveQuestionUserAnswerView(viewsets.ModelViewSet):
                                                                          question=target_question)
                 new_answer.save()
                 return Response(new_answer.id)
-        except Exception:
-            return Response('delete failed.')
+        except Exception as e:
+            return Response(str(e))
 
     @action(methods=['post'], detail=False)
     def put_subjective_question_media(self, request):

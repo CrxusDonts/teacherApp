@@ -1,15 +1,16 @@
 <template>
-  <view>
-    <view class="cu-bar bg-white">
-      <view class="action">
-        <text class="cuIcon-title text-blue"></text>请选择你的身份
-      </view>
+    <view>
+        <view class="cu-bar bg-white">
+            <view class="action">
+                <text class="cuIcon-title text-blue"></text>
+                请选择你的身份
+            </view>
+        </view>
+        <view class="padding flex flex-direction">
+            <button class="cu-btn bg-grey lg cuIcon-people" @click="toTeacherHome()">我是老师</button>
+            <button class="cu-btn bg-grey margin-tb-sm lg cuIcon-people" @click="toStudentHome()">我是学生</button>
+        </view>
     </view>
-    <view class="padding flex flex-direction">
-      <button class="cu-btn bg-grey lg cuIcon-people" @click="toTeacherHome()">我是老师</button>
-      <button class="cu-btn bg-grey margin-tb-sm lg cuIcon-people" @click="toStudentHome()">我是学生</button>
-    </view>
-  </view>
 </template>
 
 <script>
@@ -20,7 +21,7 @@ export default {
         };
     },
     mounted() {
-    // 获取open_id
+        // 获取open_id
         uni.login({
             success: res => {
                 const appid = 'wx9d16d4512ab0e560';
