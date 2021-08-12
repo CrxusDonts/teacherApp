@@ -46,10 +46,9 @@
         <el-dialog title="新建作业" :visible.sync="new_homework_form_visible">
             <el-form :model="form">
                 <el-form-item label="作业名称" :label-width="form_label_width">
-                    <el-input v-model="form.title" autocomplete="off"></el-input>
+                    <el-input class="title" v-model="form.title" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="时间" :label-width="form_label_width">
-                    <div class="block">
                         <el-date-picker
                             v-model="form.time_value"
                             value-format="yyyy-MM-dd HH:mm"
@@ -59,11 +58,10 @@
                             end-placeholder="结束日期"
                             :default-time="['12:00:00']">
                         </el-date-picker>
-                    </div>
                 </el-form-item>
                 <el-form-item label="是否可以重复提交" :label-width="form_label_width">
-                    <el-radio v-model="form.repeatable" :label="true">可以重复提交</el-radio>
-                    <el-radio v-model="form.repeatable" :label="false">不可重复提交</el-radio>
+                    <el-radio class="repeatable" v-model="form.repeatable" :label="true">可以重复提交</el-radio>
+                    <el-radio class="repeatable" v-model="form.repeatable" :label="false">不可重复提交</el-radio>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -139,6 +137,10 @@ export default {
                         this.$http.get('Class/' + this.class_id + '/get_homeworks/').then(get_homeworks_response => {
                             if (get_homeworks_response.data !== 'Class not found.') {
                                 this.homeworks = get_homeworks_response.data;
+                                for (const homework of this.homeworks) {
+                                    homework.start_time = this.handleTime(homework.start_time);
+                                    homework.due_time = this.handleTime(homework.due_time);
+                                }
                             } else {
                                 alert('获取班级失败！');
                             }
@@ -170,3 +172,11 @@ export default {
     }
 };
 </script>
+<style scoped>
+
+.title {
+    width: 400px;
+    text-align: left;
+}
+
+</style>

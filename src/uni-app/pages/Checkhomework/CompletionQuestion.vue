@@ -1,32 +1,33 @@
 <template>
-	<view class="cu-card case">
-		<view class="cu-item shadow">
-				<view class="cu-item">
-					<view class="content flex-sub padding">
-						<view class="text-lg margin-left">{{order + '.' + completionQuestion.text_content}}</view>
-						<view class="grid">
-							<view v-for="(file, file_index) in files">
-								<image v-if="file.file_type === 0" class="margin-left margin-top image"
-								:src="file.url" @click="previewImage(file.url)"></image>
-								<video v-if="file.file_type === 1" class="margin-left margin-top video" :src="file.url"></video>
-							</view>
-						</view>
-						<view class="grid margin-top margin-left">
-							正确答案：
-							<view v-for="(answer, index) in answers" class="answer">
-							{{answer.answer}}
-							</view>
-						</view>
-						<view class="grid margin-top margin-left">
-							{{student.name}}的答案：
-							<view class="answer" v-for="(student_answer, index) in student_answers">
-								{{student_answer.answer}}
-							</view>
-						</view>
-					</view>
-				</view>
-		</view>
-	</view>
+    <view class="cu-card case">
+        <view class="cu-item shadow">
+            <view class="cu-item">
+                <view class="content flex-sub padding">
+                    <view class="text-lg margin-left">{{ order + '.' + completionQuestion.text_content }}</view>
+                    <view class="grid">
+                        <view v-for="file in files">
+                            <image v-if="file.file_type === 0" class="margin-left margin-top image"
+                                   :src="file.url" @click="previewImage(file.url)"></image>
+                            <video v-if="file.file_type === 1" class="margin-left margin-top video"
+                                   :src="file.url"></video>
+                        </view>
+                    </view>
+                    <view class="grid margin-top margin-left">
+                        正确答案：
+                        <view v-for="answer in answers" class="answer">
+                            {{ answer.answer }}
+                        </view>
+                    </view>
+                    <view class="grid margin-top margin-left">
+                        {{ student.name }}的答案：
+                        <view class="answer" v-for="student_answer in student_answers">
+                            {{ student_answer.answer }}
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>

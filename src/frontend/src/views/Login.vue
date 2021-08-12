@@ -1,28 +1,34 @@
 <template>
-    <div id="poster">
-        <el-form ref="loginForm" class="login-container" label-position="left"
-                 label-width="0px">
-            <h3 class="login-title">系统登录</h3>
-            <el-form-item>
-                <el-input type="text" v-model="user_name" prefix-icon="el-icon-user" :autofocus="true"
-                          auto-complete="off" placeholder="账号"></el-input>
-            </el-form-item>
-            <el-form-item>
-                <el-input type="password" v-model="password" prefix-icon="el-icon-lock"
-                          auto-complete="off" placeholder="密码" v-on:keyup.enter.native="login"></el-input>
-            </el-form-item>
+    <div>
+        <Header></Header>
+        <div id="poster">
+            <el-form ref="loginForm" class="login-container" label-position="left"
+                     label-width="0px">
+                <h3 class="login-title">系统登录</h3>
+                <el-form-item>
+                    <el-input type="text" v-model="user_name" prefix-icon="el-icon-user" :autofocus="true"
+                              auto-complete="off" placeholder="账号"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input type="password" v-model="password" prefix-icon="el-icon-lock"
+                              auto-complete="off" placeholder="密码" v-on:keyup.enter.native="login"></el-input>
+                </el-form-item>
 
-            <el-form-item>
-                <el-button class="method-Button" type="primary" @click="login">登录</el-button>
-                <el-button class="method-Button" type="primary" @click="register">注册</el-button>
-            </el-form-item>
-        </el-form>
+                <el-form-item>
+                    <el-button class="method-Button" type="primary" @click="login">登录</el-button>
+                    <el-button class="method-Button" type="primary" @click="register">注册</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
     </div>
 </template>
 
 <script>
+import Header from '../components/Header';
+
 export default {
     name: 'Login',
+    components: { Header },
     data: function() {
         return {
             user_name: '',
@@ -67,7 +73,7 @@ export default {
 .login-container {
     width: 350px;
     padding: 35px 35px 15px;
-    margin: 180px auto 90px;
+    margin: 120px auto 90px;
     border: 1px solid #eaeaea;
     border-radius: 15px;
     background-clip: padding-box;

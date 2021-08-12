@@ -123,4 +123,4 @@ class TeacherComment(models.Model):
     time_slot = models.DecimalField(max_digits=10, decimal_places=5, default=0)
     media = models.ForeignKey(Media, related_name='Media_comment',
                               on_delete=models.CASCADE, null=True)
-    url = models.FileField(upload_to='./static/media/%Y/%m/%d/')
+    url = models.FileField(upload_to='./static/media/%Y/%m/%d/', null=True)

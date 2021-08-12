@@ -66,8 +66,13 @@ export default {
     },
     methods: {
         handleSwitch(index) {
+            if (this.class_id === this.classes[index].id.toString()) {
+                alert('你当前位于此班级');
+                return;
+            }
             this.class_id = this.classes[index].id;
             this.$emit('classIdChanged', this.class_id);
+            alert('切换成功');
         }
     }
 };

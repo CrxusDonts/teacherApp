@@ -1,20 +1,22 @@
 <template>
-	<view>
-		<view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-title text-blue "></text> {{'欢迎你，' + user_name}}
-			</view>
-			<button class="cu-btn bg-grey margin-right" @click="logout()">退出登录</button>
-		</view>
-		<view class="cu-list menu-avatar">
-			<view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="clazz in classes" @click="toClassManagement(clazz)">
-				<view class="cu-avatar round lg cuIcon-group"></view>
-				<view class="content">
-					<view class="text-grey">{{clazz.class_name}}</view>
-				</view>
-			</view>
-		</view>
-	</view>
+    <view>
+        <view class="cu-bar bg-white solid-bottom margin-top">
+            <view class="action">
+                <text class="cuIcon-title text-blue "></text>
+                {{ '欢迎你，' + user_name }}
+            </view>
+            <button class="cu-btn bg-grey margin-right" @click="logout()">退出登录</button>
+        </view>
+        <view class="cu-list menu-avatar">
+            <view class="cu-item" :class="size?'solids-top':'solid-top'" v-for="clazz in classes"
+                  @click="toClassManagement(clazz)">
+                <view class="cu-avatar round lg cuIcon-group"></view>
+                <view class="content">
+                    <view class="text-grey">{{ clazz.class_name }}</view>
+                </view>
+            </view>
+        </view>
+    </view>
 </template>
 
 <script>
@@ -25,7 +27,7 @@ export default {
             classes: []
         };
     },
-    onLoad: function(option) {
+    onLoad: function (option) {
         this.user_name = option.user_name;
     },
     mounted() {
@@ -48,7 +50,7 @@ export default {
             method: 'get',
             success: res => {
                 if (res.data !== 'Get my manage class failed.') {
-                    for (let i = 0;i < res.data.length; i++) {
+                    for (let i = 0; i < res.data.length; i++) {
                         this.classes.push(res.data[i]);
                     }
                 } else {
@@ -67,30 +69,30 @@ export default {
             });
         },
         logout() {
-			uni.showModal({
-			    title: '是否提交?',
-			    success: res => {
-			        if (res.confirm) {
-						uni.request({
-						    url: this.$BASICURL + 'BackendAccount/miniapp_logout/',
-						    method: 'post',
-						    success: res => {
-								if (res.data === 'logout succeed.') {
-									uni.showToast({
-									    title: '退出登录',
-									    icon: 'none'
-									});
-									setTimeout(() => {
-									    uni.navigateTo({
-									        url: './Home'
-									    });
-									}, 1000);
-								}
-						    }
-						});
-					}
-				}
-			});
+            uni.showModal({
+                title: '是否提交?',
+                success: res => {
+                    if (res.confirm) {
+                        uni.request({
+                            url: this.$BASICURL + 'BackendAccount/miniapp_logout/',
+                            method: 'post',
+                            success: res => {
+                                if (res.data === 'logout succeed.') {
+                                    uni.showToast({
+                                        title: '退出登录',
+                                        icon: 'none'
+                                    });
+                                    setTimeout(() => {
+                                        uni.navigateTo({
+                                            url: './Home'
+                                        });
+                                    }, 1000);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 };

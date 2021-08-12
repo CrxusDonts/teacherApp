@@ -58,6 +58,10 @@ export default {
                     name: this.name
                 }).then(response => {
                     if (response.data === 'Register succeed.') {
+                        this.$message({
+                            message: '注册成功',
+                            type: 'success'
+                        });
                         this.$router.push({ path: '/' });
                     } else if (response.data === 'User already existed.') {
                         this.$message.error('您注册的账号已存在，请重新注册！');
